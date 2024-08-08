@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 4, 2012 4:12:17 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.CustomAssetClassEntity" table="custom_asset_class">
+        <id name="Custom_Class_Id" type="int">
+            <column default="0" name="Custom_Class_ID" />
+            <generator class="identity" />
+        </id>
+        
+        <many-to-one name="Parent_Class_Id" class="remote.wise.businessentity.CustomAssetClassEntity" fetch="join">
+            <column name="Parent_Class_ID" />
+        </many-to-one>
+        <property name="Custom_class_Name" type="java.lang.String">
+            <column name="Custom_Class_Name" />
+        </property>
+        <set name="childCustomClass_list" table="custom_asset_class" inverse="false" lazy="true">
+            <key>
+                <column name="Parent_Class_ID" />
+            </key>
+            <one-to-many class="remote.wise.businessentity.CustomAssetClassEntity" />
+        </set>
+        <many-to-one name="client_id" class="remote.wise.businessentity.ClientEntity" fetch="join">
+            <column name="Client_ID" />
+        </many-to-one>
+    </class>
+</hibernate-mapping>

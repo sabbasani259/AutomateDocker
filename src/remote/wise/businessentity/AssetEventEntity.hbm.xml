@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 2, 2012 10:00:25 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+ <class name="remote.wise.businessentity.AssetEventEntity" table="asset_event">
+  <id name="assetEventId" type="int">
+   <column default="0" name="Asset_Event_ID"/>
+   <generator class="identity"/>
+  </id>
+  <many-to-one class="remote.wise.businessentity.AssetEntity"
+   fetch="join" lazy="false" name="serialNumber">
+   <column name="Serial_Number"/>
+  </many-to-one>
+  <many-to-one class="remote.wise.businessentity.EventEntity"
+   fetch="join" name="eventId">
+   <column name="Event_ID"/>
+  </many-to-one>
+  <many-to-one class="remote.wise.businessentity.EventTypeEntity"
+   fetch="join" name="eventTypeId">
+   <column name="Event_Type_ID"/>
+  </many-to-one>
+  <property generated="never" lazy="false" name="eventSeverity" type="java.lang.String">
+   <column name="Event_Severity"/>
+  </property>
+  <property generated="never" lazy="false" name="eventGeneratedTime" type="java.sql.Timestamp">
+   <column name="Event_Generated_Time"/>
+  </property>
+  <property generated="never" lazy="false" name="activeStatus" type="int">
+   <column name="Active_Status"/>
+  </property>
+  <property generated="never" lazy="false" name="comments" type="java.lang.String">
+   <column name="Comments"/>
+  </property>
+  <property generated="never" lazy="false" name="eventClosedTime" type="java.sql.Timestamp">
+   <column name="Event_Closed_Time"/>
+  </property>
+  <property generated="never" lazy="false" name="serviceScheduleId" type="int">
+   <column name="Service_Schedule_ID"/>
+  </property>
+  <property generated="never" lazy="false" name="address" type="java.lang.String">
+   <column name="Address"/>
+  </property>
+  <property generated="never" lazy="false" name="state" type="java.lang.String">
+   <column name="State"/>
+  </property>
+  <property generated="never" lazy="false" name="city" type="java.lang.String">
+   <column name="City"/>
+  </property>
+  <property generated="never" lazy="false" name="landmarkId" type="int">
+   <column name="Landmark_ID"/>
+  </property>
+   <property generated="never" lazy="false" name="created_timestamp" type="java.sql.Timestamp">
+   <column name="created_timestamp"/>
+  </property>
+   <property generated="never" lazy="false" name="Location" type="java.lang.String">
+   <column name="Location"/>
+  </property>
+
+	<!-- DF20190110@KO369761 New columns added for the partition key and updated 
+		sources. -->
+	<property generated="never" lazy="false" name="updateSource"
+		type="java.lang.String">
+		<column name="UpdateSource" />
+	</property>
+	<property generated="never" lazy="false" name="partitionKey"
+		type="int">
+		<column name="PartitionKey" />
+	</property>
+	<property generated="never" lazy="false" name="autoClosure"
+		type="int">
+		<column name="AutoClosure" />
+	</property>
+  
+ </class>
+</hibernate-mapping>

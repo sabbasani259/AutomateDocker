@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="EngineTypeServiceService" targetNamespace="http://webservice.service.wise.remote/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://webservice.service.wise.remote/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<import namespace="http://webservice.service.wise.remote/" schemaLocation="EngineTypeServiceService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="setEngineTypeDetails">
+    <wsdl:part name="parameters" element="tns:setEngineTypeDetails">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="setEngineTypeDetailsResponse">
+    <wsdl:part name="parameters" element="tns:setEngineTypeDetailsResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="EngineTypeService">
+    <wsdl:operation name="setEngineTypeDetails">
+      <wsdl:input name="setEngineTypeDetails" message="tns:setEngineTypeDetails">
+    </wsdl:input>
+      <wsdl:output name="setEngineTypeDetailsResponse" message="tns:setEngineTypeDetailsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="EngineTypeServiceServiceSoapBinding" type="tns:EngineTypeService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="setEngineTypeDetails">
+      <soap:operation soapAction="setEngineTypeDetails" style="document"/>
+      <wsdl:input name="setEngineTypeDetails">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="setEngineTypeDetailsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="EngineTypeServiceService">
+    <wsdl:port name="EngineTypeServicePort" binding="tns:EngineTypeServiceServiceSoapBinding">
+      <soap:address location="http://localhost:9090/EngineTypeServicePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

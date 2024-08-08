@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jan 18, 2013 5:15:56 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.LandmarkDimensionEntity" table="landmark_dimension">
+        <id name="landmarkDimensionId" type="int">
+            <column name="Landmark_Dimension_ID" />
+            <generator class="assigned" />
+        </id>
+        <property name="landMarkId" type="int">
+            <column name="LandMark_ID" />
+        </property>
+        <property name="landMarkName" type="java.lang.String">
+            <column name="LandMark_Name" />
+        </property>
+        <property name="landMarkCategoryId" type="int">
+            <column name="LandMark_Category_ID" />
+        </property>
+        <property name="landMarkCategoryName" type="java.lang.String">
+            <column name="LandMark_Category_Name" />
+        </property>
+    </class>
+</hibernate-mapping>

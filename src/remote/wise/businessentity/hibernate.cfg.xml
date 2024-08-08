@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+                                         "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+	<session-factory name="HibernateSession">
+		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+		<property name="hibernate.dialect">org.hibernate.dialect.MySQLInnoDBDialect</property>
+		<!-- <property name="hibernate.connection.url">jdbc:mysql://10.106.68.8:3306/wisetest</property> -->
+		<!-- Change in db pwd for aws server -->
+		<!-- <property name="hibernate.connection.url">jdbc:mysql://10.179.12.74:3306/wise</property> -->
+		<property name="hibernate.connection.url">jdbc:mysql://10.210.196.240:3306/wise</property>
+		<!-- <property name="hibernate.connection.url">jdbc:mysql://10.106.68.10:3306/wise</property> -->
+		<!-- Change the connection properties during deployment -->
+		<property name="hibernate.connection.username">root</property>
+		<property name="current_session_context_class">thread</property>
+		<property name="hibernate.show_sql">false</property>
+		<!-- Change in db pwd for aws server -->
+		<!-- <property name="hibernate.connection.password">admin</property> -->
+		<property name="hibernate.connection.password">root@123#</property>
+		<property name="hibernate.connection.pool_size">500</property>
+		<property name="connection.autoReconnect">true</property>
+		<property name="connection.autoReconnectForPools">true</property>
+		<property name="connection.is-connection-validation-required">true</property>
+		<!-- Hibernate Connection Pooling Properties Starts -->
+		<property name="hibernate.connection.provider_class">org.hibernate.connection.C3P0ConnectionProvider</property>
+		<!-- <property name="hibernate.connection.isolation">2</property> Connection 
+			Isolation level:READ_COMMITED -->
+		<property name="hibernate.c3p0.acquire_increment">10</property>
+		<property name="hibernate.c3p0.idle_test_period">300</property>
+		<property name="hibernate.c3p0.max_statements">1000</property>
+		<property name="hibernate.c3p0.min_size">5</property>
+		<property name="hibernate.c3p0.max_size">500</property>
+		<property name="hibernate.c3p0.timeout">1000</property>
+		<property name="hibernate.c3p0.unreturnedConnectionTimeout">500</property>
+		<property name="hibernate.c3p0.debugUnreturnedConnectionStackTraces">true</property>
+		<property name="hibernate.c3p0.validate">true</property>
+		<property name="hibernate.c3p0.preferredTestQuery">select 1</property>
+		<!-- Hibernate Connection Pooling Properties Ends -->
+
+		<!-- Df20171207 Session close changes @Roopa -->
+		<property name="hibernate.cache.use_query_cache">false</property>
+		<property name="hibernate.query.startup_check">false</property>
+		<!-- <prop key="hibernate.connection.release_mode"> after_statement </property> 
+			<property name="hibernate.transaction.flush_before_completion">true</property> 
+			<property name="hibernate.transaction.auto_close_session">true</property> -->
+
+
+		<!-- Df20171207 END -->
+
+
+		<!-- DF20160316 @Roopa for session flush changes -->
+		<property name="org.hibernate.FlushMode">commit</property>
+		<mapping class="remote.wise.businessentity.ContactEntity"
+			resource="remote/wise/businessentity/ContactEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.RoleEntity"
+			resource="remote/wise/businessentity/RoleEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.ClientEntity"
+			resource="remote/wise/businessentity/ClientEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.IndustryEntity"
+			resource="remote/wise/businessentity/IndustryEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.ContactActivityLogEntity"
+			resource="remote/wise/businessentity/ContactActivityLogEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.AccountContactMapping"
+			resource="remote/wise/businessentity/AccountContactMapping.hbm.xml" />
+		<mapping class="remote.wise.businessentity.AccountEntity"
+			resource="remote/wise/businessentity/AccountEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.TenancyTypeEntity"
+			resource="remote/wise/businessentity/TenancyTypeEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.TenancyEntity"
+			resource="remote/wise/businessentity/TenancyEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.AccountTenancyMapping"
+			resource="remote/wise/businessentity/AccountTenancyMapping.hbm.xml" />
+		<mapping class="remote.wise.businessentity.CustomAssetGroupEntity"
+			resource="remote/wise/businessentity/CustomAssetGroupEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.AssetClassEntity"
+			resource="remote/wise/businessentity/AssetClassEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.AssetGroupEntity"
+			resource="remote/wise/businessentity/AssetGroupEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.AssetTypeEntity"
+			resource="remote/wise/businessentity/AssetTypeEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.CustomAssetClassEntity"
+			resource="remote/wise/businessentity/CustomAssetClassEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.AssetEntity"
+			resource="remote/wise/businessentity/AssetEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.AssetCustomGroupMapping"
+			resource="remote/wise/businessentity/AssetCustomGroupMapping.hbm.xml" />
+		<mapping class="remote.wise.businessentity.GroupUserMapping"
+			resource="remote/wise/businessentity/GroupUserMapping.hbm.xml" />
+		<mapping class="remote.wise.businessentity.AssetAccountMapping"
+			resource="remote/wise/businessentity/AssetAccountMapping.hbm.xml" />
+		<mapping class="remote.wise.businessentity.EventEntity"
+			resource="remote/wise/businessentity/EventEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.EventSubscriptionMapping"
+			resource="remote/wise/businessentity/EventSubscriptionMapping.hbm.xml" />
+		<mapping class="remote.wise.businessentity.EventActionEntity"
+			resource="remote/wise/businessentity/EventActionEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.EventTypeEntity"
+			resource="remote/wise/businessentity/EventTypeEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.PartnerRoleEntity"
+			resource="remote/wise/businessentity/PartnerRoleEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.PartnershipMapping"
+			resource="remote/wise/businessentity/PartnershipMapping.hbm.xml" />
+		<mapping class="remote.wise.businessentity.AssetEventEntity"
+			resource="remote/wise/businessentity/AssetEventEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.EventUsersEntity"
+			resource="remote/wise/businessentity/EventUsersEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.ProductEntity"
+			resource="remote/wise/businessentity/ProductEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.AssetControlUnitEntity"
+			resource="remote/wise/businessentity/AssetControlUnitEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.ControlUnitEntity"
+			resource="remote/wise/businessentity/ControlUnitEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.AssetExtendedDetailsEntity"
+			resource="remote/wise/businessentity/AssetExtendedDetailsEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.AssetMonitoringHeaderEntity"
+			resource="remote/wise/businessentity/AssetMonitoringHeaderEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.AssetMonitoringDetailEntity"
+			resource="remote/wise/businessentity/AssetMonitoringDetailEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.MonitoringParameters"
+			resource="remote/wise/businessentity/MonitoringParameters.hbm.xml" />
+		<mapping class="remote.wise.businessentity.ParameterTypeEntity"
+			resource="remote/wise/businessentity/ParameterTypeEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.IndustryStandardEntity"
+			resource="remote/wise/businessentity/IndustryStandardEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.TenancyDelegationEntity"
+			resource="remote/wise/businessentity/TenancyDelegationEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.TenancyBridgeEntity"
+			resource="remote/wise/businessentity/TenancyBridgeEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.AssetMonitoringFactDataEntity"
+			resource="remote/wise/businessentity/AssetMonitoringFactDataEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.MachineGroupDimensionEntity"
+			resource="remote/wise/businessentity/MachineGroupDimensionEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.TenancyDimensionEntity"
+			resource="remote/wise/businessentity/TenancyDimensionEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.AssetClassDimensionEntity"
+			resource="remote/wise/businessentity/AssetClassDimensionEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.AccountDimensionEntity"
+			resource="remote/wise/businessentity/AccountDimensionEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.NotificationFactEntity"
+			resource="remote/wise/businessentity/NotificationFactEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.NotificationDimensionEntity"
+			resource="remote/wise/businessentity/NotificationDimensionEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.UomMasterEntity"
+			resource="remote/wise/businessentity/UomMasterEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.AddressEntity"
+			resource="remote/wise/businessentity/AddressEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.LandmarkCategoryEntity"
+			resource="remote/wise/businessentity/LandmarkCategoryEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.LandmarkEntity"
+			resource="remote/wise/businessentity/LandmarkEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.LandmarkAssetEntity"
+			resource="remote/wise/businessentity/LandmarkAssetEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.AssetServiceScheduleEntity"
+			resource="remote/wise/businessentity/AssetServiceScheduleEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.ServiceScheduleEntity"
+			resource="remote/wise/businessentity/ServiceScheduleEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.ServiceHistoryEntity"
+			resource="remote/wise/businessentity/ServiceHistoryEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.ServiceTypeEntity"
+			resource="remote/wise/businessentity/ServiceTypeEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.AssetFaultEntity"
+			resource="remote/wise/businessentity/AssetFaultEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.ConditionsEntity"
+			resource="remote/wise/businessentity/Conditions.hbm.xml" />
+		<mapping class="remote.wise.businessentity.EventCondition"
+			resource="remote/wise/businessentity/EventCondition.hbm.xml" />
+		<mapping class="remote.wise.businessentity.LandmarkDimensionEntity"
+			resource="remote/wise/businessentity/LandmarkDimensionEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.AssetGroupProfileEntity"
+			resource="remote/wise/businessentity/AssetGroupProfileEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.PreferenceCatalogEntity"
+			resource="remote/wise/businessentity/PreferenceCatalogEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.PreferenceEntity"
+			resource="remote/wise/businessentity/PreferenceEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.CatalogValuesEntity"
+			resource="remote/wise/businessentity/CatalogValuesEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.DateDimensionEntity"
+			resource="remote/wise/businessentity/DateDimensionEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.ReportMasterListEntity"
+			resource="remote/wise/businessentity/ReportMasterListEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.ContactLoginInfoEntity"
+			resource="remote/wise/businessentity/ContactLoginInfo.hbm.xml" />
+		<mapping class="remote.wise.businessentity.SecretQuestionEntity"
+			resource="remote/wise/businessentity/SecretQuestionEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.EmailTemplateEntity"
+			resource="remote/wise/businessentity/EmailTemplateEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.SmsTemplateEntity"
+			resource="remote/wise/businessentity/SmsTemplateEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.EngineTypeEntity"
+			resource="remote/wise/businessentity/EngineTypeEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.ProductProfileEntity"
+			resource="remote/wise/businessentity/ProductProfileEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.ExtendedMonitoringParameters"
+			resource="remote/wise/businessentity/ExtendedMonitoringParameters.hbm.xml" />
+		<mapping class="remote.wise.businessentity.AssetMonitoringDetailExtended"
+			resource="remote/wise/businessentity/AssetMonitoringDetailExtended.hbm.xml" />
+		<mapping class="remote.wise.businessentity.SavedReportEntity"
+			resource="remote/wise/businessentity/SavedReportEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.RpmBands" resource="remote/wise/businessentity/RpmBands.hbm.xml" />
+		<mapping class="remote.wise.businessentity.FotaAuthenticationEntity"
+			resource="remote/wise/businessentity/FotaAuthenticationEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.FotaVersionEntity"
+			resource="remote/wise/businessentity/FotaVersionEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.LandmarkFactEntity"
+			resource="remote/wise/businessentity/LandmarkFactEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.LandmarkLogDetailsEntity"
+			resource="remote/wise/businessentity/LandmarkLogDetailsEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.ConfigAppEntity"
+			resource="remote/wise/businessentity/ConfigAppEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.RecordTypeEntity"
+			resource="remote/wise/businessentity/RecordTypeEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.FaultDetails"
+			resource="remote/wise/businessentity/FaultDetails.hbm.xml" />
+		<mapping class="remote.wise.businessentity.JobDetails"
+			resource="remote/wise/businessentity/JobDetails.hbm.xml" />
+		<mapping class="remote.wise.businessentity.FotaUpdateHistoryEntity"
+			resource="remote/wise/businessentity/FotaUpdateHistoryEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.ServiceDetailsReportEntity"
+			resource="remote/wise/businessentity/ServiceDetailsReportEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.SmsPendingEntity"
+			resource="remote/wise/businessentity/SmsPendingEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.EmailPendingEntity"
+			resource="remote/wise/businessentity/EmailPendingEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.SmsLogDetailsEntity"
+			resource="remote/wise/businessentity/SmsLogDetailsEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.BillingReportEntity"
+			resource="remote/wise/businessentity/BillingReportEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.AccountMapping"
+			resource="remote/wise/businessentity/AccountMapping.hbm.xml" />
+		<mapping class="remote.wise.businessentity.BillingReportDetailEntity"
+			resource="remote/wise/businessentity/BillingReportDetailEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.AssetMonitoringSnapshotEntity"
+			resource="remote/wise/businessentity/AssetMonitoringSnapshotEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.RegConfirmationEntity"
+			resource="remote/wise/businessentity/RegConfirmationEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.CustomerMasterEntity"
+			resource="remote/wise/businessentity/CustomerMasterEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.EALogDetailsEntity"
+			resource="remote/wise/businessentity/EALogDetailsEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.CMHRLogDetails"
+			resource="remote/wise/businessentity/CMHRLogDetails.hbm.xml" />
+		<mapping class="remote.wise.businessentity.RejectedPacketDetailsEntity"
+			resource="remote/wise/businessentity/RejectedPacketDetailsEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.EPStage2InstancesEntity"
+			resource="remote/wise/businessentity/EPStage2InstancesEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.AssetOwnerSnapshotEntity"
+			resource="remote/wise/businessentity/AssetOwnerSnapshotEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.SmsEventDetailsEntity"
+			resource="remote/wise/businessentity/SmsEventDetailsEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.SmsEventEntity"
+			resource="remote/wise/businessentity/SmsEventEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.AlertPacketDetailsEntity"
+			resource="remote/wise/businessentity/AlertPacketDetailsEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.HAJassetSnapshotEntity"
+			resource="remote/wise/businessentity/HAJassetSnapshotEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.HAJAssetLocationDetailsEntity"
+			resource="remote/wise/businessentity/HAJAssetLocationDetailsEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.HAJAssetContactSnapshotEntity"
+			resource="remote/wise/businessentity/HAJAssetContactSnapshotEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.EAFileDetailsEntity"
+			resource="remote/wise/businessentity/EAFileDetailsEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.TestimonialFeedBackEntity"
+			resource="remote/wise/businessentity/TestimonialFeedBackEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.SmsTemplateTranslatorEntity"
+			resource="remote/wise/businessentity/SmsTemplateTranslatorEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.FeedBackCountEntity"
+			resource="remote/wise/businessentity/FeedBackCountEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.JcbNewsEntity"
+			resource="remote/wise/businessentity/JcbNewsEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.LanguagesEntity"
+			resource="remote/wise/businessentity/LanguagesEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.LanguageTrackingEntity"
+			resource="remote/wise/businessentity/LanguageTrackingEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.MoolFaultDetailsEntity"
+			resource="remote/wise/businessentity/MoolFaultDetailsEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.FleetSummaryChartTempDataEntity"
+			resource="remote/wise/businessentity/FleetSummaryChartTempDataEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.CountryCodesEntity"
+			resource="remote/wise/businessentity/CountryCodesEntity.hbm.xml" />
+		<!-- @SU334449: DF20180105 - Adding new mapping resource for MOOLDA fault 
+			details entity -->
+		<mapping class="remote.wise.businessentity.MOOLDAFaultDetailsEntity"
+			resource="remote/wise/businessentity/MOOLDAFaultDetailsEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.AssetRenewalDataEntity"
+			resource="remote/wise/businessentity/AssetRenewalDataEntity.hbm.xml" />
+		<mapping class="remote.wise.businessentity.InterfaceLogDetails"
+			resource="remote/wise/businessentity/InterfaceLogDetails.hbm.xml" />
+		<mapping class="remote.wise.businessentity.InterfaceErrorCodes"
+			resource="remote/wise/businessentity/InterfaceErrorCodes.hbm.xml" />
+		<mapping class="remote.wise.businessentity.FileWiseTracking"
+			resource="remote/wise/businessentity/FileWiseTracking.hbm.xml" />
+			
+		<!-- @KO369761: DF20180323 - Adding new mapping resource for SOS Alert
+			Category entity -->
+		<mapping class="remote.wise.businessentity.SOSCategoryMasterEntity"
+			resource="remote/wise/businessentity/SOSCategoryMasterEntity.hbm.xml" />
+			
+		<!-- @KO369761: DF20180328 - Adding new mapping resource for SOS Alerts
+			History entity -->
+		<mapping class="remote.wise.businessentity.SOSAlertsHistoryEntity"
+			resource="remote/wise/businessentity/SOSAlertsHistoryEntity.hbm.xml" />
+
+		<!-- @KO369761: DF20180328 - Adding new mapping resource for service history 
+			interface tracking with multiple files -->
+		<mapping class="remote.wise.businessentity.ServiceHistoryFilesEntity"
+			resource="remote/wise/businessentity/ServiceHistoryFilesEntity.hbm.xml" />
+			
+		<!-- Abhishek: DF20190703 - Adding new Mapping resource for Custom asset group  -->	
+		<mapping class="remote.wise.businessentity.CustomAssetGroupSnapshotEntity"
+			resource="remote/wise/businessentity/CustomAssetGroupSnapshotEntity.hbm.xml" />
+
+		<mapping class="remote.wise.businessentity.CommReportEnhancedEntity"
+		resource="remote/wise/businessentity/CommReportEnhancedEntity.hbm.xml" />
+		
+		<mapping class="remote.wise.businessentity.SiteNameAssociationForMACustomerEntity"
+		resource="remote/wise/businessentity/SiteNameAssociationForMACustomerEntity.hbm.xml" />
+
+	</session-factory>
+</hibernate-configuration>

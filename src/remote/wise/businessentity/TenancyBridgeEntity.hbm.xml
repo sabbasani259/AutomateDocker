@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jan 8, 2013 4:39:26 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.TenancyBridgeEntity" table="tenancy_bridge">
+        <composite-id>
+         <key-property
+            name="childId"
+            type ="int"
+            column="Child_ID">
+         </key-property>
+         <key-property
+            name="parentId"
+            type ="int"
+            column="Parent_Id">
+         </key-property>
+      	</composite-id>
+        <property name="level" type="int">
+            <column name="Level" />
+        </property>
+        <property name="bottomFlag" type="java.lang.String">
+            <column name="Bottom_FLAG" />
+        </property>
+        <property name="topFlag" type="java.lang.String">
+            <column name="Top_FLAG" />
+        </property>
+    </class>
+</hibernate-mapping>

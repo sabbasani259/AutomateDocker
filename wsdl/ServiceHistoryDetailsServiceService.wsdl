@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="ServiceHistoryDetailsServiceService" targetNamespace="http://webservice.service.wise.remote/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://webservice.service.wise.remote/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<import namespace="http://webservice.service.wise.remote/" schemaLocation="ServiceHistoryDetailsServiceService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="SetServiceHistoryDetails">
+    <wsdl:part name="parameters" element="tns:SetServiceHistoryDetails">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GetServiceHistoryDetailsResponse">
+    <wsdl:part name="parameters" element="tns:GetServiceHistoryDetailsResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GetServiceHistoryDetails">
+    <wsdl:part name="parameters" element="tns:GetServiceHistoryDetails">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="CustomFault">
+    <wsdl:part name="CustomFault" element="tns:CustomFault">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="SetServiceHistoryDetailsResponse">
+    <wsdl:part name="parameters" element="tns:SetServiceHistoryDetailsResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="ServiceHistoryDetailsService">
+    <wsdl:operation name="SetServiceHistoryDetails">
+      <wsdl:input name="SetServiceHistoryDetails" message="tns:SetServiceHistoryDetails">
+    </wsdl:input>
+      <wsdl:output name="SetServiceHistoryDetailsResponse" message="tns:SetServiceHistoryDetailsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetServiceHistoryDetails">
+      <wsdl:input name="GetServiceHistoryDetails" message="tns:GetServiceHistoryDetails">
+    </wsdl:input>
+      <wsdl:output name="GetServiceHistoryDetailsResponse" message="tns:GetServiceHistoryDetailsResponse">
+    </wsdl:output>
+      <wsdl:fault name="CustomFault" message="tns:CustomFault">
+    </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ServiceHistoryDetailsServiceServiceSoapBinding" type="tns:ServiceHistoryDetailsService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="SetServiceHistoryDetails">
+      <soap:operation soapAction="SetServiceHistoryDetails" style="document"/>
+      <wsdl:input name="SetServiceHistoryDetails">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="SetServiceHistoryDetailsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetServiceHistoryDetails">
+      <soap:operation soapAction="GetServiceHistoryDetails" style="document"/>
+      <wsdl:input name="GetServiceHistoryDetails">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="GetServiceHistoryDetailsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="CustomFault">
+        <soap:fault name="CustomFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ServiceHistoryDetailsServiceService">
+    <wsdl:port name="ServiceHistoryDetailsServicePort" binding="tns:ServiceHistoryDetailsServiceServiceSoapBinding">
+      <soap:address location="http://localhost:9090/ServiceHistoryDetailsServicePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

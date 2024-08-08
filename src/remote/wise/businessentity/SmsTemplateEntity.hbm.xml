@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 8, 2013 11:26:05 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.SmsTemplateEntity" table="sms_template">
+        <composite-id mapped="false" unsaved-value="undefined">
+   			<key-many-to-one
+    			class="remote.wise.businessentity.EventEntity"
+   			    column="Event_ID" name="eventId"/>
+  		</composite-id>
+        <property name="smsBody" type="java.lang.String">
+            <column name="SMS_Body" />
+        </property>
+         <property name="templateId" type="java.lang.String">
+            <column name="Template_ID" />
+    	</property>
+    </class>
+   
+</hibernate-mapping>

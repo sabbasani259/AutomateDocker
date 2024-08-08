@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 8, 2012 11:31:31 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+	<class name="remote.wise.businessentity.EngineTypeEntity" table="engine_type">
+	<id name="engineTypeId" type="int">
+   <column default="0" name="Engine_Type_id"/>
+   <generator class="identity"/>
+  </id>
+  <property generated="never" lazy="false" name="engineTypeName" type="java.lang.String">
+   <column name="Engine_Type_Name"/>
+  </property>
+   <property generated="never" lazy="false" name="engineTypeCode" type="java.lang.String">
+   <column name="Engine_Type_Code"/>
+  </property>
+  </class>
+</hibernate-mapping>

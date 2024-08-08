@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 26, 2014 2:37:08 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.EPStage2InstancesEntity" table="ep_stage2_instances">
+        <id name="nodeName" type="java.lang.String">
+            <column name="Node_Name" />
+            <generator class="assigned" />
+        </id>
+        <property name="serverIP" type="java.lang.String">
+            <column name="Server_IP" />
+        </property>
+        <property name="status" type="int">
+            <column name="Status" />
+        </property>
+    </class>
+</hibernate-mapping>

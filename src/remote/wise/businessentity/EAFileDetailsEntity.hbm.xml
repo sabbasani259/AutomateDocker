@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 15, 2015 12:14:25 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.EAFileDetailsEntity" table="ea_file_details">
+        <id name="Serial_Number" type="java.lang.String">
+            <column name="Machine_Number" />
+            <generator class="assigned" />
+        </id>
+        <property name="JCBRollOff" type="java.lang.String">
+            <column name="JCBRollOff" />
+        </property>
+        <property name="AssetPersonality" type="java.lang.String">
+            <column name="AssetPersonality" />
+        </property>
+        <property name="AssetGateOut" type="java.lang.String">
+            <column name="AssetGateOut" />
+        </property>
+        <property name="SaleFromD2C" type="java.lang.String">
+            <column name="SaleFromD2C" />
+        </property>
+        <property name="ServiceHistory" type="java.lang.String">
+            <column name="ServiceHistory" />
+        </property>
+        <property name="PrimaryDealerTransfer" type="java.lang.String">
+            <column name="PrimaryDealerTransfer" />
+        </property>
+        <property name="AssetInstallationDetails" type="java.lang.String">
+            <column name="AssetInstallationDetails" />
+        </property>
+    </class>
+</hibernate-mapping>

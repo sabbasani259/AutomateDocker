@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Mar 25, 2014 11:39:15 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.AccountMapping" table="account_mapping">
+       	<composite-id mapped="false" unsaved-value="undefined">
+   			<key-property name="eccAccCode" type="java.lang.String">
+   				<column name="ECC_Code"/>
+   			</key-property>
+   			<key-property name="crmAccCode" type="java.lang.String">
+   				<column name="CRM_Code"/>
+   			</key-property>
+  		</composite-id>
+        <property name="llAccCode" type="java.lang.String">
+            <column name="LL_Code" />
+        </property>
+        <property name="eccAccName" type="java.lang.String">
+            <column name="ECC_Account_Name" />
+        </property>
+    </class>
+</hibernate-mapping>

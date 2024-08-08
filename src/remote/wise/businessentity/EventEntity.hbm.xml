@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 12, 2012 11:17:38 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+ <class name="remote.wise.businessentity.EventEntity" table="business_event">
+  <id name="eventId" type="int">
+   <column default="0" name="Event_ID"/>
+   <generator class="identity"/>
+  </id>
+  <many-to-one class="remote.wise.businessentity.EventTypeEntity"
+   fetch="join" lazy="false" name="eventTypeId">
+   <column name="Event_Type_ID"/>
+  </many-to-one>
+  <property generated="never" lazy="false" name="eventDescription" type="java.lang.String">
+   <column name="Event_Description"/>
+  </property>
+  <property generated="never" lazy="false" name="frequency" type="int">
+   <column name="Frequency"/>
+  </property>
+  <property generated="never" lazy="false" name="UOM" type="java.lang.String">
+   <column name="UOM"/>
+  </property>
+  <property generated="never" lazy="false" name="eventName" type="java.lang.String">
+   <column name="Event_Name"/>
+  </property>
+  <property access="field" generated="never" lazy="false" name="isSms" type="boolean">
+   <column name="IsSMS"/>
+  </property>
+  <property access="field" generated="never" lazy="false" name="isEmail" type="boolean">
+   <column name="IsEmail"/>
+  </property>
+  <property generated="never" lazy="false" name="eventSeverity" type="java.lang.String">
+   <column name="Event_Severity"/>
+  </property>
+   <property generated="never" lazy="false" name="eventCode" type="java.lang.String">
+   <column name="Alert_Code"/>
+  </property>
+  <property generated="never" lazy="false" name="parameterID" type="int">
+   <column name="Parameter_ID"/>
+  </property>
+ </class>
+</hibernate-mapping>

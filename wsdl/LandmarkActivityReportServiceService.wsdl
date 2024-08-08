@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="LandmarkActivityReportServiceService" targetNamespace="http://webservice.service.wise.remote/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://webservice.service.wise.remote/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<import namespace="http://webservice.service.wise.remote/" schemaLocation="LandmarkActivityReportServiceService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="GetLandmarkActivityReport">
+    <wsdl:part name="parameters" element="tns:GetLandmarkActivityReport">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GetLandmarkActivityReportResponse">
+    <wsdl:part name="parameters" element="tns:GetLandmarkActivityReportResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="LandmarkActivityReportService">
+    <wsdl:operation name="GetLandmarkActivityReport">
+      <wsdl:input name="GetLandmarkActivityReport" message="tns:GetLandmarkActivityReport">
+    </wsdl:input>
+      <wsdl:output name="GetLandmarkActivityReportResponse" message="tns:GetLandmarkActivityReportResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="LandmarkActivityReportServiceServiceSoapBinding" type="tns:LandmarkActivityReportService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="GetLandmarkActivityReport">
+      <soap:operation soapAction="GetLandmarkActivityReport" style="document"/>
+      <wsdl:input name="GetLandmarkActivityReport">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="GetLandmarkActivityReportResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="LandmarkActivityReportServiceService">
+    <wsdl:port name="LandmarkActivityReportServicePort" binding="tns:LandmarkActivityReportServiceServiceSoapBinding">
+      <soap:address location="http://localhost:9090/LandmarkActivityReportServicePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

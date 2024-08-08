@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2014 6:23:14 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.CustomerMasterEntity" table="customer_master">
+        <id name="customerCode" type="java.lang.String">
+            <column name="Customer_Code" />
+            <generator class="assigned" />
+        </id>
+        <property name="customerdetail" type="java.lang.String">
+            <column name="Customer_Detail" />
+        </property>
+        <property name="processFlag" type="int">
+            <column name="Process_Flag" />
+        </property>
+        <!-- SU334449: Property mapping for dealerCode -->
+		<property name="dealerCode" type="java.lang.String">
+			<column name="DealerECC_Code" />
+		</property>
+    </class>
+</hibernate-mapping>

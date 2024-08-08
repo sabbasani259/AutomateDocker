@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 17, 2012 3:39:48 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.EventSubscriptionMapping" table="event_subscription">
+  		<composite-id>
+         <key-many-to-one
+            name="contactId"
+            class="remote.wise.businessentity.ContactEntity"
+            column="Contact_ID">
+         </key-many-to-one>
+         <key-many-to-one
+            name="serialNumber"
+            class="remote.wise.businessentity.AssetEntity"
+            column="Serial_Number">
+         </key-many-to-one>
+         </composite-id>
+         <property generated="never" lazy="false" name="priority" type="int">
+   			<column name="priority"/>
+  		</property>
+    </class>
+</hibernate-mapping>

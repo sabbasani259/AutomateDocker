@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 24, 2012 10:06:33 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.UomMasterEntity" table="uom_master">
+        <id name="uomMasterId" type="int">
+            <column default="0" name="UOM_Master_Id" />
+            <generator class="identity" />
+        </id>
+        <property name="baseUnit" type="java.lang.String">
+            <column name="Base_Unit" />
+        </property>
+        <property name="receivedUnit" type="java.lang.String">
+            <column name="Received_Unit" />
+        </property>
+        <property name="conversionFactor" type="double">
+            <column name="Conversion_Factor" />
+        </property>
+    </class>
+</hibernate-mapping>

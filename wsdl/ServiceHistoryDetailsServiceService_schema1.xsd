@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://webservice.service.wise.remote/" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://webservice.service.wise.remote/">
+  <xs:element name="GetServiceHistoryDetails" type="tns:GetServiceHistoryDetails"/>
+  <xs:element name="GetServiceHistoryDetailsResponse" type="tns:GetServiceHistoryDetailsResponse"/>
+  <xs:element name="SetServiceHistoryDetails" type="tns:SetServiceHistoryDetails"/>
+  <xs:element name="SetServiceHistoryDetailsResponse" type="tns:SetServiceHistoryDetailsResponse"/>
+  <xs:complexType name="SetServiceHistoryDetails">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="serialNumber" type="xs:string"/>
+      <xs:element minOccurs="0" name="dealerCode" type="xs:string"/>
+      <xs:element minOccurs="0" name="jobCardNumber" type="xs:string"/>
+      <xs:element minOccurs="0" name="dbmsPartCode" type="xs:string"/>
+      <xs:element minOccurs="0" name="servicedDate" type="xs:string"/>
+      <xs:element minOccurs="0" name="messageId" type="xs:string"/>
+      <xs:element minOccurs="0" name="fileRef" type="xs:string"/>
+      <xs:element minOccurs="0" name="process" type="xs:string"/>
+      <xs:element minOccurs="0" name="reprocessJobCode" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SetServiceHistoryDetailsResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="GetServiceHistoryDetails">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="tns:serviceHistoryReqContract"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="serviceHistoryReqContract">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="serialNumber" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="GetServiceHistoryDetailsResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:serviceHistoryRespContract"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="serviceHistoryRespContract">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="jobCardNumber" type="xs:string"/>
+      <xs:element minOccurs="0" name="scheduleName" type="xs:string"/>
+      <xs:element minOccurs="0" name="serviceDate" type="xs:string"/>
+      <xs:element minOccurs="0" name="serviceName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="CustomFault" nillable="true" type="xs:string"/>
+</xs:schema>

@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 29, 2012 3:49:52 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.AssetServiceScheduleEntity" table="asset_service_schedule">
+        <id name="assetServiceScheduleId" type="int">
+            <column name="Asset_Svc_Schd_Id"  default="0"/>
+            <generator class="identity" />
+        </id>
+        <many-to-one name="serialNumber" class="remote.wise.businessentity.AssetEntity" fetch="join">
+            <column name="SerialNumber" />
+        </many-to-one>
+        <many-to-one name="serviceScheduleId" class="remote.wise.businessentity.ServiceScheduleEntity" fetch="join">
+            <column name="Service_Schedule_Id" />
+        </many-to-one>
+        <property name="scheduledDate" type="java.sql.Timestamp">
+            <column name="Scheduled_Date" />
+        </property>
+        <property generated="never" lazy="false" name="engineHoursSchedule" type="long">
+   			<column name="EngineHours_Schedule"/>
+ 		</property>
+        <many-to-one name="dealerId" class="remote.wise.businessentity.AccountEntity" fetch="join">
+            <column name="Dealer_Id" />
+        </many-to-one>
+        <property generated="never" lazy="false" name="alertGenFlag" type="int">
+   			<column name="alert_gen_flag"/>
+ 		</property>
+    </class>
+</hibernate-mapping>

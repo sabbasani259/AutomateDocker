@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 18, 2012 8:07:43 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+ <class name="remote.wise.businessentity.AssetAccountMapping" table="asset_owners">
+  <composite-id mapped="false" unsaved-value="undefined">
+   <key-many-to-one class="remote.wise.businessentity.AccountEntity"
+    column="Account_ID" name="accountId"/>
+   <key-many-to-one class="remote.wise.businessentity.AssetEntity"
+    column="Serial_Number" name="serialNumber"/>
+   <key-property name="ownershipStartDate" type="java.util.Date">
+    <column name="Ownership_Start_Date"/>
+   </key-property>
+  </composite-id>
+ </class>
+</hibernate-mapping>

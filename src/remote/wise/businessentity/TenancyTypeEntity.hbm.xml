@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 29, 2012 11:32:25 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.TenancyTypeEntity" table="tenancy_type">
+        <id name="tenancy_type_id" type="int">
+            <column default="1" name="Tenancy_Type_ID" />
+            <generator  class="identity" />
+        </id>
+        <property name="tenancy_type_name" type="java.lang.String">
+            <column name="Tenancy_Type_Name" />
+        </property>
+         <set lazy="true" name="tenancy_list" sort="unsorted" table="tenancy">
+   			<key>
+    			<column name="tenancy_type_id"/>
+   			</key>
+   			<one-to-many class="remote.wise.businessentity.TenancyEntity"/>
+  		</set>
+    </class>
+</hibernate-mapping>

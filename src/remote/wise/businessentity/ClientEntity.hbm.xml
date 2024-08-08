@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 29, 2012 11:44:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+ <class name="remote.wise.businessentity.ClientEntity" table="clients">
+  <id name="client_id" type="int">
+   <column default="1" name="Client_ID"/>
+   <generator class="identity"/>
+  </id>
+  <property generated="never" lazy="false" name="client_name" type="java.lang.String">
+   <column name="Client_Name"/>
+  </property>
+  <set lazy="true" name="contact_list" sort="unsorted" table="contact">
+   <key>
+    <column name="Client_ID"/>
+   </key>
+   <one-to-many class="remote.wise.businessentity.ContactEntity"/>
+  </set>
+  <set lazy="true" name="role_list" sort="unsorted" table="role">
+   <key>
+    <column name="Client_ID"/>
+   </key>
+   <one-to-many class="remote.wise.businessentity.RoleEntity"/>
+  </set>
+  <set lazy="true" name="account_list" sort="unsorted" table="account">
+   <key>
+    <column name="Client_ID"/>
+   </key>
+   <one-to-many class="remote.wise.businessentity.AccountEntity"/>
+  </set>
+  <set lazy="true" name="tenancy_list" sort="unsorted" table="tenancy">
+   <key>
+    <column name="Client_ID"/>
+   </key>
+   <one-to-many class="remote.wise.businessentity.TenancyEntity"/>
+  </set>
+  <set lazy="true" name="custom_asset_group_list" sort="unsorted" table="custom_asset_group">
+   <key>
+    <column name="Client_ID"/>
+   </key>
+   <one-to-many class="remote.wise.businessentity.CustomAssetGroupEntity"/>
+  </set>
+  <set lazy="true" name="asset_class_list" sort="unsorted" table="asset_class">
+   <key>
+    <column name="Client_ID"/>
+   </key>
+   <one-to-many class="remote.wise.businessentity.AssetClassEntity"/>
+  </set>
+  <set lazy="true" name="asset_type_list" sort="unsorted" table="asset_type">
+   <key>
+    <column name="Client_ID"/>
+   </key>
+   <one-to-many class="remote.wise.businessentity.AssetTypeEntity"/>
+  </set>
+  <set lazy="true" name="asset_group_list" sort="unsorted" table="asset_group">
+   <key>
+    <column name="Client_ID"/>
+   </key>
+   <one-to-many class="remote.wise.businessentity.AssetGroupEntity"/>
+  </set>
+  
+ 
+  
+ </class>
+ 
+</hibernate-mapping>

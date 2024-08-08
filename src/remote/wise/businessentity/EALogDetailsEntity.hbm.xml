@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 11, 2014 2:58:14 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.EALogDetailsEntity" table="ea_log_details">
+        <id name="fileName" type="java.lang.String">
+            <column name="File_Name" />
+            <generator class="assigned" />
+        </id>
+        <property name="process" type="java.lang.String">
+            <column name="Process" />
+        </property>
+        <property name="processedTimestamp" type="java.sql.Timestamp">
+            <column name="Processed_Timestamp" />
+        </property>
+        <property name="noOfRecords" type="int">
+            <column name="No_Of_Records" />
+        </property>
+    </class>
+</hibernate-mapping>

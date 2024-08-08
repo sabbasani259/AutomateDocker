@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="MasterServiceScheduleService" targetNamespace="http://webservice.service.wise.remote/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://webservice.service.wise.remote/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<import namespace="http://webservice.service.wise.remote/" schemaLocation="MasterServiceScheduleService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="setMasterServiceScheduleDetailsResponse">
+    <wsdl:part name="parameters" element="tns:setMasterServiceScheduleDetailsResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GetMasterServiceScheduleResponse">
+    <wsdl:part name="parameters" element="tns:GetMasterServiceScheduleResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="setMasterServiceScheduleDetails">
+    <wsdl:part name="parameters" element="tns:setMasterServiceScheduleDetails">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GetMasterServiceSchedule">
+    <wsdl:part name="parameters" element="tns:GetMasterServiceSchedule">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="CustomFault">
+    <wsdl:part name="CustomFault" element="tns:CustomFault">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="MasterServiceSchedule">
+    <wsdl:operation name="GetMasterServiceSchedule">
+      <wsdl:input name="GetMasterServiceSchedule" message="tns:GetMasterServiceSchedule">
+    </wsdl:input>
+      <wsdl:output name="GetMasterServiceScheduleResponse" message="tns:GetMasterServiceScheduleResponse">
+    </wsdl:output>
+      <wsdl:fault name="CustomFault" message="tns:CustomFault">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="setMasterServiceScheduleDetails">
+      <wsdl:input name="setMasterServiceScheduleDetails" message="tns:setMasterServiceScheduleDetails">
+    </wsdl:input>
+      <wsdl:output name="setMasterServiceScheduleDetailsResponse" message="tns:setMasterServiceScheduleDetailsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="MasterServiceScheduleServiceSoapBinding" type="tns:MasterServiceSchedule">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="GetMasterServiceSchedule">
+      <soap:operation soapAction="GetMasterServiceSchedule" style="document"/>
+      <wsdl:input name="GetMasterServiceSchedule">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="GetMasterServiceScheduleResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="CustomFault">
+        <soap:fault name="CustomFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="setMasterServiceScheduleDetails">
+      <soap:operation soapAction="setMasterServiceScheduleDetails" style="document"/>
+      <wsdl:input name="setMasterServiceScheduleDetails">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="setMasterServiceScheduleDetailsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="MasterServiceScheduleService">
+    <wsdl:port name="MasterServiceSchedulePort" binding="tns:MasterServiceScheduleServiceSoapBinding">
+      <soap:address location="http://localhost:9090/MasterServiceSchedulePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

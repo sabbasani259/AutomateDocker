@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<!DOCTYPE
+ hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd"
+	>
+<!-- Generated Oct 28, 2012 2:59:34 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+	<class name="remote.wise.businessentity.SOSAlertsHistoryEntity"
+		table="SOS_Alerts_History">
+		<id name="updateId" type="int">
+			<column default="0" name="update_id" />
+			<generator class="identity" />
+		</id>
+		<property generated="never" lazy="false" name="comments"
+			type="java.lang.String">
+			<column name="comments" />
+		</property>
+		<property generated="never" lazy="false" name="updatedTime"
+			type="java.sql.Timestamp">
+			<column name="updated_time" />
+		</property>
+		<property generated="never" lazy="false" name="assetEventId"
+			type="int">
+			<column name="asset_event_id" />
+		</property>		
+		<many-to-one class="remote.wise.businessentity.ContactEntity"
+			fetch="join" lazy="false" name="updatedBy">
+			<column name="updated_by" />
+		</many-to-one>
+		<!-- CR300.sn -->
+		<property generated="never" lazy="false" name="serialNumber" type="java.lang.String">
+   <column name="Serial_Number"/>
+   </property>
+		<property generated="never" lazy="false" name="category" type="java.lang.String">
+   <column name="Category"/>
+   </property>
+     <property generated="never" lazy="false" name="alertCategory" type="java.lang.String">
+   <column name="Alert_Category"/>
+   </property>
+      <property generated="never" lazy="false" name="alert" type="java.lang.String">
+   <column name="Alert"/>
+   </property>
+      <property generated="never" lazy="false" name="cmh" type="java.lang.String">
+   <column name="CMH"/>
+   </property>
+        <property generated="never" lazy="false" name="alertDescription" type="java.lang.String">
+   <column name="Alert_Description"/>
+   </property>
+       <property generated="never" lazy="false" name="resolutionTime" type="java.lang.String">
+   <column name="Resolution_Time"/>
+   </property>
+   <property generated="never" lazy="false" name="alertSeverity" type="java.lang.String">
+   <column name="Alert_Severity"/>
+   </property>
+   <property generated="never" lazy="false" name="partitionKey" type="java.lang.String">
+   <column name="partitionKey"/>
+   </property>
+    <property generated="never" lazy="false" name="alertGenerationTime" type="java.sql.Timestamp">
+   <column name="Alert_Generation_Time"/>
+  </property>
+   <property generated="never" lazy="false" name="alertClosureTime" type="java.sql.Timestamp">
+   <column name="Alert_Closure_Time"/>
+  </property>
+   <!-- CR300.en -->
+	</class>
+</hibernate-mapping>

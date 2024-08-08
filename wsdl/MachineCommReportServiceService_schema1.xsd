@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://webservice.service.wise.remote/" targetNamespace="http://webservice.service.wise.remote/" version="1.0">
+<xs:element name="getMachineCommReport" type="tns:getMachineCommReport"/>
+<xs:element name="getMachineCommReportResponse" type="tns:getMachineCommReportResponse"/>
+<xs:complexType name="getMachineCommReport">
+    <xs:sequence/>
+  </xs:complexType>
+<xs:complexType name="getMachineCommReportResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:machineCommReportRespContract"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="machineCommReportRespContract">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="city" type="xs:string"/>
+      <xs:element name="dealerAccountId" type="xs:int"/>
+      <xs:element minOccurs="0" name="dealerCode" type="xs:string"/>
+      <xs:element minOccurs="0" name="dealerName" type="xs:string"/>
+      <xs:element minOccurs="0" name="fwVersion" type="xs:string"/>
+      <xs:element minOccurs="0" name="machineHours" type="xs:string"/>
+      <xs:element minOccurs="0" name="ownerName" type="xs:string"/>
+      <xs:element minOccurs="0" name="pktCreatedTimestamp" type="xs:string"/>
+      <xs:element minOccurs="0" name="pktReceivedDate" type="xs:string"/>
+      <xs:element minOccurs="0" name="pktReceivedTimestamp" type="xs:string"/>
+      <xs:element minOccurs="0" name="rolledOffDate" type="xs:string"/>
+      <xs:element minOccurs="0" name="serialNumber" type="xs:string"/>
+      <xs:element minOccurs="0" name="state" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

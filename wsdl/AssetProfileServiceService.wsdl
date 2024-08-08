@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="AssetProfileServiceService" targetNamespace="http://webservice.service.wise.remote/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://webservice.service.wise.remote/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<import namespace="http://webservice.service.wise.remote/" schemaLocation="AssetProfileServiceService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="setAssetProfileDetailsResponse">
+    <wsdl:part name="parameters" element="tns:setAssetProfileDetailsResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="setAssetProfileDetails">
+    <wsdl:part name="parameters" element="tns:setAssetProfileDetails">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="AssetProfileService">
+    <wsdl:operation name="setAssetProfileDetails">
+      <wsdl:input name="setAssetProfileDetails" message="tns:setAssetProfileDetails">
+    </wsdl:input>
+      <wsdl:output name="setAssetProfileDetailsResponse" message="tns:setAssetProfileDetailsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="AssetProfileServiceServiceSoapBinding" type="tns:AssetProfileService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="setAssetProfileDetails">
+      <soap:operation soapAction="setAssetProfileDetails" style="document"/>
+      <wsdl:input name="setAssetProfileDetails">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="setAssetProfileDetailsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="AssetProfileServiceService">
+    <wsdl:port name="AssetProfileServicePort" binding="tns:AssetProfileServiceServiceSoapBinding">
+      <soap:address location="http://localhost:9090/AssetProfileServicePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

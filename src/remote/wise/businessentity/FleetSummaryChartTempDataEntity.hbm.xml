@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+	<!DOCTYPE
+ hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="remote.wise.businessentity.FleetSummaryChartTempDataEntity"
+		table="fleet_summary_chart_tempdata">
+		<id name="accountId" type="int">
+			<column default="0" name="account_id" />
+			<generator class="assigned" />
+		</id>
+		<property generated="never" lazy="false" name="timeStamp" type="java.lang.String">
+			<column name="time_stamp"/>
+		</property>
+		<property generated="never" lazy="false" name="engineOffHours"
+			type="java.lang.Double">
+			<column name="engine_off_hours" />
+		</property>
+		<property generated="never" lazy="false" name="engineIdleHours"
+			type="java.lang.Double">
+			<column name="engine_idle_hours" />
+		</property>
+		<property generated="never" lazy="false" name="engineWorkingHours"
+			type="java.lang.Double">
+			<column name="engine_working_hours" />
+		</property>
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 8, 2012 12:55:13 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.AssetControlUnitEntity" table="asset_control_unit">
+        <id name="serialNumber" type="java.lang.String">
+            <column name="Serial_Number" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="controlUnitId" class="remote.wise.businessentity.ControlUnitEntity" fetch="join">
+            <column name="Control_Unit_ID" />
+        </many-to-one>
+        <property name="simNo" type="java.lang.String">
+            <column name="SIM_No" />
+        </property>
+        <property name="iccidNo" type="java.lang.String">
+            <column name="ICCID" />
+        </property>
+        <property name="imeiNo" type="java.lang.String">
+            <column name="IMEI_Number" />
+        </property>
+        <property generated="never" lazy="false" name="registrationDate" type="java.sql.Timestamp">
+  			 <column name="Registration_Date"/>
+  		</property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 4, 2012 4:21:18 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping default-access="field">
+ <class name="remote.wise.businessentity.AssetEntity" table="asset">
+  <composite-id mapped="false" unsaved-value="undefined">
+   <key-many-to-one
+    class="remote.wise.businessentity.AssetControlUnitEntity"
+    column="Serial_Number" name="serial_number"/>
+  </composite-id>
+  <property generated="never" lazy="false" name="primary_owner_id" type="int">
+   <column name="Primary_Owner_ID"/>
+  </property>
+  <property generated="never" lazy="false" name="nick_name" type="java.lang.String">
+   <column name="Engine_Number"/>
+  </property>
+  <property generated="never" lazy="false" name="description" type="java.lang.String">
+   <column name="Description"/>
+  </property>
+  <property generated="never" lazy="false" name="chasisNumber" type="java.lang.String">
+   <column name="Chasis_Number"/>
+  </property>
+  <property generated="never" lazy="false" name="purchase_date" type="java.sql.Timestamp">
+   <column name="Purchase_Date"/>
+  </property>
+  <property generated="never" lazy="false" name="install_date" type="java.sql.Timestamp">
+   <column name="Install_Date"/>
+  </property>
+  <property generated="never" lazy="false" name="sale_Date" 	type="java.sql.Timestamp">
+			<column name="sale_Date" />
+  </property>
+  <property generated="never" lazy="false" name="active_status" type="java.lang.Boolean">
+   <column name="Status"/>
+  </property>
+  <property generated="never" lazy="false" name="make" type="java.lang.String">
+   <column name="Make"/>
+  </property>
+  <property generated="never" lazy="false" name="machineNumber" type="java.lang.String">
+   <column name="Machine_Number"/>
+  </property>
+  <property generated="never" lazy="false" name="dateTime" type="java.sql.Timestamp">
+   <column name="Rolloff_Date"/>
+  </property>
+  <property generated="never" lazy="false" name="transferDate" type="java.sql.Timestamp">
+   <column name="Transfer_Date"/>
+  </property>
+  <property generated="never" lazy="false" name="segmentId" type="int">
+   <column name="Segment_ID"/>
+  </property>
+  <!-- DF20170801: SU334449 - Inserting new column timeZone for SAARC machines -->
+  <property generated="never" lazy="false" name="timeZone" type="java.lang.String">
+   <column name="TimeZone"/>
+  </property>
+  <property generated="never" lazy="false" name="renewal_flag" type="int">
+   <column name="Renewal_Flag"/>
+  </property>
+  <property generated="never" lazy="false" name="renewal_date" type="java.sql.Timestamp">
+   <column name="Renewal_Date"/>
+  </property>
+  <!--DF20180305: @Mani adding new column as a retrofitment machines flag  -->
+  <property generated="never" lazy="false" name="retrofitFlag" type="int">
+   <column name="Retrofit_Flag"/>
+  </property>
+  <!-- Df20171218 @Roopa adding new column country cide for map service changes -->
+  <property generated="never" lazy="false" name="countrycode" type="java.lang.String">
+   <column name="country_code"/>
+  </property>
+  <!-- DF20191109:Abhishek::Add extendedWarrantyFlag for extended Warranty. -->
+  <property generated="never" lazy="false" name="extendedWarrantyFlag" type="int">
+   <column name="extended_warranty_flag"/>
+  </property>
+   <property generated="never" lazy="false" name="extendedWarrantyType" type="java.lang.String">
+	<column name="Extended_Warranty_Type" />
+	</property>
+	<property generated="never" lazy="false" name="PremFlag" type="int">
+	<column name="PremFlag" />
+	</property>
+  <many-to-one class="remote.wise.businessentity.ClientEntity"
+   fetch="join" name="client_id">
+   <column name="Client_ID"/>
+  </many-to-one>
+  <many-to-one class="remote.wise.businessentity.ProductEntity"
+   fetch="join" lazy="false" name="productId">
+   <column name="Product_ID"/>
+  </many-to-one>
+  <many-to-one class="remote.wise.businessentity.SiteNameAssociationForMACustomerEntity"
+   fetch="join"  name="siteId">
+   <column name="SiteId"/>
+  </many-to-one>
+ </class>
+</hibernate-mapping>

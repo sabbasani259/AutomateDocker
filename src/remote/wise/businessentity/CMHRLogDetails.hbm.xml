@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 29, 2014 4:49:36 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.CMHRLogDetails" table="cmhr_log_details">
+        <id name="cmhr_log_id" type="int">
+            <column name="CMHR_LOG_ID" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="serial_number" class="remote.wise.businessentity.AssetEntity" fetch="join">
+            <column name="Serial_Number" />
+        </many-to-one>
+        <property name="application_timestamp" type="java.sql.Timestamp">
+            <column name="Application_Timestamp" />
+        </property>
+        <property name="firmware_timestamp" type="java.sql.Timestamp">
+            <column name="Firmware_Updated_Timestamp" />
+        </property>
+        <many-to-one name="cmhr_loginID" class="remote.wise.businessentity.ContactEntity" fetch="join">
+            <column name="Contact_ID" />
+        </many-to-one>
+        <property name="refreshCHM" type="java.lang.String">
+            <column name="Refresh_CMHR" />
+        </property>
+        <property name="cmhrflag" type="java.lang.String">
+            <column name="CMHR_Flag" />
+        </property>
+        <property name="previousCMHR" type="java.lang.String">
+            <column name="Previous_CMHR" />
+        </property>
+    </class>
+</hibernate-mapping>

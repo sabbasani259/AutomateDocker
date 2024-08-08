@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="MachineCommReportServiceService" targetNamespace="http://webservice.service.wise.remote/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://webservice.service.wise.remote/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<import namespace="http://webservice.service.wise.remote/" schemaLocation="MachineCommReportServiceService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="getMachineCommReportResponse">
+    <wsdl:part name="parameters" element="tns:getMachineCommReportResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getMachineCommReport">
+    <wsdl:part name="parameters" element="tns:getMachineCommReport">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="MachineCommReportService">
+    <wsdl:operation name="getMachineCommReport">
+      <wsdl:input name="getMachineCommReport" message="tns:getMachineCommReport">
+    </wsdl:input>
+      <wsdl:output name="getMachineCommReportResponse" message="tns:getMachineCommReportResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="MachineCommReportServiceServiceSoapBinding" type="tns:MachineCommReportService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="getMachineCommReport">
+      <soap:operation soapAction="getMachineCommReport" style="document"/>
+      <wsdl:input name="getMachineCommReport">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getMachineCommReportResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="MachineCommReportServiceService">
+    <wsdl:port name="MachineCommReportServicePort" binding="tns:MachineCommReportServiceServiceSoapBinding">
+      <soap:address location="http://localhost:9090/MachineCommReportServicePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

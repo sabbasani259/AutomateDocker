@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="PrimaryDealerTransferServiceService" targetNamespace="http://webservice.service.wise.remote/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://webservice.service.wise.remote/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<import namespace="http://webservice.service.wise.remote/" schemaLocation="PrimaryDealerTransferServiceService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="primaryDealerTransfer">
+    <wsdl:part name="parameters" element="tns:primaryDealerTransfer">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="primaryDealerTransferResponse">
+    <wsdl:part name="parameters" element="tns:primaryDealerTransferResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="PrimaryDealerTransferService">
+    <wsdl:operation name="primaryDealerTransfer">
+      <wsdl:input name="primaryDealerTransfer" message="tns:primaryDealerTransfer">
+    </wsdl:input>
+      <wsdl:output name="primaryDealerTransferResponse" message="tns:primaryDealerTransferResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="PrimaryDealerTransferServiceServiceSoapBinding" type="tns:PrimaryDealerTransferService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="primaryDealerTransfer">
+      <soap:operation soapAction="primaryDealerTransfer" style="document"/>
+      <wsdl:input name="primaryDealerTransfer">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="primaryDealerTransferResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="PrimaryDealerTransferServiceService">
+    <wsdl:port name="PrimaryDealerTransferServicePort" binding="tns:PrimaryDealerTransferServiceServiceSoapBinding">
+      <soap:address location="http://localhost:9090/PrimaryDealerTransferServicePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

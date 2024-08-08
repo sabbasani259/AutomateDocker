@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="AssetDashboardServiceService" targetNamespace="http://webservice.service.wise.remote/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://webservice.service.wise.remote/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<import namespace="http://webservice.service.wise.remote/" schemaLocation="AssetDashboardServiceService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="GetAssetDashboardDetailsResponse">
+    <wsdl:part name="parameters" element="tns:GetAssetDashboardDetailsResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GetAssetDashboardDetails">
+    <wsdl:part name="parameters" element="tns:GetAssetDashboardDetails">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="CustomFault">
+    <wsdl:part name="CustomFault" element="tns:CustomFault">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="AssetDashboardService">
+    <wsdl:operation name="GetAssetDashboardDetails">
+      <wsdl:input name="GetAssetDashboardDetails" message="tns:GetAssetDashboardDetails">
+    </wsdl:input>
+      <wsdl:output name="GetAssetDashboardDetailsResponse" message="tns:GetAssetDashboardDetailsResponse">
+    </wsdl:output>
+      <wsdl:fault name="CustomFault" message="tns:CustomFault">
+    </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="AssetDashboardServiceServiceSoapBinding" type="tns:AssetDashboardService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="GetAssetDashboardDetails">
+      <soap:operation soapAction="GetAssetDashboardDetails" style="document"/>
+      <wsdl:input name="GetAssetDashboardDetails">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="GetAssetDashboardDetailsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="CustomFault">
+        <soap:fault name="CustomFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="AssetDashboardServiceService">
+    <wsdl:port name="AssetDashboardServicePort" binding="tns:AssetDashboardServiceServiceSoapBinding">
+      <soap:address location="http://localhost:9090/AssetDashboardServicePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

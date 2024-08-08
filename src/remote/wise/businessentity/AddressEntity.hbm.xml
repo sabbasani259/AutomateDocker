@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+	<!DOCTYPE
+ hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd"
+	>
+	<!-- Generated Jan 2, 2013 10:39:43 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+	<class name="remote.wise.businessentity.AddressEntity" table="address">
+		<id name="AddressId" type="int">
+			<column default="0" name="Address_ID"/>
+			<generator class="identity"/>
+		</id>
+		<property generated="never" lazy="false" name="addressLine1" type="java.lang.String">
+			<column name="AddressLine1"/>
+		</property>
+		<property generated="never" lazy="false" name="addressLine2" type="java.lang.String">
+			<column name="AddressLine2"/>
+		</property>
+		<property generated="never" lazy="false" name="country" type="java.lang.String">
+			<column name="Country"/>
+		</property>
+		<property generated="never" lazy="false" name="state" type="java.lang.String">
+			<column name="State"/>
+		</property>
+		<property generated="never" lazy="false" name="city" type="java.lang.String">
+			<column name="City"/>
+		</property>
+		<property generated="never" lazy="false" name="zipCode" type="java.lang.String">
+			<column name="ZipCode"/>
+		</property>
+		<property generated="never" lazy="false" name="zone" type="java.lang.String">
+			<column name="Zone"/>
+		</property>
+	</class>
+</hibernate-mapping>

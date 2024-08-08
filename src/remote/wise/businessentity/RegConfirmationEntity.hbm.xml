@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated May 14, 2014 3:00:10 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+ <class name="remote.wise.businessentity.RegConfirmationEntity" table="registration_confirmation">
+  <id name="IMEI_number" type="java.lang.String">
+   <column name="IMEI_NUMBER"/>
+   <generator class="assigned"/>
+  </id>
+  <property generated="never" lazy="false" name="phone_number" type="java.lang.String">
+   <column name="PHONE_NUMBER"/>
+  </property>
+  <property generated="never" lazy="false" name="user_ID" type="java.lang.String">
+   <column name="USER_ID"/>
+  </property>
+ </class>
+</hibernate-mapping>

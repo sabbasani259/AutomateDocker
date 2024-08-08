@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://webservices.EAintegration.wise.remote/" targetNamespace="http://webservices.EAintegration.wise.remote/" version="1.0">
+<xs:element name="reprocessEADealerData" type="tns:reprocessEADealerData"/>
+<xs:element name="reprocessEADealerDataResponse" type="tns:reprocessEADealerDataResponse"/>
+<xs:complexType name="reprocessEADealerData">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="msg" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="reprocessEADealerDataResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

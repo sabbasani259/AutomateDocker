@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 16, 2014 3:02:47 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.AssetOwnerSnapshotEntity" table="asset_owner_snapshot">
+        <composite-id>
+        	<key-property name="serialNumber" type="java.lang.String">
+    			<column name="Serial_Number"/>
+   			</key-property>
+   			 <key-many-to-one name="accountId" class="remote.wise.businessentity.AccountEntity"
+            			column="Account_ID">
+         	</key-many-to-one>
+        </composite-id>
+        <property name="assetOwnershipDate" type="java.util.Date">
+            <column name="Ownership_Start_Date" />
+        </property>
+        <property name="accountType" type="java.lang.String">
+            <column name="Account_Type" />
+        </property>
+        <many-to-one name="assetGroupId" class="remote.wise.businessentity.AssetGroupEntity" fetch="join">
+            <column name="Asset_Group_ID" />
+        </many-to-one>
+        <many-to-one name="assetTypeId" class="remote.wise.businessentity.AssetTypeEntity" fetch="join">
+            <column name="Asset_Type_ID" />
+        </many-to-one>
+    </class>
+</hibernate-mapping>

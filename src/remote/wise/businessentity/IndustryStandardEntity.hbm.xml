@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 26, 2012 8:49:31 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+ <class name="remote.wise.businessentity.IndustryStandardEntity" table="industry_standard">
+  <id name="standardId" type="int">
+   <column default="0" name="Standard_Id"/>
+   <generator class="identity"/>
+  </id>
+  <many-to-one class="remote.wise.businessentity.IndustryEntity"
+   fetch="join" name="industryId">
+   <column name="Industry_Id"/>
+  </many-to-one>
+  <property generated="never" lazy="false" name="standardName" type="java.lang.String">
+   <column name="Standard_Name"/>
+  </property>
+  <property generated="never" lazy="false" name="versionNumber" type="java.lang.String">
+   <column name="Version_Number"/>
+  </property>
+  <property generated="never" lazy="false" name="incompatibleVersion" type="boolean">
+   <column name="Incompatible_Version"/>
+  </property>
+ </class>
+</hibernate-mapping>

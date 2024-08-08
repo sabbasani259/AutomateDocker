@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="JcbRollOffServiceService" targetNamespace="http://webservice.service.wise.remote/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://webservice.service.wise.remote/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<import namespace="http://webservice.service.wise.remote/" schemaLocation="JcbRollOffServiceService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="setVinMachineNameMapping">
+    <wsdl:part name="parameters" element="tns:setVinMachineNameMapping">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="setVinMachineNameMappingResponse">
+    <wsdl:part name="parameters" element="tns:setVinMachineNameMappingResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="CustomFault">
+    <wsdl:part name="CustomFault" element="tns:CustomFault">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="JcbRollOffService">
+    <wsdl:operation name="setVinMachineNameMapping">
+      <wsdl:input name="setVinMachineNameMapping" message="tns:setVinMachineNameMapping">
+    </wsdl:input>
+      <wsdl:output name="setVinMachineNameMappingResponse" message="tns:setVinMachineNameMappingResponse">
+    </wsdl:output>
+      <wsdl:fault name="CustomFault" message="tns:CustomFault">
+    </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="JcbRollOffServiceServiceSoapBinding" type="tns:JcbRollOffService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="setVinMachineNameMapping">
+      <soap:operation soapAction="setVinMachineNameMapping" style="document"/>
+      <wsdl:input name="setVinMachineNameMapping">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="setVinMachineNameMappingResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="CustomFault">
+        <soap:fault name="CustomFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="JcbRollOffServiceService">
+    <wsdl:port name="JcbRollOffServicePort" binding="tns:JcbRollOffServiceServiceSoapBinding">
+      <soap:address location="http://localhost:9090/JcbRollOffServicePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

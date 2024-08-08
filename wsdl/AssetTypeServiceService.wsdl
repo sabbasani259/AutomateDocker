@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="AssetTypeServiceService" targetNamespace="http://webservice.service.wise.remote/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://webservice.service.wise.remote/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<import namespace="http://webservice.service.wise.remote/" schemaLocation="AssetTypeServiceService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="setAssetTypeDetails">
+    <wsdl:part name="parameters" element="tns:setAssetTypeDetails">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="setAssetTypeDetailsResponse">
+    <wsdl:part name="parameters" element="tns:setAssetTypeDetailsResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="AssetTypeService">
+    <wsdl:operation name="setAssetTypeDetails">
+      <wsdl:input name="setAssetTypeDetails" message="tns:setAssetTypeDetails">
+    </wsdl:input>
+      <wsdl:output name="setAssetTypeDetailsResponse" message="tns:setAssetTypeDetailsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="AssetTypeServiceServiceSoapBinding" type="tns:AssetTypeService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="setAssetTypeDetails">
+      <soap:operation soapAction="setAssetTypeDetails" style="document"/>
+      <wsdl:input name="setAssetTypeDetails">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="setAssetTypeDetailsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="AssetTypeServiceService">
+    <wsdl:port name="AssetTypeServicePort" binding="tns:AssetTypeServiceServiceSoapBinding">
+      <soap:address location="http://localhost:9090/AssetTypeServicePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

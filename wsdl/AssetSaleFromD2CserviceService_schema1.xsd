@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://webservice.service.wise.remote/" targetNamespace="http://webservice.service.wise.remote/" version="1.0">
+<xs:element name="assetSaleFromDealerToCust" type="tns:assetSaleFromDealerToCust"/>
+<xs:element name="assetSaleFromDealerToCustResponse" type="tns:assetSaleFromDealerToCustResponse"/>
+<xs:complexType name="assetSaleFromDealerToCust">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="dealerCode" type="xs:string"/>
+      <xs:element minOccurs="0" name="customerCode" type="xs:string"/>
+      <xs:element minOccurs="0" name="machineNumber" type="xs:string"/>
+      <xs:element minOccurs="0" name="installationDate" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="assetSaleFromDealerToCustResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

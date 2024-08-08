@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Apr 17, 2013 4:40:13 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.RpmBands" table="rpm_bands">
+        <id name="Band_ID" type="int">
+            <column name="BAND_ID" />
+            <generator class="assigned" />
+        </id>
+        <property name="Engine_Status" type="java.lang.String">
+            <column name="ENGINE_STATUS" />
+        </property>
+        <property name="Power_Band" type="java.lang.String">
+            <column name="POWER_BAND" />
+        </property>
+        <property name="RPM_Description" type="java.lang.String">
+            <column name="RPM_DESCRIPTION" />
+        </property>
+    </class>
+</hibernate-mapping>

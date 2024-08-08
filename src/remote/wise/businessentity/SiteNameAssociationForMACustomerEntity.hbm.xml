@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Mar 25, 2014 11:39:15 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.SiteNameAssociationForMACustomerEntity" table="SiteMaster">
+       <id name="siteId" type="int">
+			<column default="0" name="siteId"/>
+			<generator class="identity"/>
+		</id>
+		<property generated="never" lazy="false" name="accountId" type="java.lang.String">
+			<column name="AccountId"/>
+		</property>
+		<property generated="never" lazy="false" name="userId" type="java.lang.String">
+			<column name="UserId"/>
+		</property>
+		<property generated="never" lazy="false" name="siteName" type="java.lang.String">
+			<column name="SiteName"/>
+		</property>
+		 <property generated="never" lazy="false" name="lastUpdatedTime" type="java.sql.Timestamp">
+   		<column name="LastUpdatedTime"/>
+  		</property>
+		<property generated="never" lazy="false" name="flag" type="boolean">
+			<column name="Flag"/>
+		</property>
+    </class>
+</hibernate-mapping>

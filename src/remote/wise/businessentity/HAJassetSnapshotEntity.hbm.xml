@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jan 20, 2015 12:06:15 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.HAJassetSnapshotEntity" table="HAJ_asset_snapshot">
+        <id name="serial_number" type="java.lang.String">
+            <column name="Serial_Number" />
+            <generator class="assigned" />
+        </id>
+        <property name="primary_owner_id" type="int">
+            <column name="Primary_Account_id" />
+        </property>
+        <property name="asset_type_name" type="java.lang.String">
+            <column name="Asset_Type_Name" />
+        </property>
+        <property name="asset_group_name" type="java.lang.String">
+            <column name="Asset_Group_Name" />
+        </property>
+        <property name="sendFlag" type="int">
+            <column name="Send_Flag" />
+        </property>
+    </class>
+</hibernate-mapping>

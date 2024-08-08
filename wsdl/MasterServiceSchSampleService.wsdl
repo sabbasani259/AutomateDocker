@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="MasterServiceSchSampleService" targetNamespace="http://webservices.EAintegration.wise.remote/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://webservices.EAintegration.wise.remote/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<import namespace="http://webservices.EAintegration.wise.remote/" schemaLocation="MasterServiceSchSampleService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="processEAMasterServSch">
+    <wsdl:part name="parameters" element="tns:processEAMasterServSch">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="processEAMasterServSchResponse">
+    <wsdl:part name="parameters" element="tns:processEAMasterServSchResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="MasterServiceSchSample">
+    <wsdl:operation name="processEAMasterServSch">
+      <wsdl:input name="processEAMasterServSch" message="tns:processEAMasterServSch">
+    </wsdl:input>
+      <wsdl:output name="processEAMasterServSchResponse" message="tns:processEAMasterServSchResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="MasterServiceSchSampleServiceSoapBinding" type="tns:MasterServiceSchSample">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="processEAMasterServSch">
+      <soap:operation soapAction="processEAMasterServSch" style="document"/>
+      <wsdl:input name="processEAMasterServSch">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="processEAMasterServSchResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="MasterServiceSchSampleService">
+    <wsdl:port name="MasterServiceSchSamplePort" binding="tns:MasterServiceSchSampleServiceSoapBinding">
+      <soap:address location="http://localhost:9090/MasterServiceSchSamplePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="RAssetPersonalitySampleService" targetNamespace="http://webservices.EAintegration.wise.remote/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://webservices.EAintegration.wise.remote/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<import namespace="http://webservices.EAintegration.wise.remote/" schemaLocation="RAssetPersonalitySampleService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="reprocessEAassetPersDataResponse">
+    <wsdl:part name="parameters" element="tns:reprocessEAassetPersDataResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="reprocessEAassetPersData">
+    <wsdl:part name="parameters" element="tns:reprocessEAassetPersData">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="RAssetPersonalitySample">
+    <wsdl:operation name="reprocessEAassetPersData">
+      <wsdl:input name="reprocessEAassetPersData" message="tns:reprocessEAassetPersData">
+    </wsdl:input>
+      <wsdl:output name="reprocessEAassetPersDataResponse" message="tns:reprocessEAassetPersDataResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="RAssetPersonalitySampleServiceSoapBinding" type="tns:RAssetPersonalitySample">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="reprocessEAassetPersData">
+      <soap:operation soapAction="reprocessEAassetPersData" style="document"/>
+      <wsdl:input name="reprocessEAassetPersData">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="reprocessEAassetPersDataResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="RAssetPersonalitySampleService">
+    <wsdl:port name="RAssetPersonalitySamplePort" binding="tns:RAssetPersonalitySampleServiceSoapBinding">
+      <soap:address location="http://localhost:9090/RAssetPersonalitySamplePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

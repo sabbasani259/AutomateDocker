@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 7, 2012 3:27:12 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.CatalogValuesEntity" table="catalog_values">
+        <id name="catalogValueId" type="int">
+            <column default="0" name="catalog_value_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="catalogId" class="remote.wise.businessentity.PreferenceCatalogEntity" fetch="join">
+            <column name="catalog_id" />
+        </many-to-one>
+        <property name="catalogValue" type="java.lang.String">
+            <column name="catalog_value" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://webservice.service.wise.remote/" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://webservice.service.wise.remote/">
+  <xs:element name="GetAssetEventLog" type="tns:GetAssetEventLog"/>
+  <xs:element name="GetAssetEventLogResponse" type="tns:GetAssetEventLogResponse"/>
+  <xs:complexType name="GetAssetEventLog">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="reqObj" type="tns:assetEventLogReqContract"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="assetEventLogReqContract">
+    <xs:sequence>
+      <xs:element name="loginTenancyId" type="xs:int"/>
+      <xs:element minOccurs="0" name="period" type="xs:string"/>
+      <xs:element minOccurs="0" name="serialNumber" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="GetAssetEventLogResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:assetEventRespContract"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="assetEventRespContract">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="alertSeverity" type="xs:string"/>
+      <xs:element minOccurs="0" name="latitude" type="xs:string"/>
+      <xs:element minOccurs="0" name="longitude" type="xs:string"/>
+      <xs:element minOccurs="0" name="parameterName" type="xs:string"/>
+      <xs:element minOccurs="0" name="parameterValue" type="xs:string"/>
+      <xs:element name="sequenceId" type="xs:int"/>
+      <xs:element minOccurs="0" name="transactionTime" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="CustomFault" nillable="true" type="xs:string"/>
+</xs:schema>

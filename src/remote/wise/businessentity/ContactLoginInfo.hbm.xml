@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 27, 2012 11:49:46 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+ <class name="remote.wise.businessentity.ContactLoginInfoEntity" table="contact_login_info">
+ 
+ 
+ <composite-id>
+         <key-many-to-one
+            name="contactId"
+            class="remote.wise.businessentity.ContactEntity"
+            column="Contact_ID">
+         </key-many-to-one>
+         
+          <key-many-to-one
+            name="questionId"
+            class="remote.wise.businessentity.SecretQuestionEntity"
+            column="question_Id">
+         </key-many-to-one>
+         
+ </composite-id>
+  
+  <property generated="never" lazy="false" name="answer" type="java.lang.String">
+   <column name="Answer"/>
+  </property>
+ 
+  </class>
+  </hibernate-mapping>
+  

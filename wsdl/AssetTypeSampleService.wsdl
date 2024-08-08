@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="AssetTypeSampleService" targetNamespace="http://webservices.EAintegration.wise.remote/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://webservices.EAintegration.wise.remote/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<import namespace="http://webservices.EAintegration.wise.remote/" schemaLocation="AssetTypeSampleService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="processEAassetTypeData">
+    <wsdl:part name="parameters" element="tns:processEAassetTypeData">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="processEAassetTypeDataResponse">
+    <wsdl:part name="parameters" element="tns:processEAassetTypeDataResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="AssetTypeSample">
+    <wsdl:operation name="processEAassetTypeData">
+      <wsdl:input name="processEAassetTypeData" message="tns:processEAassetTypeData">
+    </wsdl:input>
+      <wsdl:output name="processEAassetTypeDataResponse" message="tns:processEAassetTypeDataResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="AssetTypeSampleServiceSoapBinding" type="tns:AssetTypeSample">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="processEAassetTypeData">
+      <soap:operation soapAction="processEAassetTypeData" style="document"/>
+      <wsdl:input name="processEAassetTypeData">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="processEAassetTypeDataResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="AssetTypeSampleService">
+    <wsdl:port name="AssetTypeSamplePort" binding="tns:AssetTypeSampleServiceSoapBinding">
+      <soap:address location="http://localhost:9090/AssetTypeSamplePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="RPrimaryDealerTransferSampleService" targetNamespace="http://webservices.EAintegration.wise.remote/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://webservices.EAintegration.wise.remote/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<import namespace="http://webservices.EAintegration.wise.remote/" schemaLocation="RPrimaryDealerTransferSampleService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="reprocessEADealerTransferResponse">
+    <wsdl:part name="parameters" element="tns:reprocessEADealerTransferResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="reprocessEADealerTransfer">
+    <wsdl:part name="parameters" element="tns:reprocessEADealerTransfer">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="RPrimaryDealerTransferSample">
+    <wsdl:operation name="reprocessEADealerTransfer">
+      <wsdl:input name="reprocessEADealerTransfer" message="tns:reprocessEADealerTransfer">
+    </wsdl:input>
+      <wsdl:output name="reprocessEADealerTransferResponse" message="tns:reprocessEADealerTransferResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="RPrimaryDealerTransferSampleServiceSoapBinding" type="tns:RPrimaryDealerTransferSample">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="reprocessEADealerTransfer">
+      <soap:operation soapAction="reprocessEADealerTransfer" style="document"/>
+      <wsdl:input name="reprocessEADealerTransfer">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="reprocessEADealerTransferResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="RPrimaryDealerTransferSampleService">
+    <wsdl:port name="RPrimaryDealerTransferSamplePort" binding="tns:RPrimaryDealerTransferSampleServiceSoapBinding">
+      <soap:address location="http://localhost:9090/RPrimaryDealerTransferSamplePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

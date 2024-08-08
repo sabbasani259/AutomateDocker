@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 3, 2015 11:57:11 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.SmsTemplateTranslatorEntity" table="SmsTemplate_Translator">
+        <id name="seqId" type="int">
+            <column name="SequenceId" />
+            <generator class="identity" />
+        </id>
+        <property name="smsBody" type="java.lang.String">
+            <column name="Sms_Body" />
+        </property>
+        <property name="eventId" type="int">
+            <column name="Event_Id" />
+        </property>
+        <property name="unicode" type="java.lang.String">
+            <column name="Unicode_Id" />
+        </property>
+        <property name="templateId" type="java.lang.String">
+            <column name="Template_Id" />
+        </property>
+    </class>
+</hibernate-mapping>

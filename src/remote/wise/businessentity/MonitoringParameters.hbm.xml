@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 26, 2012 9:00:31 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+	<class name="remote.wise.businessentity.MonitoringParameters"
+		table="monitoring_parameters">
+		<id name="parameterId" type="int">
+			<column default="0" name="Parameter_ID" />
+			<generator class="identity" />
+		</id>
+		<many-to-one class="remote.wise.businessentity.ParameterTypeEntity"
+			fetch="join" name="parameterTypeId">
+			<column name="Parameter_Type_ID" />
+		</many-to-one>
+		<property generated="never" lazy="false" name="parameterName"
+			type="java.lang.String">
+			<column name="Parameter_Name" />
+		</property>
+		<property generated="never" lazy="false" name="RecordType"
+			type="java.lang.String">
+			<column name="Record_Type" />
+		</property>
+		<!-- DF20151005 - Rajani Nagaraju - Adding the association of parameter 
+			Code (Required by MOOL for data processing) -->
+		<property generated="never" lazy="false" name="parameterCode"
+			type="java.lang.String">
+			<column name="Parameter_Code" />
+		</property>
+		<property generated="never" lazy="false" name="parameterKey"
+			type="java.lang.String">
+			<column name="Parameter_Key" />
+		</property>
+		<!-- DF20170811: SU334449 - Adding the DTC_code column from monitoring_parameters table -->
+		<property generated="never" lazy="false" name="dtcCode" type="int">
+			<column name="DTC_code" />
+		</property>
+		<!-- DF20170811: SU334449 - Adding the DTC_code column from monitoring_parameters table -->
+		<property generated="never" lazy="false" name="errorCode" type="java.lang.String">
+			<column name="Error_Code" />
+		</property>
+		
+	</class>
+</hibernate-mapping>

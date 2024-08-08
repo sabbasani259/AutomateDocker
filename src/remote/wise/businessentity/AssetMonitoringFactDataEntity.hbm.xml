@@ -1,0 +1,480 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Apr 2, 2013 3:54:10 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+ <class entity-name="AssetMonitoringFactDataDayAgg" lazy="false"
+  name="remote.wise.businessentity.AssetMonitoringFactDataEntity" table="remote_monitoring_fact_data_dayagg">
+  <composite-id mapped="false" unsaved-value="undefined">
+   <key-property column="Serial_Number" name="serialNumber" type="java.lang.String"/>
+   <key-property column="Time_Key" name="timeKey" type="java.sql.Timestamp"/>
+  </composite-id>
+  <many-to-one class="remote.wise.businessentity.TenancyDimensionEntity"
+   fetch="join" lazy="false" name="tenancyId">
+   <column name="Tenancy_ID"/>
+  </many-to-one>
+  <many-to-one class="remote.wise.businessentity.AccountDimensionEntity"
+   fetch="join" lazy="false" name="accountDimensionId">
+   <column name="Account_ID"/>
+  </many-to-one>
+  <many-to-one
+   class="remote.wise.businessentity.AssetClassDimensionEntity"
+   fetch="join" lazy="false" name="assetClassDimensionId">
+   <column name="Asset_Class_ID"/>
+  </many-to-one>
+  <property generated="never" lazy="false" name="fuelUsedIdle" type="double">
+   <column name="FuelUsedIdle"/>
+  </property>
+  <property generated="never" lazy="false" name="fuelUsedWorking" type="double">
+   <column name="FuelUsedWorking"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand1" type="double">
+   <column name="EngineRunningBand1"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand2" type="double">
+   <column name="EngineRunningBand2"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand3" type="double">
+   <column name="EngineRunningBand3"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand4" type="double">
+   <column name="EngineRunningBand4"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand5" type="double">
+   <column name="EngineRunningBand5"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand6" type="double">
+   <column name="EngineRunningBand6"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand7" type="double">
+   <column name="EngineRunningBand7"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand8" type="double">
+   <column name="EngineRunningBand8"/>
+  </property>
+  <property generated="never" lazy="false" name="lastEngineRun" type="java.sql.Timestamp">
+   <column name="Last_Engine_Run"/>
+  </property>
+  <property generated="never" lazy="false" name="lastReported" type="java.sql.Timestamp">
+   <column name="Last_Reported"/>
+  </property>
+  <property generated="never" lazy="false" name="location" type="java.lang.String">
+   <column name="Location"/>
+  </property>
+  <property generated="never" lazy="false" name="machineHours" type="double">
+   <column name="Machine_Hours"/>
+  </property>
+  <property generated="never" lazy="false" name="engineOffHours" type="double">
+   <column name="Engine_Off_Hours"/>
+  </property>
+  <property generated="never" lazy="false" name="machineName" type="java.lang.String">
+   <column name="Machine_Name"/>
+  </property>
+  <property generated="never" lazy="false" name="Address" type="java.lang.String">
+   <column name="Address"/>
+  </property>
+  <property generated="never" lazy="false" name="state" type="java.lang.String">
+   <column name="State"/>
+  </property>
+  <property generated="never" lazy="false" name="city" type="java.lang.String">
+   <column name="City"/>
+  </property>
+  <property generated="never" lazy="false" name="engineStatus" type="java.lang.String">
+   <column name="Engine_Status"/>
+  </property>
+  <property generated="never" lazy="false" name="Created_Timestamp" type="java.sql.Timestamp">
+   <column name="Created_Timestamp"/>
+  </property>
+ 
+ </class>
+ 
+  <class entity-name="AssetMonitoringFactDataDayAgg_json" lazy="false"
+  name="remote.wise.businessentity.AssetMonitoringFactDataEntity" table="remote_monitoring_fact_data_dayagg_json_new">
+  <composite-id mapped="false" unsaved-value="undefined">
+   <key-property column="Serial_Number" name="serialNumber" type="java.lang.String"/>
+   <key-property column="Time_Key" name="timeKey" type="java.sql.Timestamp"/>
+  </composite-id>
+  <many-to-one class="remote.wise.businessentity.TenancyDimensionEntity"
+   fetch="join" lazy="false" name="tenancyId">
+   <column name="Tenancy_ID"/>
+  </many-to-one>
+  <many-to-one class="remote.wise.businessentity.AccountDimensionEntity"
+   fetch="join" lazy="false" name="accountDimensionId">
+   <column name="Account_ID"/>
+  </many-to-one>
+  <many-to-one
+   class="remote.wise.businessentity.AssetClassDimensionEntity"
+   fetch="join" lazy="false" name="assetClassDimensionId">
+   <column name="Asset_Class_ID"/>
+  </many-to-one>
+  <property generated="never" lazy="false" name="fuelUsedIdle" type="double">
+   <column name="FuelUsedIdle"/>
+  </property>
+  <property generated="never" lazy="false" name="fuelUsedWorking" type="double">
+   <column name="FuelUsedWorking"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand1" type="double">
+   <column name="EngineRunningBand1"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand2" type="double">
+   <column name="EngineRunningBand2"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand3" type="double">
+   <column name="EngineRunningBand3"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand4" type="double">
+   <column name="EngineRunningBand4"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand5" type="double">
+   <column name="EngineRunningBand5"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand6" type="double">
+   <column name="EngineRunningBand6"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand7" type="double">
+   <column name="EngineRunningBand7"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand8" type="double">
+   <column name="EngineRunningBand8"/>
+  </property>
+  <property generated="never" lazy="false" name="lastEngineRun" type="java.sql.Timestamp">
+   <column name="Last_Engine_Run"/>
+  </property>
+  <property generated="never" lazy="false" name="lastReported" type="java.sql.Timestamp">
+   <column name="Last_Reported"/>
+  </property>
+  <property generated="never" lazy="false" name="location" type="java.lang.String">
+   <column name="Location"/>
+  </property>
+  <property generated="never" lazy="false" name="machineHours" type="double">
+   <column name="Machine_Hours"/>
+  </property>
+  <property generated="never" lazy="false" name="engineOffHours" type="double">
+   <column name="Engine_Off_Hours"/>
+  </property>
+  <property generated="never" lazy="false" name="machineName" type="java.lang.String">
+   <column name="Machine_Name"/>
+  </property>
+  <property generated="never" lazy="false" name="Address" type="java.lang.String">
+   <column name="Address"/>
+  </property>
+  <property generated="never" lazy="false" name="state" type="java.lang.String">
+   <column name="State"/>
+  </property>
+  <property generated="never" lazy="false" name="city" type="java.lang.String">
+   <column name="City"/>
+  </property>
+  <property generated="never" lazy="false" name="engineStatus" type="java.lang.String">
+   <column name="Engine_Status"/>
+  </property>
+  <property generated="never" lazy="false" name="Created_Timestamp" type="java.sql.Timestamp">
+   <column name="Created_Timestamp"/>
+  </property>
+   <property generated="never" lazy="false" name="aggregate_param_data" type="java.lang.String">
+   <column name="agg_param_data"/>
+  </property>
+ </class>
+ 
+ 
+ <class entity-name="AssetMonitoringFactDataWeekAgg"
+  name="remote.wise.businessentity.AssetMonitoringFactDataEntity" table="remote_monitoring_fact_data_weekagg">
+  <composite-id mapped="false" unsaved-value="undefined">
+   <key-property column="Serial_Number" name="serialNumber" type="java.lang.String"/>
+   <key-property column="Week" name="timeCount" type="int"/>
+   <key-property column="Year" name="year" type="int"/>
+    <key-many-to-one class="remote.wise.businessentity.AccountDimensionEntity"
+    name="accountDimensionId">
+   <column name="Account_ID"/>
+  </key-many-to-one>
+  </composite-id>
+
+  <many-to-one
+    class="remote.wise.businessentity.TenancyDimensionEntity"
+    column="Tenancy_ID" fetch="join" lazy="false" name="tenancyId"/>
+    
+  <many-to-one
+   class="remote.wise.businessentity.AssetClassDimensionEntity"
+   fetch="join" name="assetClassDimensionId">
+   <column name="Asset_Class_ID"/>
+  </many-to-one>
+  <property generated="never" lazy="false" name="fuelUsedIdle" type="double">
+   <column name="FuelUsedIdle"/>
+  </property>
+  <property generated="never" lazy="false" name="fuelUsedWorking" type="double">
+   <column name="FuelUsedWorking"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand1" type="double">
+   <column name="EngineRunningBand1"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand2" type="double">
+   <column name="EngineRunningBand2"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand3" type="double">
+   <column name="EngineRunningBand3"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand4" type="double">
+   <column name="EngineRunningBand4"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand5" type="double">
+   <column name="EngineRunningBand5"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand6" type="double">
+   <column name="EngineRunningBand6"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand7" type="double">
+   <column name="EngineRunningBand7"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand8" type="double">
+   <column name="EngineRunningBand8"/>
+  </property>
+  <property generated="never" lazy="false" name="lastEngineRun" type="java.sql.Timestamp">
+   <column name="Last_Engine_Run"/>
+  </property>
+  <property generated="never" lazy="false" name="lastReported" type="java.sql.Timestamp">
+   <column name="Last_Reported"/>
+  </property>
+  <property generated="never" lazy="false" name="location" type="java.lang.String">
+   <column name="Location"/>
+  </property>
+  <property generated="never" lazy="false" name="machineHours" type="double">
+   <column name="Machine_Hours"/>
+  </property>
+  <property generated="never" lazy="false" name="engineOffHours" type="double">
+   <column name="Engine_Off_Hours"/>
+  </property>
+  <property generated="never" lazy="false" name="machineName" type="java.lang.String">
+   <column name="Machine_Name"/>
+  </property>
+  <property generated="never" lazy="false" name="Address" type="java.lang.String">
+   <column name="Address"/>
+  </property>
+  <property generated="never" lazy="false" name="engineStatus" type="java.lang.String">
+   <column name="Engine_Status"/>
+  </property>
+ </class>
+ <class entity-name="AssetMonitoringFactDataMonthAgg"
+  name="remote.wise.businessentity.AssetMonitoringFactDataEntity" table="remote_monitoring_fact_data_monthagg">
+  <composite-id mapped="false" unsaved-value="undefined">
+   <key-property column="Serial_Number" name="serialNumber" type="java.lang.String"/>
+   <key-property column="Month" name="timeCount" type="int"/>
+   <key-property column="Year" name="year" type="int"/>
+<key-many-to-one class="remote.wise.businessentity.AccountDimensionEntity"
+    name="accountDimensionId">
+   <column name="Account_ID"/>
+  </key-many-to-one>
+  </composite-id>
+
+  <many-to-one
+    class="remote.wise.businessentity.TenancyDimensionEntity"
+    column="Tenancy_ID" fetch="join" lazy="false" name="tenancyId">
+  </many-to-one>
+  <many-to-one
+   class="remote.wise.businessentity.AssetClassDimensionEntity"
+   fetch="join" name="assetClassDimensionId">
+   <column name="Asset_Class_ID"/>
+  </many-to-one>
+  <property generated="never" lazy="false" name="fuelUsedIdle" type="double">
+   <column name="FuelUsedIdle"/>
+  </property>
+  <property generated="never" lazy="false" name="fuelUsedWorking" type="double">
+   <column name="FuelUsedWorking"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand1" type="double">
+   <column name="EngineRunningBand1"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand2" type="double">
+   <column name="EngineRunningBand2"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand3" type="double">
+   <column name="EngineRunningBand3"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand4" type="double">
+   <column name="EngineRunningBand4"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand5" type="double">
+   <column name="EngineRunningBand5"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand6" type="double">
+   <column name="EngineRunningBand6"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand7" type="double">
+   <column name="EngineRunningBand7"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand8" type="double">
+   <column name="EngineRunningBand8"/>
+  </property>
+  <property generated="never" lazy="false" name="lastEngineRun" type="java.sql.Timestamp">
+   <column name="Last_Engine_Run"/>
+  </property>
+  <property generated="never" lazy="false" name="lastReported" type="java.sql.Timestamp">
+   <column name="Last_Reported"/>
+  </property>
+  <property generated="never" lazy="false" name="location" type="java.lang.String">
+   <column name="Location"/>
+  </property>
+  <property generated="never" lazy="false" name="machineHours" type="double">
+   <column name="Machine_Hours"/>
+  </property>
+  <property generated="never" lazy="false" name="engineOffHours" type="double">
+   <column name="Engine_Off_Hours"/>
+  </property>
+  <property generated="never" lazy="false" name="machineName" type="java.lang.String">
+   <column name="Machine_Name"/>
+  </property>
+  <property generated="never" lazy="false" name="Address" type="java.lang.String">
+   <column name="Address"/>
+  </property>
+  <property generated="never" lazy="false" name="engineStatus" type="java.lang.String">
+   <column name="Engine_Status"/>
+  </property>
+ </class>
+ <class entity-name="AssetMonitoringFactDataQuarterAgg"
+  name="remote.wise.businessentity.AssetMonitoringFactDataEntity" table="remote_monitoring_fact_data_quarteragg">
+  <composite-id mapped="false" unsaved-value="undefined">
+   <key-property column="Serial_Number" name="serialNumber" type="java.lang.String"/>
+   <key-property column="Quarter" name="timeCount" type="int"/>
+   <key-property column="Year" name="year" type="int"/>
+ <key-many-to-one class="remote.wise.businessentity.AccountDimensionEntity"
+    name="accountDimensionId">
+   <column name="Account_ID"/>
+  </key-many-to-one>
+  </composite-id>
+
+  <many-to-one
+    class="remote.wise.businessentity.TenancyDimensionEntity"
+    column="Tenancy_ID" fetch="join" lazy="false" name="tenancyId"/>
+  <many-to-one
+   class="remote.wise.businessentity.AssetClassDimensionEntity"
+   fetch="join" name="assetClassDimensionId">
+   <column name="Asset_Class_ID"/>
+  </many-to-one>
+  <property generated="never" lazy="false" name="fuelUsedIdle" type="double">
+   <column name="FuelUsedIdle"/>
+  </property>
+  <property generated="never" lazy="false" name="fuelUsedWorking" type="double">
+   <column name="FuelUsedWorking"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand1" type="double">
+   <column name="EngineRunningBand1"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand2" type="double">
+   <column name="EngineRunningBand2"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand3" type="double">
+   <column name="EngineRunningBand3"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand4" type="double">
+   <column name="EngineRunningBand4"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand5" type="double">
+   <column name="EngineRunningBand5"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand6" type="double">
+   <column name="EngineRunningBand6"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand7" type="double">
+   <column name="EngineRunningBand7"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand8" type="double">
+   <column name="EngineRunningBand8"/>
+  </property>
+  <property generated="never" lazy="false" name="lastEngineRun" type="java.sql.Timestamp">
+   <column name="Last_Engine_Run"/>
+  </property>
+  <property generated="never" lazy="false" name="lastReported" type="java.sql.Timestamp">
+   <column name="Last_Reported"/>
+  </property>
+  <property generated="never" lazy="false" name="location" type="java.lang.String">
+   <column name="Location"/>
+  </property>
+  <property generated="never" lazy="false" name="machineHours" type="double">
+   <column name="Machine_Hours"/>
+  </property>
+  <property generated="never" lazy="false" name="engineOffHours" type="double">
+   <column name="Engine_Off_Hours"/>
+  </property>
+  <property generated="never" lazy="false" name="machineName" type="java.lang.String">
+   <column name="Machine_Name"/>
+  </property>
+  <property generated="never" lazy="false" name="Address" type="java.lang.String">
+   <column name="Address"/>
+  </property>
+  <property generated="never" lazy="false" name="engineStatus" type="java.lang.String">
+   <column name="Engine_Status"/>
+  </property>
+ </class>
+ <class entity-name="AssetMonitoringFactDataYearAgg"
+  name="remote.wise.businessentity.AssetMonitoringFactDataEntity" table="remote_monitoring_fact_data_yearagg">
+  <composite-id mapped="false" unsaved-value="undefined">
+   <key-property column="Serial_Number" name="serialNumber" type="java.lang.String"/>
+   <key-property column="Year" name="year" type="int"/>
+ <key-many-to-one class="remote.wise.businessentity.AccountDimensionEntity"
+    name="accountDimensionId">
+   <column name="Account_ID"/>
+  </key-many-to-one>
+  </composite-id>
+
+  <many-to-one
+    class="remote.wise.businessentity.TenancyDimensionEntity"
+    column="Tenancy_ID" fetch="join" lazy="false" name="tenancyId"/>
+  <many-to-one
+   class="remote.wise.businessentity.AssetClassDimensionEntity"
+   fetch="join" name="assetClassDimensionId">
+   <column name="Asset_Class_ID"/>
+  </many-to-one>
+  <property generated="never" lazy="false" name="fuelUsedIdle" type="double">
+   <column name="FuelUsedIdle"/>
+  </property>
+  <property generated="never" lazy="false" name="fuelUsedWorking" type="double">
+   <column name="FuelUsedWorking"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand1" type="double">
+   <column name="EngineRunningBand1"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand2" type="double">
+   <column name="EngineRunningBand2"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand3" type="double">
+   <column name="EngineRunningBand3"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand4" type="double">
+   <column name="EngineRunningBand4"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand5" type="double">
+   <column name="EngineRunningBand5"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand6" type="double">
+   <column name="EngineRunningBand6"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand7" type="double">
+   <column name="EngineRunningBand7"/>
+  </property>
+  <property generated="never" lazy="false" name="EngineRunningBand8" type="double">
+   <column name="EngineRunningBand8"/>
+  </property>
+  <property generated="never" lazy="false" name="lastEngineRun" type="java.sql.Timestamp">
+   <column name="Last_Engine_Run"/>
+  </property>
+  <property generated="never" lazy="false" name="lastReported" type="java.sql.Timestamp">
+   <column name="Last_Reported"/>
+  </property>
+  <property generated="never" lazy="false" name="location" type="java.lang.String">
+   <column name="Location"/>
+  </property>
+  <property generated="never" lazy="false" name="machineHours" type="double">
+   <column name="Machine_Hours"/>
+  </property>
+  <property generated="never" lazy="false" name="engineOffHours" type="double">
+   <column name="Engine_Off_Hours"/>
+  </property>
+  <property generated="never" lazy="false" name="machineName" type="java.lang.String">
+   <column name="Machine_Name"/>
+  </property>
+  <property generated="never" lazy="false" name="Address" type="java.lang.String">
+   <column name="Address"/>
+  </property>
+  <property generated="never" lazy="false" name="engineStatus" type="java.lang.String">
+   <column name="Engine_Status"/>
+  </property>
+ </class>
+</hibernate-mapping>

@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Mar 21, 2013 11:56:31 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.AssetMonitoringDetailExtended" table="asset_monitoring_detail_extended">
+        <composite-id>
+         <key-many-to-one
+            name="transactionNumber"
+            class="remote.wise.businessentity.AssetMonitoringHeaderEntity"
+            column="Transaction_Number">
+         </key-many-to-one>
+         <key-many-to-one
+            name="extendedParameterId"
+            class="remote.wise.businessentity.ExtendedMonitoringParameters"
+            column="Extended_Parameter_ID">
+         </key-many-to-one>
+         </composite-id>
+        <property name="extendedParameterValue" type="java.lang.String">
+            <column name="Extended_Parameter_Value" />
+        </property>
+    </class>
+</hibernate-mapping>

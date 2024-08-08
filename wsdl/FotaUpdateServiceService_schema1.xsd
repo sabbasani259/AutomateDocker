@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://webservice.service.wise.remote/" targetNamespace="http://webservice.service.wise.remote/" version="1.0">
+<xs:element name="FotaUpdate" type="tns:FotaUpdate"/>
+<xs:element name="FotaUpdateResponse" type="tns:FotaUpdateResponse"/>
+<xs:complexType name="FotaUpdate">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="reqObj" type="tns:fotaUpdateReqContract"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="fotaUpdateReqContract">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="fotaSessionId" type="xs:string"/>
+      <xs:element minOccurs="0" name="fotaVersionId" type="xs:string"/>
+      <xs:element minOccurs="0" name="fotaimeiNo" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="FotaUpdateResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:fotaUpdateRespContract"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="fotaUpdateRespContract">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="file_path" type="xs:string"/>
+      <xs:element minOccurs="0" name="sessionId" type="xs:string"/>
+      <xs:element minOccurs="0" name="status" type="xs:string"/>
+      <xs:element minOccurs="0" name="versionId" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 27, 2012 11:49:46 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+ <class name="remote.wise.businessentity.ContactEntity" table="contact">
+  <id name="contact_id" type="java.lang.String">
+   <column name="Contact_ID"/>
+   <generator class="assigned"/>
+  </id>
+  <property generated="never" lazy="false" name="primary_phone_number" type="java.lang.String">
+   <column name="Primary_Phone_Number"/>
+  </property>
+  <property generated="never" lazy="false" name="secondary_phone_number" type="java.lang.String">
+   <column name="Secondary_Phone_Number"/>
+  </property>
+  <property generated="never" lazy="false" name="primary_mobile_number" type="java.lang.String">
+   <column name="Primary_Moblie_Number"/>
+  </property>
+  <property generated="never" lazy="false"
+   name="secondary_mobile_number" type="java.lang.String">
+   <column name="Secondary_Mobile_Number"/>
+  </property>
+  <property generated="never" lazy="false" name="is_tenancy_admin" type="int">
+   <column name="Is_Tenancy_Admin"/>
+  </property>
+  <property generated="never" lazy="false" name="active_status" type="boolean">
+   <column name="Status"/>
+  </property>
+  <property generated="never" lazy="false" name="department" type="java.lang.String">
+   <column name="Department"/>
+  </property>
+  <property generated="never" lazy="false" name="primary_email_id" type="java.lang.String">
+   <column name="Primary_Email_ID"/>
+  </property>
+  <property generated="never" lazy="false" name="secondary_email_id" type="java.lang.String">
+   <column name="Secondary_Email_ID"/>
+  </property>
+  <property generated="never" lazy="false" name="first_name" type="java.lang.String">
+   <column name="First_Name"/>
+  </property>
+  <property generated="never" lazy="false" name="last_name" type="java.lang.String">
+   <column name="Last_Name"/>
+  </property>
+  <property generated="never" lazy="false" name="password" type="java.lang.String">
+   <column name="Password"/>
+  </property>
+  <property generated="never" lazy="false" name="dob" type="java.lang.String">
+   <column name="DOB"/>
+  </property>
+  <property generated="never" lazy="false" name="countryCode" type="java.lang.String">
+   <column name="countrycode"/>
+  </property>
+  <property generated="never" lazy="false" name="language" type="java.lang.String">
+   <column name="Language"/>
+  </property>
+  <property generated="never" lazy="false" name="timezone" type="java.lang.String">
+   <column name="TimeZone"/>
+  </property>
+  <property generated="never" lazy="false" name="LastUpdatedTime" type="java.sql.Timestamp">
+   <column name="LastUpdatedTime"/>
+  </property>
+  <property generated="never" lazy="false" name="nativeState" type="java.lang.String">
+   <column name="Native_State"/>
+  </property>
+  <many-to-one class="remote.wise.businessentity.RoleEntity"
+   fetch="join" name="role">
+   <column name="Role_ID"/>
+  </many-to-one>
+  <many-to-one class="remote.wise.businessentity.ContactEntity"
+   fetch="join" name="manager_id">
+   <column name="Manager_ID"/>
+  </many-to-one>
+  <many-to-one class="remote.wise.businessentity.ClientEntity"
+   fetch="join" name="client_id">
+   <column name="Client_ID"/>
+  </many-to-one>
+  <many-to-one class="remote.wise.businessentity.AddressEntity"
+   fetch="join" name="addressId">
+   <column name="Address_ID"/>
+  </many-to-one>
+  <property generated="never" lazy="false" name="sysGeneratedPassword" type="int">
+   <column default = "0" name="sys_gen_password"/>
+  </property> 
+   <property generated="never" lazy="false" name="pwdExpired" type="int">
+   <column default = "0" name="pwd_Expired"/>
+  </property>
+  <property generated="never" lazy="false" name="password_creation_date" type="java.sql.Timestamp">
+   <column name="password_creation_date"/>
+  </property>
+  <!-- JCB6622 : 20240805 : Dhiraj Kumar : Email Flooding security fix -->
+  <property generated="never" lazy="false" name="resetPassCount" type="int">
+   <column name="reset_pass_count"/>
+  </property> 
+ 
+ </class>
+</hibernate-mapping>

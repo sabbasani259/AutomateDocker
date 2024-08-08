@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 28, 2012 11:18:50 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+   	<class name="remote.wise.businessentity.AccountContactMapping" table="account_contact">
+  		<composite-id>
+         <key-many-to-one
+            name="account_id"
+            class="remote.wise.businessentity.AccountEntity"
+            column="Account_ID">
+         </key-many-to-one>
+         <key-many-to-one
+            name="contact_id"
+            class="remote.wise.businessentity.ContactEntity"
+            column="Contact_ID">
+         </key-many-to-one>
+      	</composite-id>
+  	
+   </class>
+</hibernate-mapping>

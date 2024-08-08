@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 30, 2012 1:42:48 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.ServiceHistoryEntity" table="service_history">
+        <id name="serviceTicketNumber" type="java.lang.String">
+            <column name="serviceTicketNumber" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="serialNumber" class="remote.wise.businessentity.AssetEntity" fetch="join">
+            <column name="serialNumber" />
+        </many-to-one>
+        <property name="serviceDate" type="java.sql.Timestamp">
+            <column name="serviceDate" />
+        </property>
+        <many-to-one name="dealerId" class="remote.wise.businessentity.AccountEntity" fetch="join">
+            <column name="dealerId" />
+        </many-to-one>
+        <property name="attendedBy" type="java.lang.String">
+            <column name="attendedBy" />
+        </property>
+        <property name="nextServiceDate" type="java.sql.Timestamp">
+            <column name="nextServiceDate" />
+        </property>
+        <property name="comments" type="java.lang.String">
+            <column name="comments" />
+        </property>
+        <property name="actionTaken" type="java.lang.String">
+            <column name="actionTaken" />
+        </property>
+        <many-to-one name="serviceTypeId" class="remote.wise.businessentity.ServiceTypeEntity" fetch="join">
+            <column name="serviceTypeId" />
+        </many-to-one>
+        <property name="serviceName" type="java.lang.String">
+            <column name="serviceName" />
+        </property>
+        <property name="ScheduleName" type="java.lang.String">
+            <column name="scheduleName" />
+        </property>
+        <property name="dbmsPartCode" type="java.lang.String">
+   		<column name="DBMS_partCode"/>
+  		</property>
+  		<property name="serviceScheduleId" type="int">
+   		<column name="serviceScheduleId"/>
+  		</property>
+  		
+  		<property name="CMH" type="java.lang.String">
+   		<column name="CMH"/>
+  		</property>
+  		
+  		<!--  DF20191220:Abhishek:: added callTypeId to close service alert. -->
+  		
+  		<property name="callTypeId" type="java.lang.String">
+   		<column name="call_type_id"/>
+  		</property>
+  		
+        <many-to-one name="faultId" class="remote.wise.businessentity.AssetFaultEntity" fetch="join">
+            <column name="faultId" />
+        </many-to-one>
+    </class>
+</hibernate-mapping>

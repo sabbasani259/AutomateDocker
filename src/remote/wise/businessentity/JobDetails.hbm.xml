@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Apr 24, 2013 12:04:54 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+ <class name="remote.wise.businessentity.JobDetails" table="job_details">
+  <composite-id mapped="false" unsaved-value="undefined">
+   <key-property column="Job_Code" name="jobCode" type="java.lang.String"/>
+   <key-property column="Process" name="process" type="java.lang.String"/>
+  </composite-id>
+  <property generated="never" lazy="false" name="sequence" type="int">
+   <column name="Sequence"/>
+  </property>
+  <property generated="never" lazy="false" name="filePath" type="java.lang.String">
+   <column name="File_Path"/>
+  </property>
+  <property generated="never" lazy="false" name="fileName" type="java.lang.String">
+   <column name="File_Name"/>
+  </property>
+  <property generated="never" lazy="false" name="reprocessJobCode" type="java.lang.String">
+   <column name="Reprocess_Job_Code"/>
+  </property>
+ </class>
+</hibernate-mapping>

@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated May 29, 2013 11:55:07 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+ <class name="remote.wise.businessentity.LandmarkLogDetailsEntity" table="landmark_log_details">
+  <composite-id>
+   <key-many-to-one class="remote.wise.businessentity.AssetEntity"
+    column="Serial_Number" name="serialNumber"/>
+   <key-many-to-one class="remote.wise.businessentity.LandmarkEntity"
+    column="Landmark_Id" name="landmarkId"/>
+   <key-property name="transactionTimestamp" type="java.sql.Timestamp" column="Transaction_Timestamp"/>
+  </composite-id>
+  <property generated="never" lazy="false" name="machineLandmarkStatus" type="java.lang.String">
+   <column name="Machine_Landmark_Status"/>
+  </property>
+  <many-to-one class="remote.wise.businessentity.AssetEventEntity"
+   fetch="join" lazy="false" name="assetEventId">
+   <column name="Asset_Event_ID"/>
+  </many-to-one>
+ </class>
+</hibernate-mapping>

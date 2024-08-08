@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 17, 2012 2:46:12 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.EventTypeEntity" table="event_type">
+        <id name="eventTypeId" type="int">
+            <column default="0" name="Event_Type_ID" />
+            <generator class="identity" />
+        </id>
+        <property name="eventTypeName" type="java.lang.String">
+            <column name="Event_Type_Name" />
+        </property>
+        <property name="eventTypeCode" type="java.lang.String">
+            <column name="Event_Type_Code" />
+        </property>
+    </class>
+</hibernate-mapping>

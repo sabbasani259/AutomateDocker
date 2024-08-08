@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 23, 2013 12:04:25 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+ <class name="remote.wise.businessentity.SmsLogDetailsEntity" table="sms_log_details">
+  <id name="smsLoggerId" type="int">
+   <column default="1" name="Sms_Logger_ID"/>
+   <generator class="identity"/>
+  </id>
+  <property generated="never" lazy="false" name="serialNumber" type="java.lang.String">
+   <column name="Serial_Number"/>
+  </property>
+  <property generated="never" lazy="false" name="mobileNumber" type="java.lang.String">
+   <column name="Mobile_Number"/>
+  </property>
+  <property generated="never" lazy="false" name="smsSentTime" type="java.sql.Timestamp">
+   <column name="SmsSent_Timestamp"/>
+  </property>
+  <property generated="never" lazy="false" name="smsBody" type="java.lang.String">
+   <column name="Sms_Body"/>
+  </property>
+  <property generated="never" lazy="false" name="responseId" type="java.lang.String">
+   <column name="Response_ID"/>
+  </property>
+  <property generated="never" lazy="false" name="assetEventId" type="int">
+   <column name="Asset_Event_ID"/>
+  </property>
+  <property generated="never" lazy="false" name="language" type="java.lang.String">
+   <column name="Language"/>
+  </property>
+  <property generated="never" lazy="false" name="eventCode" type="java.lang.String">
+   <column name="Event_Code"/>
+  </property>
+  <property generated="never" lazy="false" name="eventGeneratedTS" type="java.sql.Timestamp">
+   <column name="Event_Generated_TS"/>
+  </property>
+  <property generated="never" lazy="false" name="month" type="int">
+   <column name="Month"/>
+  </property>
+  <property generated="never" lazy="false" name="year" type="int">
+   <column name="Year"/>
+  </property>
+ </class>
+</hibernate-mapping>

@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 20, 2012 11:50:06 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.EventCondition" table="event_condition">
+        <composite-id>
+         <key-many-to-one
+            name="EventId"
+            class="remote.wise.businessentity.EventEntity"
+            column="event_id">
+         </key-many-to-one>
+         <key-many-to-one
+            name="ConditionId"
+            class="remote.wise.businessentity.ConditionsEntity"
+            column="condition_id">
+         </key-many-to-one>
+      	</composite-id>
+        <property name="BooleanOperator" type="java.lang.String">
+            <column name="boolen_operator" />
+        </property>
+        <property name="Rank" type="int">
+            <column name="Rank" />
+        </property>
+    </class>
+</hibernate-mapping>

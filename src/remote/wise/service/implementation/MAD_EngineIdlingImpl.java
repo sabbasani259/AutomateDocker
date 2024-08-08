@@ -1,0 +1,525 @@
+/**
+ * CR337 : 20220721 : Dhiraj K : Property file read.
+ */
+package remote.wise.service.implementation;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Properties;
+
+import org.apache.logging.log4j.Logger;
+import org.codehaus.jackson.map.ObjectMapper;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import remote.wise.exception.CustomFault;
+import remote.wise.log.FatalErrorLogging.FatalLoggerClass;
+import remote.wise.log.InfoLogging.InfoLoggerClass;
+import remote.wise.util.CommonUtil;
+import remote.wise.util.ConnectMySQL;
+import remote.wise.util.DateUtil;
+import remote.wise.util.ListToStringConversion;
+import remote.wise.util.StaticProperties;
+
+/**
+ * @author ROOPN5
+ *
+ */
+public class MAD_EngineIdlingImpl {
+
+	public List<HashMap<String, Object>> getEngineIdlingDetails(String loginID, List tenancyIdList,List profileCodeList,String startDate,String endDate,String accountType, String detailedView){
+
+		HashMap<String, Object> respObj = null;
+		List<HashMap<String, Object>> responseList=new ArrayList<HashMap<String,Object>>();
+
+		Logger fLogger = FatalLoggerClass.logger;
+		Logger iLogger = InfoLoggerClass.logger;
+		Connection prodConnection = null;
+		Statement statement = null;
+		ResultSet rs = null;
+		String accountCodeListAsString=null;
+		String profileCodelistAsString=null;
+
+		String selectQuery=null;
+		String fromQuery=null;
+		String whereQuery=null;
+		String groupByQuery=null;
+		String finalQuery=null;
+		List<String> AccountCodeList = new ArrayList<String>();
+		String MDAaccountIdListAsString=null;
+		String MDAassetGroupCodeList=null;
+		String MDAoutput=null;
+		String MDAresult=null;
+		DecimalFormat decformat=new DecimalFormat("0.0");
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		Date date1 = null,date2=null,forMDA=null;
+		try {
+			date1 = format.parse(startDate);
+			 date2 = format.parse(endDate);
+			 forMDA=format.parse("2018-03-01");
+		} catch (ParseException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+
+		//DecimalFormat decformat=new DecimalFormat("0.0");
+
+		//Df20180129 @Roopa Multiple BP code changes--Taking the list of users that are mapped to given account code, based on Mapping code
+		iLogger.info("MAD_EngineIdlingImpl input : loginid= "+loginID+" tenancyIdList "+tenancyIdList+" profileCodeList "+profileCodeList+" startDate "+startDate+" endDate "+endDate+" accountType "+accountType+" detailedView "+detailedView);
+
+		try{
+			if(tenancyIdList!=null){
+
+				accountCodeListAsString=new DateUtil().getAccountCodeListForTheTenancy(tenancyIdList);
+				AccountCodeList.add(accountCodeListAsString.replace("\'", "").split(",")[0]);
+				MDAaccountIdListAsString=accountCodeListAsString.replace("\'", "");
+				
+			}
+			iLogger.info("MAD_EngineIdlingImpl : AccountCodeList "+AccountCodeList+" MDAaccountIdListAsString "+MDAaccountIdListAsString);
+
+			if(profileCodeList!=null){
+				profileCodelistAsString=new ListToStringConversion().getStringList(profileCodeList).toString();
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			fLogger.fatal("MADashBoardDetailsRESTService:getEngineIdlingDetails: "+"Error in converting the list to String :"+e.getMessage());
+			return responseList;
+		}
+
+
+		Properties props = new Properties();
+
+		Properties deployEnvProp=null;
+		try
+		{
+			deployEnvProp= StaticProperties.getConfProperty();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			fLogger.fatal("MADashBoardDetailsRESTService:getEngineIdlingDetails: "+"Error in intializing property File :"+e.getMessage());
+			return responseList;
+		}
+		String ReportFetchDB = deployEnvProp.getProperty("ReportFetchDB");
+
+		/*if(ReportFetchDB!=null && ReportFetchDB.equalsIgnoreCase("NDB"))*/
+		if(date1.before(forMDA) && date2.before(forMDA)){
+
+			try{
+
+
+
+				SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+
+				Date startDay = myFormat.parse(startDate);
+				Date endDay = myFormat.parse(endDate);
+				long difference = startDay.getTime() - endDay.getTime();
+				double daysBetween = (difference / (1000*60*60*24));
+
+				double total_period_hours = 24*daysBetween;
+
+				int total_period_hours1=(int) Math.abs(total_period_hours);
+
+
+				System.out.println("Number of Days between dates: "+daysBetween);
+
+				if(detailedView==null || detailedView.equalsIgnoreCase("false")){
+					selectQuery= "select count(distinct a.AssetID) as machineCount," +
+							"convert(ifnull(sum(a.idletime),'0.000'), decimal(10,1))  as idletime,"+
+							"convert(ifnull(sum(a.WorkingTime),'0.000'), decimal(10,1))  as WorkingTime, "+
+							"CONVERT(ifnull(sum(a.EngineOnTime),'0.000') , decimal(10,1)) as EngineOnTime," +
+							"a.ProfileName ";
+				}
+				else{
+
+					selectQuery= "select a.AssetID as Serial_Number," +
+							"convert(ifnull(sum(a.idletime),'0.000'), decimal(10,1))  as idletime,"+
+							"convert(ifnull(sum(a.WorkingTime),'0.000'), decimal(10,1))  as WorkingTime, "+
+							"CONVERT(ifnull(sum(a.EngineOnTime),'0.000') , decimal(10,1)) as EngineOnTime";
+				}
+
+				fromQuery= " from factInsight_dayAgg a ";
+
+				whereQuery=	" where a.TxnDate between '"+startDate+"' and '"+endDate+"' ";
+
+				if(accountType!=null){
+					if(accountType.equalsIgnoreCase("region")){
+
+						whereQuery=whereQuery+" and a.Column2 in ("+accountCodeListAsString+")";
+
+					}
+					if(accountType.equalsIgnoreCase("zone")){
+
+						whereQuery=whereQuery+" and a.ZonalCode in ("+accountCodeListAsString+")";
+
+					}
+
+					if(accountType.equalsIgnoreCase("dealer")){
+
+						whereQuery=whereQuery+" and a.DealerCode in ("+accountCodeListAsString+")";
+
+					}
+
+					if(accountType.equalsIgnoreCase("customer")){
+
+						whereQuery=whereQuery+" and a.CustCode in ("+accountCodeListAsString+")";
+
+					}
+				}
+
+				if(profileCodelistAsString!=null){
+					whereQuery=whereQuery+ " and a.ProfileCode in("+profileCodelistAsString+")";	
+				}
+
+				if(detailedView==null || detailedView.equalsIgnoreCase("false")){
+					groupByQuery= " group by a.ProfileCode";
+				}
+				else{
+					groupByQuery= " group by a.AssetID";
+				}
+
+				finalQuery=selectQuery+fromQuery+whereQuery+groupByQuery;
+
+				iLogger.info("MADashBoardDetailsRESTService:getEngineIdlingDetails: Final Query::"+finalQuery);
+
+				ConnectMySQL connMySql = new ConnectMySQL();
+				prodConnection = connMySql.getProdDb2Connection();
+				statement = prodConnection.createStatement();
+				rs = statement.executeQuery(finalQuery);
+
+
+				if(detailedView==null || detailedView.equalsIgnoreCase("false")){
+					while(rs.next()){
+						respObj = new HashMap<String, Object>();
+
+						int machineCount=rs.getInt("machineCount");
+
+						double EngineOnTime=rs.getDouble("EngineOnTime");
+
+						double engineonPerct=(EngineOnTime/(machineCount * total_period_hours1))*100;
+
+						double WorkingTime=rs.getDouble("WorkingTime");
+
+						double WorkingTimePerct=(WorkingTime/(machineCount * total_period_hours1))*100;
+
+						double engineoffPerct=100 - engineonPerct;
+						double idleperct=100-(WorkingTimePerct+engineoffPerct);
+
+						respObj.put("WorkingTimePerct", decformat.format(WorkingTimePerct));
+						respObj.put("EngineOffTimePerct", decformat.format(engineoffPerct));
+						respObj.put("idletimePerct", decformat.format(idleperct));
+						respObj.put("ProfileName", rs.getString("ProfileName"));
+
+						responseList.add(respObj);
+					}
+				}
+				else{
+
+					while(rs.next()){
+						respObj = new HashMap<String, Object>();
+
+
+
+						double EngineOnTime=rs.getDouble("EngineOnTime");
+
+						double engineonPerct=(EngineOnTime/ total_period_hours1)*100;
+
+						double WorkingTime=rs.getDouble("WorkingTime");
+
+						double WorkingTimePerct=(WorkingTime/ total_period_hours1)*100;
+
+						double engineoffPerct=100 - engineonPerct;
+						double idleperct=100-(WorkingTimePerct+engineoffPerct);
+
+						respObj.put("WorkingTimePerct", decformat.format(WorkingTimePerct));
+						respObj.put("EngineOffTimePerct", decformat.format(engineoffPerct));
+						respObj.put("idletimePerct", decformat.format(idleperct));
+						respObj.put("Serial_Number", rs.getString("Serial_Number"));
+
+						responseList.add(respObj);
+					}
+
+				}
+
+			}
+
+			catch(Exception e){
+				fLogger.fatal("MADashBoardDetailsRESTService:getEngineIdlingDetails:: Exception Caught:"+e.getMessage());
+			}
+			finally{
+				try { 
+					if (rs != null)
+						rs.close(); 
+				} catch (Exception e) {
+					fLogger.fatal("MADashBoardDetailsRESTService:getEngineIdlingDetails:: Exception Caught:"+e.getMessage());
+				}
+
+				if(statement!=null){
+					try {
+						statement.close();
+					} catch (SQLException e) {
+						fLogger.fatal("MADashBoardDetailsRESTService:getEngineIdlingDetails:: Exception Caught:"+e.getMessage());
+					}
+				}
+				if(prodConnection != null){
+					try {
+						prodConnection.close();
+					} catch (SQLException e) {
+						fLogger.fatal("MADashBoardDetailsRESTService:getEngineIdlingDetails:: Exception Caught:"+e.getMessage());
+					}
+				}
+			}
+
+		}
+		else{
+
+			//Fetch data from MONGODB
+			
+			iLogger.info("Fetch from MONGO");
+			//MOOL DB changes
+			Connection prodConn = null;
+			Statement stmnt = null;
+			ResultSet res = null,rt=null;
+			try{
+			ConnectMySQL connSql = new ConnectMySQL();
+			prodConn = connSql.getConnection();
+			stmnt = prodConn.createStatement();
+			List<HashMap<String,Object>> MDAOutputMap = null;
+			DateUtil dateUtil1 = new DateUtil();
+			ListToStringConversion conversionObj = new ListToStringConversion();
+			//For accountFilter filling
+			if(AccountCodeList!=null && AccountCodeList.size()>0){
+				String countrycodeQuery="select account_id,CountryCode from account where Account_Code="+AccountCodeList.get(0);
+				//System.out.println("countrycodeQuery "+countrycodeQuery);
+				iLogger.info("For MongoDB countrycodeQuery "+countrycodeQuery);
+				rt=stmnt.executeQuery(countrycodeQuery);
+				String countryCode=null;
+				String account_id=null;
+				if(rt.next())
+				{
+					countryCode=rt.getString("CountryCode");
+					account_id=rt.getString("account_id");
+					countryCode= URLEncoder.encode(countryCode, "UTF-8");
+				}
+				
+					String acntTncyQuery = "select Tenancy_Type_Name from tenancy_type where Tenancy_Type_ID in (select Tenancy_Type_ID from tenancy where Tenancy_ID in (select Tenancy_ID from account_tenancy where Account_ID="
+							+ account_id + "))";
+					iLogger.info("For MongoDB acntTncyNameQuery "+acntTncyQuery);
+			res=stmnt.executeQuery(acntTncyQuery);
+			String tenancy_type_name="";
+			if(res.next())
+			{
+				tenancy_type_name=res.getString("Tenancy_Type_Name");
+			}
+			String accountFilter="";
+			if(tenancy_type_name!=null && !tenancy_type_name.equalsIgnoreCase(""))
+			{
+				if(tenancy_type_name.equalsIgnoreCase("Global"))
+				{
+					accountFilter=null;
+					countryCode=null;
+
+				}
+				else if(tenancy_type_name.equalsIgnoreCase("Regional"))
+				{
+					accountFilter="RegionCode";
+				}
+				else if(tenancy_type_name.equalsIgnoreCase("Zonal"))
+				{
+					accountFilter="ZonalCode";
+				}
+				else if(tenancy_type_name.equalsIgnoreCase("Dealer"))
+				{
+					accountFilter="DealerCode";
+				}
+				else if(tenancy_type_name.equalsIgnoreCase("Customer"))
+				{
+					accountFilter="CustCode";
+				}
+				else
+				{
+					accountFilter="";
+				}
+				if(profileCodeList!=null){
+				StringBuilder MDAassetGroupCodeListBuilder=conversionObj.getStringWithoutQuoteList(profileCodeList);
+				MDAassetGroupCodeList=MDAassetGroupCodeListBuilder.toString();
+				MDAassetGroupCodeList=ListToStringConversion.removeLastComma(MDAassetGroupCodeList);}
+				respObj = new HashMap<String, Object>(); //MDAResponse=new AlertSummaryRespContract();
+				ObjectMapper mapper = new ObjectMapper();
+				//CR337.sn
+				String connIP=null;
+				String connPort=null;
+				Properties prop = null;
+				try{
+					prop = CommonUtil.getDepEnvProperties();
+					connIP = prop.getProperty("MDA_ServerIP");
+					connPort = prop.getProperty("MDA_ServerPort");
+					iLogger.info("MAD_EngineIdlingImpl : MDAIP : "+ connIP + ":MDAPort:"+connPort);
+				}catch(Exception e){
+					fLogger.fatal("MAD_EngineIdlingImpl : getEngineIdlingDetails : " +
+							"Exception in getting Server Details for MDA Layer from properties file: " +e);
+				}
+				//CR337.en
+
+				try{
+							//String url="http://10.210.196.206:26030/MoolDAReports/MADashBoardService/getMAD_EngineIdling?accountFilter=" //CR337.o
+							String url="http://"+ connIP +":"+ connPort +"/MoolDAReports/MADashBoardService/getMAD_EngineIdling?accountFilter=" //CR337.n
+									+ accountFilter
+									+ "&accountIDList="
+									+ MDAaccountIdListAsString
+									+ "&dateFilter=Date"
+									+ "&value1="
+									+ startDate
+									+"&value2="
+									+endDate
+									+"&profileCodeList="
+									+MDAassetGroupCodeList
+									+ "&loginID="
+									+ loginID
+									+ "&countryCode="
+									+countryCode
+									+"&detailedView="
+									+detailedView;
+							//System.out.println("MDA MADashBoardService/getMAD_EngineIdling  URL : "+url);
+							iLogger.info("MDA MADashBoardService/getMAD_EngineIdling URL : "+url);
+							URL MDAUrl = new URL(url);
+							 HttpURLConnection conn =(HttpURLConnection) MDAUrl.openConnection();
+							    conn.setRequestMethod("GET"); 
+							    conn.setRequestProperty("Accept", "application/json");
+								  if (conn.getResponseCode() != 200  && conn.getResponseCode() != 204) {
+									  iLogger.info("MDAReports report status: FAILURE for getMAD_EngineIdling Service Report ::Response Code:"+conn.getResponseCode());
+									  throw new RuntimeException("Failed : HTTP error code : " +conn.getResponseCode()); 
+									  }
+								  iLogger.info("MDAReports report status: SUCCESS for getMAD_EngineIdling Service Report ::Response Code:"+conn.getResponseCode());
+								  BufferedReader br = new BufferedReader(new  InputStreamReader((conn.getInputStream())));
+								  
+								  System.out.println("MDA MADashBoardService/getMAD_EngineIdling Output from Server .... \n");
+								  while ((MDAoutput = br.readLine()) != null) { 
+									  //System.out.println("MDA AlertSummary json output "+MDAoutput); 
+									  iLogger.info("MDA MADashBoardService/getMAD_EngineIdling json output "+MDAoutput);
+									  MDAresult =MDAoutput; } 
+								  MDAOutputMap = new Gson().fromJson(MDAresult, new TypeToken<ArrayList<HashMap<String, Object>>>(){}.getType());
+								  for(HashMap<String, Object> map: MDAOutputMap){
+										respObj = new HashMap<String, Object>();
+									  for(Entry<String, Object> mapEntry: map.entrySet()){
+								  if(detailedView.equalsIgnoreCase("true")){
+									  if (mapEntry.getKey().toString().contains("Serial_Number"))
+									  {
+									  respObj.put("Serial_Number", mapEntry.getValue());}
+									  if (mapEntry.getKey().toString().contains("WorkingTimePerct"))
+									  {
+										  respObj.put("WorkingTimePerct", mapEntry.getValue());}
+									  if (mapEntry.getKey().toString().contains("EngineOffPerct"))
+									  {
+										  respObj.put("EngineOffTimePerct", mapEntry.getValue());}
+									  if (mapEntry.getKey().toString().contains("IdleTimePerct"))
+									  {
+										  respObj.put("idletimePerct", mapEntry.getValue());}
+										
+								  }
+								  else{
+									  if (mapEntry.getKey().toString().contains("ProfileName"))
+									  {
+									  respObj.put("ProfileName", mapEntry.getValue());
+									  }
+									  if (mapEntry.getKey().toString().contains("WorkingTimePerct"))
+									  {
+										respObj.put("WorkingTimePerct", mapEntry.getValue());
+									  }
+									  if (mapEntry.getKey().toString().contains("EngineOffPerct"))
+									  {
+										respObj.put("EngineOffTimePerct", mapEntry.getValue());
+									  }
+									  if (mapEntry.getKey().toString().contains("IdleTimePerct"))
+									  {
+										respObj.put("idletimePerct", mapEntry.getValue());
+									  }
+
+								  }
+									  }	responseList.add(respObj);
+									  }
+								   //System.out.println("MDAResponse LLAlertSummaryService outmap : "+MDAOutputMap);
+								  //iLogger.info("MDAResponse MADashBoardService/getMAD_EngineIdling outmap : "+MDAOutputMap);
+								  conn.disconnect();
+				}catch(Exception e)
+				{
+					e.printStackTrace();
+					fLogger.fatal("Error occured while connecting to Mongo DB "+e.getMessage());
+				}
+				
+				}
+			
+			
+			}
+			else{
+				
+				throw new CustomFault("AccountCodeList is empty");
+			}
+				
+		}catch(Exception e)
+		{	e.printStackTrace();
+			fLogger.fatal("Exception occured "+e.getMessage());
+		}
+			finally {
+				if (res != null){
+					try {
+						res.close();
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
+				}
+				if (rt != null){
+					try {
+						rt.close();
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
+				}
+
+				if (stmnt != null){
+					try {
+						stmnt.close();
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+
+				if (prodConn != null) {
+					try {
+						prodConn.close();
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+
+			}
+		
+		
+		
+		}
+
+		return responseList;
+
+	}
+
+}

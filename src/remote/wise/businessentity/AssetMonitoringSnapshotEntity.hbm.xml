@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Apr 9, 2014 3:16:48 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+ <class name="remote.wise.businessentity.AssetMonitoringSnapshotEntity" table="asset_monitoring_snapshot">
+  <composite-id mapped="false" unsaved-value="undefined">
+   <key-many-to-one class="remote.wise.businessentity.AssetEntity"
+    column="Serial_Number" name="serialNumber"/>
+  </composite-id>
+  <many-to-one
+   class="remote.wise.businessentity.AssetMonitoringHeaderEntity"
+   fetch="join" name="transactionNumber">
+   <column name="Transaction_Number"/>
+  </many-to-one>
+  <property generated="never" lazy="false" name="transactionTime" type="java.sql.Timestamp">
+   <column name="Transaction_Timestamp"/>
+  </property>
+  <property generated="never" lazy="false" name="fuelLevel" type="java.lang.String">
+   <column name="Fuel_Level"/>
+  </property>
+  <property generated="never" lazy="false" name="latestCreatedTimestamp" type="java.sql.Timestamp">
+   <column name="Latest_Created_Timestamp"/>
+  </property>
+  <many-to-one
+   class="remote.wise.businessentity.AssetMonitoringHeaderEntity"
+   fetch="join" name="latestLogTxn">
+   <column name="Latest_Log_Transaction"/>
+  </many-to-one>
+  <many-to-one
+   class="remote.wise.businessentity.AssetMonitoringHeaderEntity"
+   fetch="join" name="latestEventTxn">
+   <column name="Latest_Event_Transaction"/>
+  </many-to-one>
+  <many-to-one
+   class="remote.wise.businessentity.AssetMonitoringHeaderEntity"
+   fetch="join" name="latestFuelTxn">
+   <column name="Latest_Fuel_Transaction"/>
+  </many-to-one>
+ </class>
+</hibernate-mapping>

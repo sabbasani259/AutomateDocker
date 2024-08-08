@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated May 6, 2013 2:10:46 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+ <class name="remote.wise.businessentity.FotaUpdateHistoryEntity" table="fota_update_history">
+  <id name="history_id" type="int">
+   <column name="history_id" default="0"/>
+   <generator class="identity"/>
+  </id>
+  <property generated="never" lazy="false" name="versionId" type="java.lang.String">
+   <column name="Version_ID"/>
+  </property>
+  <property generated="never" lazy="false" name="fileName" type="java.lang.String">
+   <column name="file_name"/>
+  </property>
+  <property generated="never" lazy="false" name="imeiNo" type="java.lang.String">
+   <column name="IMEI_Number"/>
+  </property>
+  <property generated="never" lazy="false" name="sessionId" type="java.lang.String">
+   <column name="Session_ID"/>
+  </property>
+  <property generated="never" lazy="false" name="update_date" type="java.sql.Timestamp">
+   <column name="Update_Date"/>
+  </property>
+  <property generated="never" lazy="false" name="status" type="java.lang.String">
+   <column name="Status"/>
+  </property>
+ </class>
+</hibernate-mapping>

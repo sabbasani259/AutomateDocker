@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="DealerInformationSampleService" targetNamespace="http://webservice.service.wise.remote/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://webservice.service.wise.remote/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<import namespace="http://webservice.service.wise.remote/" schemaLocation="DealerInformationSampleService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="processEADealerData">
+    <wsdl:part name="parameters" element="tns:processEADealerData">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="reprocessEADealerDataResponse">
+    <wsdl:part name="parameters" element="tns:reprocessEADealerDataResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="reprocessEADealerData">
+    <wsdl:part name="parameters" element="tns:reprocessEADealerData">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="processEADealerDataResponse">
+    <wsdl:part name="parameters" element="tns:processEADealerDataResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="DealerInformationSample">
+    <wsdl:operation name="reprocessEADealerData">
+      <wsdl:input name="reprocessEADealerData" message="tns:reprocessEADealerData">
+    </wsdl:input>
+      <wsdl:output name="reprocessEADealerDataResponse" message="tns:reprocessEADealerDataResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="processEADealerData">
+      <wsdl:input name="processEADealerData" message="tns:processEADealerData">
+    </wsdl:input>
+      <wsdl:output name="processEADealerDataResponse" message="tns:processEADealerDataResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="DealerInformationSampleServiceSoapBinding" type="tns:DealerInformationSample">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="reprocessEADealerData">
+      <soap:operation soapAction="reprocessEADealerData" style="document"/>
+      <wsdl:input name="reprocessEADealerData">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="reprocessEADealerDataResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="processEADealerData">
+      <soap:operation soapAction="processEADealerData" style="document"/>
+      <wsdl:input name="processEADealerData">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="processEADealerDataResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="DealerInformationSampleService">
+    <wsdl:port name="DealerInformationSamplePort" binding="tns:DealerInformationSampleServiceSoapBinding">
+      <soap:address location="http://localhost:9090/DealerInformationSamplePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

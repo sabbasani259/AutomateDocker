@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 28, 2012 11:18:50 PM by Hibernate Tools 3.4.0.CR1 -->
+<!-- CR334 : 20221118 : Dhiraj K : Changes for Billing and ARD table update -->
+<hibernate-mapping>
+   	<class name="remote.wise.businessentity.AssetRenewalDataEntity" table="asset_renewal_data">
+  		<composite-id mapped="false" unsaved-value="undefined">
+			<key-many-to-one class="remote.wise.businessentity.AssetEntity"
+				column="Serial_Number" name="serial_number" />
+		</composite-id>
+		<property generated="never" lazy="false" name="mode_of_subscription"
+			type="int">
+			<!-- <column name="Mode_Of_Subscription" /> -->
+			<column name="NoOfYrs" />
+		</property>
+		<property generated="never" lazy="false" name="updated_on"
+			type="java.sql.Timestamp">
+			<column name="Updated_On" />
+		</property>
+		<property generated="never" lazy="false" name="subscribed_from"
+			type="java.sql.Timestamp">
+			<!-- <column name="Subscribed_From" /> CR334.o-->
+			<!-- CR334.sn -->
+			<column name="SubsStartDate" />
+		</property>
+		<property generated="never" lazy="false" name="subscribed_to"
+			type="java.sql.Timestamp">
+			<column name="SubsEndDate" />
+			<!-- CR334.en -->
+		</property>
+		<many-to-one class="remote.wise.businessentity.ContactEntity"
+			fetch="join" lazy="false" name="updated_by">
+			<column name="Updated_By" />
+		</many-to-one>
+   </class>
+</hibernate-mapping>

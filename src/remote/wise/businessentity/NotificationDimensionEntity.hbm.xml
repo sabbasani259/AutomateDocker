@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jan 10, 2013 9:49:08 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+ <class name="remote.wise.businessentity.NotificationDimensionEntity" table="notification_dimension">
+  <id name="Notification_Dimension_Id" type="int">
+   <column default="0" name="Notification_Dimension_Id"/>
+   <generator class="identity"/>
+  </id>
+  <many-to-one class="remote.wise.businessentity.EventEntity"
+   column="Notification_Id" name="Notification_Id"/>
+  <property generated="never" lazy="false" name="Notification_Type_Id" type="int">
+   <column name="Notification_Type_Id"/>
+  </property>
+  <property generated="never" lazy="false" name="Notification_Name" type="java.lang.String">
+   <column name="Notification_Name"/>
+  </property>
+  <property generated="never" lazy="false" name="LastUpdated_Date" type="java.lang.String">
+   <column name="last_updated"/>
+  </property>
+  <property generated="never" lazy="false" name="Notification_Type_Name" type="java.lang.String">
+   <column name="Notification_Type_Name"/>
+  </property>
+  <property access="field" generated="never" lazy="false"
+   name="Severity" type="java.lang.String">
+   <column name="Severity"/>
+  </property>
+ </class>
+</hibernate-mapping>

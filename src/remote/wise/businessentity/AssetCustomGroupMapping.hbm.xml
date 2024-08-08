@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 4, 2012 5:21:05 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.AssetCustomGroupMapping" table="custom_asset_group_member">
+  		<composite-id>
+         <key-many-to-one
+            name="group_id"
+            class="remote.wise.businessentity.CustomAssetGroupEntity"
+            column="Group_ID">
+         </key-many-to-one>
+         <key-many-to-one
+            name="serial_number"
+            class="remote.wise.businessentity.AssetEntity"
+            column="Serial_Number">
+         </key-many-to-one>
+      	</composite-id>
+  	
+   </class>
+</hibernate-mapping>

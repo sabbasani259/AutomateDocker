@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jan 20, 2015 10:43:20 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+ <class name="remote.wise.businessentity.HAJAssetLocationDetailsEntity" table="HAJ_location_snapshot">
+  <id name="serialNumber" type="java.lang.String">
+   <column name="Serial_Number"/>
+   <generator class="assigned"/>
+  </id>
+  <property generated="never" lazy="false" name="Latitude" type="java.lang.String">
+   <column name="Latitude"/>
+  </property>
+  <property generated="never" lazy="false" name="Longitude" type="java.lang.String">
+   <column name="Longitude"/>
+  </property>
+  <property generated="never" lazy="false" name="sendFlag" type="int">
+   <column name="Send_Flag"/>
+  </property>
+ </class>
+</hibernate-mapping>

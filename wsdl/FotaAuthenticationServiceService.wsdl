@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="FotaAuthenticationServiceService" targetNamespace="http://webservice.service.wise.remote/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://webservice.service.wise.remote/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<import namespace="http://webservice.service.wise.remote/" schemaLocation="FotaAuthenticationServiceService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="FotaAuthenticationResponse">
+    <wsdl:part name="parameters" element="tns:FotaAuthenticationResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="FotaAuthentication">
+    <wsdl:part name="parameters" element="tns:FotaAuthentication">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="FotaAuthenticationService">
+    <wsdl:operation name="FotaAuthentication">
+      <wsdl:input name="FotaAuthentication" message="tns:FotaAuthentication">
+    </wsdl:input>
+      <wsdl:output name="FotaAuthenticationResponse" message="tns:FotaAuthenticationResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="FotaAuthenticationServiceServiceSoapBinding" type="tns:FotaAuthenticationService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="FotaAuthentication">
+      <soap:operation soapAction="FotaAuthentication" style="document"/>
+      <wsdl:input name="FotaAuthentication">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="FotaAuthenticationResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="FotaAuthenticationServiceService">
+    <wsdl:port name="FotaAuthenticationServicePort" binding="tns:FotaAuthenticationServiceServiceSoapBinding">
+      <soap:address location="http://localhost:9090/FotaAuthenticationServicePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

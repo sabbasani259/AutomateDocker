@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="AssetInstallationDetailsSampleService" targetNamespace="http://webservices.EAintegration.wise.remote/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://webservices.EAintegration.wise.remote/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<import namespace="http://webservices.EAintegration.wise.remote/" schemaLocation="AssetInstallationDetailsSampleService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="processEAassetInstData">
+    <wsdl:part name="parameters" element="tns:processEAassetInstData">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="processEAassetInstDataResponse">
+    <wsdl:part name="parameters" element="tns:processEAassetInstDataResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="AssetInstallationDetailsSample">
+    <wsdl:operation name="processEAassetInstData">
+      <wsdl:input name="processEAassetInstData" message="tns:processEAassetInstData">
+    </wsdl:input>
+      <wsdl:output name="processEAassetInstDataResponse" message="tns:processEAassetInstDataResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="AssetInstallationDetailsSampleServiceSoapBinding" type="tns:AssetInstallationDetailsSample">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="processEAassetInstData">
+      <soap:operation soapAction="processEAassetInstData" style="document"/>
+      <wsdl:input name="processEAassetInstData">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="processEAassetInstDataResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="AssetInstallationDetailsSampleService">
+    <wsdl:port name="AssetInstallationDetailsSamplePort" binding="tns:AssetInstallationDetailsSampleServiceSoapBinding">
+      <soap:address location="http://localhost:9090/AssetInstallationDetailsSamplePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

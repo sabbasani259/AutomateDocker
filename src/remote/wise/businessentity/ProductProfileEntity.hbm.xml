@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Mar 20, 2013 12:22:16 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+ <class name="remote.wise.businessentity.ProductProfileEntity" table="product_profile">
+  <composite-id mapped="false" unsaved-value="undefined">
+   <key-many-to-one class="remote.wise.businessentity.ProductEntity"
+    column="Product_ID" name="productId"/>
+  </composite-id>
+  <property generated="never" lazy="false" name="fuelCapacityInLitres" type="double">
+   <column name="FuelCapacityInLitres"/>
+  </property>
+  <!-- <property generated="never" lazy="false" name="ServiceScheduleName" type="java.lang.String">
+   <column name="ServiceScheduleName"/>
+  </property> -->
+ </class>
+</hibernate-mapping>

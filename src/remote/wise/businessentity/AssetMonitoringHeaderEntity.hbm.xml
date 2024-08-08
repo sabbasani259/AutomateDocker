@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 7, 2012 2:32:09 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+ <class name="remote.wise.businessentity.AssetMonitoringHeaderEntity" table="asset_monitoring_header">
+  <id name="transactionNumber" type="int">
+   <column default="0" name="Transaction_Number"/>
+   <generator class="identity"/>
+  </id>
+  <property generated="never" lazy="false" name="transactionTime" type="java.sql.Timestamp">
+   <column name="Transaction_Timestamp"/>
+  </property>
+  <many-to-one class="remote.wise.businessentity.AssetEntity"
+   fetch="join" name="serialNumber">
+   <column name="Serial_Number"/>
+  </many-to-one>
+  <many-to-one class="remote.wise.businessentity.RecordTypeEntity"
+   fetch="join" name="recordTypeId">
+   <column name="Record_Type_Id"/>
+  </many-to-one>
+  <property generated="never" lazy="false" name="createdTimestamp" type="java.sql.Timestamp">
+   <column name="Created_Timestamp"/>
+  </property>
+  <property generated="never" lazy="false" name="lastUpdatedTime" type="java.sql.Timestamp">
+   <column name="Last_Updated_Timestamp"/>
+  </property>
+  <property generated="never" lazy="false" name="updateCount" type="int">
+   <column name="Update_Count"/>
+  </property>
+  <property generated="never" lazy="false" name="fwVersionNumber" type="java.lang.String">
+   <column name="FW_Version_Number"/>
+  </property>
+  <property generated="never" lazy="false" name="segmentId" type="int">
+   <column name="Segment_ID"/>
+  </property>
+ </class>
+</hibernate-mapping>

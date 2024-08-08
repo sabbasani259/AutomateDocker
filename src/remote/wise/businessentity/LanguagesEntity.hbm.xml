@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 25, 2015 11:29:34 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.LanguagesEntity" table="language_master">
+        <id name="language" type="java.lang.String">
+            <column name="language" />
+            <generator class="assigned" />
+        </id>
+        <property name="lang_code" type="java.lang.String">
+            <column name="lang_code" />
+        </property>
+    </class>
+</hibernate-mapping>

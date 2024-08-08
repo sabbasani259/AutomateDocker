@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://webservice.service.wise.remote/" targetNamespace="http://webservice.service.wise.remote/" version="1.0">
+<xs:element name="setCurrentOwnerDetails" type="tns:setCurrentOwnerDetails"/>
+<xs:element name="setCurrentOwnerDetailsResponse" type="tns:setCurrentOwnerDetailsResponse"/>
+<xs:complexType name="setCurrentOwnerDetails">
+    <xs:sequence/>
+  </xs:complexType>
+<xs:complexType name="setCurrentOwnerDetailsResponse">
+    <xs:sequence/>
+  </xs:complexType>
+</xs:schema>

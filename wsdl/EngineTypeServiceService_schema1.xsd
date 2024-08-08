@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://webservice.service.wise.remote/" elementFormDefault="unqualified" targetNamespace="http://webservice.service.wise.remote/" version="1.0">
+<xs:element name="setEngineTypeDetails" type="tns:setEngineTypeDetails"/>
+<xs:element name="setEngineTypeDetailsResponse" type="tns:setEngineTypeDetailsResponse"/>
+<xs:complexType name="setEngineTypeDetails">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="engineTypeName" type="xs:string"/>
+      <xs:element minOccurs="0" name="engineTypeCode" type="xs:string"/>
+      <xs:element minOccurs="0" name="messageId" type="xs:string"/>
+      <xs:element minOccurs="0" name="fileRef" type="xs:string"/>
+      <xs:element minOccurs="0" name="process" type="xs:string"/>
+      <xs:element minOccurs="0" name="reprocessJobCode" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="setEngineTypeDetailsResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

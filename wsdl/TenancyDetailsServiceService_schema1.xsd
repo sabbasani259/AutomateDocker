@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://webservice.service.wise.remote/" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://webservice.service.wise.remote/">
+  <xs:element name="GetTenancyDetails" type="tns:GetTenancyDetails"/>
+  <xs:element name="GetTenancyDetailsResponse" type="tns:GetTenancyDetailsResponse"/>
+  <xs:element name="setTenancyDetails" type="tns:setTenancyDetails"/>
+  <xs:element name="setTenancyDetailsResponse" type="tns:setTenancyDetailsResponse"/>
+  <xs:complexType name="GetTenancyDetails">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="reqObj" type="tns:tenancyDetailsReqContract"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tenancyDetailsReqContract">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="childTenancyIdList" nillable="true" type="xs:int"/>
+      <xs:element minOccurs="0" name="loginId" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="parentTenancyIdList" nillable="true" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="GetTenancyDetailsResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:tenancyDetailsRespContract"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tenancyDetailsRespContract">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="accountName" type="xs:string"/>
+      <xs:element minOccurs="0" name="createdBy" type="xs:string"/>
+      <xs:element minOccurs="0" name="createdDate" type="xs:string"/>
+      <xs:element minOccurs="0" name="operatingEndTime" type="xs:string"/>
+      <xs:element minOccurs="0" name="operatingStartTime" type="xs:string"/>
+      <xs:element name="parentTenancyId" type="xs:int"/>
+      <xs:element minOccurs="0" name="parentTenancyName" type="xs:string"/>
+      <xs:element name="parentTenancyUserIdMailIdList">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="entry">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element minOccurs="0" name="key" type="xs:string"/>
+                  <xs:element minOccurs="0" name="value" type="xs:string"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="tenancyAdminList" nillable="true" type="xs:string"/>
+      <xs:element minOccurs="0" name="tenancyCode" type="xs:string"/>
+      <xs:element name="tenancyId" type="xs:int"/>
+      <xs:element minOccurs="0" name="tenancyName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType abstract="true" name="abstractMap">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="hashMap">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractMap">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="setTenancyDetails">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="reqObj" type="tns:tenancyCreationReqContract"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tenancyCreationReqContract">
+    <xs:sequence>
+      <xs:element name="accountId" type="xs:int"/>
+      <xs:element name="childTenancyId" type="xs:int"/>
+      <xs:element minOccurs="0" name="childTenancyName" type="xs:string"/>
+      <xs:element minOccurs="0" name="countryCode" type="xs:string"/>
+      <xs:element minOccurs="0" name="loginId" type="xs:string"/>
+      <xs:element minOccurs="0" name="operatingEndTime" type="xs:string"/>
+      <xs:element minOccurs="0" name="operatingStartTime" type="xs:string"/>
+      <xs:element name="overrideMachineOperatingHours" type="xs:boolean"/>
+      <xs:element name="parentTenancyId" type="xs:int"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="parentTenancyUserIdList" nillable="true" type="xs:string"/>
+      <xs:element minOccurs="0" name="tenancyAdminEmailId" type="xs:string"/>
+      <xs:element minOccurs="0" name="tenancyAdminFirstName" type="xs:string"/>
+      <xs:element minOccurs="0" name="tenancyAdminLastName" type="xs:string"/>
+      <xs:element minOccurs="0" name="tenancyAdminPhoneNumber" type="xs:string"/>
+      <xs:element name="tenancyAdminRoleId" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setTenancyDetailsResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="CustomFault" nillable="true" type="xs:string"/>
+  <xs:element name="ParseException" type="tns:ParseException"/>
+  <xs:complexType name="ParseException">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:element name="IOException" type="tns:IOException"/>
+  <xs:complexType name="IOException">
+    <xs:sequence/>
+  </xs:complexType>
+</xs:schema>

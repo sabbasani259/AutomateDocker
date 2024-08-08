@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jan 9, 2013 10:58:13 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.MachineGroupDimensionEntity" table="machine_group_dimension">
+        <id name="machineGroupId" type="int">
+            <column name="Machine_Group_ID" />
+            <generator class="assigned" />
+        </id>
+        <property name="parentId" type="int">
+            <column name="Parent_ID" />
+        </property>
+        <property name="machineGroupName" type="java.lang.String">
+            <column name="Machine_Group_Name" />
+        </property>
+        <property name="level" type="int">
+            <column name="Level" />
+        </property>
+        <property name="contactId" type="java.lang.String">
+            <column name="Contact_ID" />
+        </property>
+        <property name="tenancyId" type="int">
+            <column name="Tenancy_ID" />
+        </property>
+    </class>
+</hibernate-mapping>

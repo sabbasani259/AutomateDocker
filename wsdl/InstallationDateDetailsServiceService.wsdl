@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="InstallationDateDetailsServiceService" targetNamespace="http://webservice.service.wise.remote/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://webservice.service.wise.remote/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<import namespace="http://webservice.service.wise.remote/" schemaLocation="InstallationDateDetailsServiceService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="setAssetServiceSchedule">
+    <wsdl:part name="parameters" element="tns:setAssetServiceSchedule">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="setAssetServiceScheduleResponse">
+    <wsdl:part name="parameters" element="tns:setAssetServiceScheduleResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="InstallationDateDetailsService">
+    <wsdl:operation name="setAssetServiceSchedule">
+      <wsdl:input name="setAssetServiceSchedule" message="tns:setAssetServiceSchedule">
+    </wsdl:input>
+      <wsdl:output name="setAssetServiceScheduleResponse" message="tns:setAssetServiceScheduleResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="InstallationDateDetailsServiceServiceSoapBinding" type="tns:InstallationDateDetailsService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="setAssetServiceSchedule">
+      <soap:operation soapAction="setAssetServiceSchedule" style="document"/>
+      <wsdl:input name="setAssetServiceSchedule">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="setAssetServiceScheduleResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="InstallationDateDetailsServiceService">
+    <wsdl:port name="InstallationDateDetailsServicePort" binding="tns:InstallationDateDetailsServiceServiceSoapBinding">
+      <soap:address location="http://localhost:9090/InstallationDateDetailsServicePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

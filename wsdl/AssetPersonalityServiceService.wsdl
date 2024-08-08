@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="AssetPersonalityServiceService" targetNamespace="http://webservice.service.wise.remote/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://webservice.service.wise.remote/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<import namespace="http://webservice.service.wise.remote/" schemaLocation="AssetPersonalityServiceService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="SetAssetPersonalityDetails">
+    <wsdl:part name="parameters" element="tns:SetAssetPersonalityDetails">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="SetAssetPersonalityDetailsResponse">
+    <wsdl:part name="parameters" element="tns:SetAssetPersonalityDetailsResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="AssetPersonalityService">
+    <wsdl:operation name="SetAssetPersonalityDetails">
+      <wsdl:input name="SetAssetPersonalityDetails" message="tns:SetAssetPersonalityDetails">
+    </wsdl:input>
+      <wsdl:output name="SetAssetPersonalityDetailsResponse" message="tns:SetAssetPersonalityDetailsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="AssetPersonalityServiceServiceSoapBinding" type="tns:AssetPersonalityService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="SetAssetPersonalityDetails">
+      <soap:operation soapAction="SetAssetPersonalityDetails" style="document"/>
+      <wsdl:input name="SetAssetPersonalityDetails">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="SetAssetPersonalityDetailsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="AssetPersonalityServiceService">
+    <wsdl:port name="AssetPersonalityServicePort" binding="tns:AssetPersonalityServiceServiceSoapBinding">
+      <soap:address location="http://localhost:9090/AssetPersonalityServicePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 4, 2012 3:45:35 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.AssetGroupEntity" table="asset_group">
+        <id name="asset_group_id" type="int">
+            <column default="0" name="Asset_Group_ID" />
+            <generator class="identity" />
+        </id>
+        <property name="asset_group_name" lazy="false" type="java.lang.String">
+            <column name="Asseet_Group_Name" />
+        </property>
+        <many-to-one name="client_id" lazy="false" class="remote.wise.businessentity.ClientEntity" fetch="join">
+            <column name="Client_ID" />
+        </many-to-one>
+    </class>
+</hibernate-mapping>

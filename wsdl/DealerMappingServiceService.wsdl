@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="DealerMappingServiceService" targetNamespace="http://webservice.service.wise.remote/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://webservice.service.wise.remote/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<import namespace="http://webservice.service.wise.remote/" schemaLocation="DealerMappingServiceService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="setDealerMapping">
+    <wsdl:part name="parameters" element="tns:setDealerMapping">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="setDealerMappingResponse">
+    <wsdl:part name="parameters" element="tns:setDealerMappingResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="DealerMappingService">
+    <wsdl:operation name="setDealerMapping">
+      <wsdl:input name="setDealerMapping" message="tns:setDealerMapping">
+    </wsdl:input>
+      <wsdl:output name="setDealerMappingResponse" message="tns:setDealerMappingResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="DealerMappingServiceServiceSoapBinding" type="tns:DealerMappingService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="setDealerMapping">
+      <soap:operation soapAction="setDealerMapping" style="document"/>
+      <wsdl:input name="setDealerMapping">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="setDealerMappingResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="DealerMappingServiceService">
+    <wsdl:port name="DealerMappingServicePort" binding="tns:DealerMappingServiceServiceSoapBinding">
+      <soap:address location="http://localhost:9090/DealerMappingServicePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

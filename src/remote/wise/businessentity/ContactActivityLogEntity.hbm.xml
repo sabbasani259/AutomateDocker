@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 1, 2012 2:29:14 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.ContactActivityLogEntity" table="contact_activity_log">
+        <id name="contact_activitylog_id" type="int">
+            <column default="0" name="Contact_ActivityLog_ID" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="contact_id" class="remote.wise.businessentity.ContactEntity" fetch="join">
+            <column name="Contact_ID" />
+        </many-to-one>
+        <property name="login_date" type="java.sql.Timestamp">
+            <column name="Login_Date" />
+        </property>
+        <property name="logout_date" type="java.sql.Timestamp">
+            <column name="Logout_Date" />
+        </property>
+    </class>
+</hibernate-mapping>

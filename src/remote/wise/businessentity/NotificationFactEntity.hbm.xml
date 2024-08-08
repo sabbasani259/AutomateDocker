@@ -1,0 +1,169 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jan 10, 2013 9:59:48 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+ <class entity-name="NotificationFactEntity_DayAgg" lazy="false"
+  name="remote.wise.businessentity.NotificationFactEntity"  table="notification_fact_dayagg">
+  
+  <composite-id mapped="false" unsaved-value="undefined">   
+    <key-many-to-one
+        name="Notification_Id"
+        class="remote.wise.businessentity.NotificationDimensionEntity"
+        column="Notification_Id">
+     </key-many-to-one>
+     <key-property column="Serial_Number" name="SerialNumber"  type="java.lang.String"/>
+   <key-property column="Time_Key" name="Time_Key" type="java.sql.Timestamp"/>
+    </composite-id>
+  <many-to-one class="remote.wise.businessentity.TenancyDimensionEntity" lazy="false"
+   fetch="join" name="Tenancy_Id">
+   <column name="Tenancy_Id"/>
+  </many-to-one>
+  <many-to-one class="remote.wise.businessentity.AccountDimensionEntity" lazy="false"
+   fetch="join" name="Account_Id">
+   <column name="Account_Id"/>
+  </many-to-one>
+  <many-to-one
+   class="remote.wise.businessentity.AssetClassDimensionEntity" lazy="false"
+   fetch="join" name="AssetClass_Id">
+   <column name="Asset_Class_Id"/>
+  </many-to-one>
+
+  <property generated="never" lazy="false" name="NotificationCount" type="int">
+   <column name="Notification_Count"/>
+   
+  
+  </property>
+ </class>
+ <class entity-name="notification_fact_weekagg"
+  name="remote.wise.businessentity.NotificationFactEntity" table="notification_fact_weekagg">
+  <composite-id mapped="false" unsaved-value="undefined">
+   <key-many-to-one
+        name="Notification_Id"
+        class="remote.wise.businessentity.NotificationDimensionEntity"
+        column="Notification_Id">
+     </key-many-to-one>
+       <key-many-to-one
+            name="Tenancy_Id"
+            class="remote.wise.businessentity.TenancyDimensionEntity"
+            column="Tenancy_Id">
+         </key-many-to-one>
+   <key-property column="Serial_Number" name="SerialNumber" type="java.lang.String"/>
+   <key-property column="Week" name="TimeCount" type="int"/>
+   <key-property column="Year" name="Year" type="int"/>
+  </composite-id>
+
+  <many-to-one class="remote.wise.businessentity.AccountDimensionEntity"
+   fetch="join" name="Account_Id">
+   <column name="Account_Id"/>
+  </many-to-one>
+  
+  <many-to-one
+   class="remote.wise.businessentity.AssetClassDimensionEntity"
+   fetch="join" name="AssetClass_Id">
+   <column name="Asset_Class_Id"/>
+  </many-to-one>
+
+  <property generated="never" lazy="false" name="NotificationCount" type="int">
+   <column name="Notification_Count"/>
+  </property>
+ </class>
+ <class entity-name="notification_fact_Monthagg"
+  name="remote.wise.businessentity.NotificationFactEntity" table="notification_fact_monthagg">
+  <composite-id mapped="false" unsaved-value="undefined">
+        <key-many-to-one
+            name="Tenancy_Id"
+            class="remote.wise.businessentity.TenancyDimensionEntity"
+            column="Tenancy_Id">
+         </key-many-to-one>
+     <key-many-to-one
+        name="Notification_Id"
+        class="remote.wise.businessentity.NotificationDimensionEntity"
+        column="Notification_Id">
+     </key-many-to-one>  
+   <key-property column="Serial_Number" name="SerialNumber" type="java.lang.String"/>
+   <key-property column="Month" name="TimeCount" type="int"/>
+   <key-property column="Year" name="Year" type="int"/>
+  </composite-id>
+ 
+
+  <many-to-one class="remote.wise.businessentity.AccountDimensionEntity"
+   fetch="join" name="Account_Id">
+   <column name="Account_Id"/>
+  </many-to-one>
+ 
+  <many-to-one
+   class="remote.wise.businessentity.AssetClassDimensionEntity"
+   fetch="join" name="AssetClass_Id">
+   <column name="Asset_Class_Id"/>
+  </many-to-one>
+  <property generated="never" lazy="false" name="NotificationCount" type="int">
+   <column name="Notification_Count"/>
+  </property>
+ 
+ </class>
+ <class entity-name="notification_fact_Yearagg"
+  name="remote.wise.businessentity.NotificationFactEntity" table="notification_fact_yearagg">
+  <composite-id mapped="false" unsaved-value="undefined">
+  <key-many-to-one
+        name="Notification_Id"
+        class="remote.wise.businessentity.NotificationDimensionEntity"
+        column="Notification_Id">
+     </key-many-to-one>
+           <key-many-to-one
+            name="Tenancy_Id"
+            class="remote.wise.businessentity.TenancyDimensionEntity"
+            column="Tenancy_Id">
+         </key-many-to-one>
+   <key-property column="Serial_Number" name="SerialNumber" type="java.lang.String"/>
+   <key-property column="Year" name="Year" type="int"/>
+  </composite-id>
+
+  <many-to-one class="remote.wise.businessentity.AccountDimensionEntity"
+   fetch="join" name="Account_Id">
+   <column name="Account_Id"/>
+  </many-to-one>
+ 
+  <many-to-one
+   class="remote.wise.businessentity.AssetClassDimensionEntity"
+   fetch="join" name="AssetClass_Id">
+   <column name="Asset_Class_Id"/>
+  </many-to-one>
+  <property generated="never" lazy="false" name="NotificationCount" type="int">
+   <column name="Notification_Count"/>
+  </property>
+
+ </class>
+ <class entity-name="notification_fact_Quarteragg"
+  name="remote.wise.businessentity.NotificationFactEntity" table="notification_fact_quarteragg">
+  <composite-id mapped="false" unsaved-value="undefined">
+  <key-many-to-one
+        name="Notification_Id"
+        class="remote.wise.businessentity.NotificationDimensionEntity"
+        column="Notification_Id">
+     </key-many-to-one>
+       <key-many-to-one
+            name="Tenancy_Id"
+            class="remote.wise.businessentity.TenancyDimensionEntity"
+            column="Tenancy_Id">
+         </key-many-to-one>
+   <key-property column="Serial_Number" name="SerialNumber" type="java.lang.String"/>
+   <key-property column="Quarter" name="TimeCount" type="int"/>
+   <key-property column="Year" name="Year" type="int"/>
+  </composite-id>
+
+  <many-to-one class="remote.wise.businessentity.AccountDimensionEntity"
+   fetch="join" name="Account_Id">
+   <column name="Account_Id"/>
+  </many-to-one>
+    <many-to-one
+   class="remote.wise.businessentity.AssetClassDimensionEntity"
+   fetch="join" name="AssetClass_Id">
+   <column name="Asset_Class_Id"/>
+  </many-to-one>
+  <property generated="never" lazy="false" name="NotificationCount" type="int">
+   <column name="Notification_Count"/>
+  </property>
+ 
+ </class>
+</hibernate-mapping>

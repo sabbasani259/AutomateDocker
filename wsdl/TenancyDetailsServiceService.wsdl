@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="TenancyDetailsServiceService" targetNamespace="http://webservice.service.wise.remote/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://webservice.service.wise.remote/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<import namespace="http://webservice.service.wise.remote/" schemaLocation="TenancyDetailsServiceService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="GetTenancyDetailsResponse">
+    <wsdl:part name="parameters" element="tns:GetTenancyDetailsResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="IOException">
+    <wsdl:part name="IOException" element="tns:IOException">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GetTenancyDetails">
+    <wsdl:part name="parameters" element="tns:GetTenancyDetails">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="setTenancyDetails">
+    <wsdl:part name="parameters" element="tns:setTenancyDetails">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ParseException">
+    <wsdl:part name="ParseException" element="tns:ParseException">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="setTenancyDetailsResponse">
+    <wsdl:part name="parameters" element="tns:setTenancyDetailsResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="CustomFault">
+    <wsdl:part name="CustomFault" element="tns:CustomFault">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="TenancyDetailsService">
+    <wsdl:operation name="GetTenancyDetails">
+      <wsdl:input name="GetTenancyDetails" message="tns:GetTenancyDetails">
+    </wsdl:input>
+      <wsdl:output name="GetTenancyDetailsResponse" message="tns:GetTenancyDetailsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="setTenancyDetails">
+      <wsdl:input name="setTenancyDetails" message="tns:setTenancyDetails">
+    </wsdl:input>
+      <wsdl:output name="setTenancyDetailsResponse" message="tns:setTenancyDetailsResponse">
+    </wsdl:output>
+      <wsdl:fault name="IOException" message="tns:IOException">
+    </wsdl:fault>
+      <wsdl:fault name="ParseException" message="tns:ParseException">
+    </wsdl:fault>
+      <wsdl:fault name="CustomFault" message="tns:CustomFault">
+    </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="TenancyDetailsServiceServiceSoapBinding" type="tns:TenancyDetailsService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="GetTenancyDetails">
+      <soap:operation soapAction="GetTenancyDetails" style="document"/>
+      <wsdl:input name="GetTenancyDetails">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="GetTenancyDetailsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="setTenancyDetails">
+      <soap:operation soapAction="setTenancyDetails" style="document"/>
+      <wsdl:input name="setTenancyDetails">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="setTenancyDetailsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="IOException">
+        <soap:fault name="IOException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ParseException">
+        <soap:fault name="ParseException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="CustomFault">
+        <soap:fault name="CustomFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="TenancyDetailsServiceService">
+    <wsdl:port name="TenancyDetailsServicePort" binding="tns:TenancyDetailsServiceServiceSoapBinding">
+      <soap:address location="http://localhost:9090/TenancyDetailsServicePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

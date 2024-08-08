@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 20, 2012 11:35:36 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.ConditionsEntity" table="conditions">
+        <id name="ConditionId" type="int">
+            <column default = "0" name="Condition_ID" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="ParameterId" class="remote.wise.businessentity.MonitoringParameters" fetch="join">
+            <column name="Parameter_ID" />
+        </many-to-one>
+        <property name="ConditionOperator" type="java.lang.String">
+            <column name="Condition_Operator" />
+        </property>
+        <property name="ConditionValue" type="int">
+            <column name="Condition_Value" />
+        </property>
+    </class>
+</hibernate-mapping>

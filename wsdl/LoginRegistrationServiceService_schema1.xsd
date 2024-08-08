@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://webservice.service.wise.remote/" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://webservice.service.wise.remote/">
+  <xs:element name="GetQuestionsToUser" type="tns:GetQuestionsToUser"/>
+  <xs:element name="GetQuestionsToUserResponse" type="tns:GetQuestionsToUserResponse"/>
+  <xs:element name="GetSecretQuestions" type="tns:GetSecretQuestions"/>
+  <xs:element name="GetSecretQuestionsResponse" type="tns:GetSecretQuestionsResponse"/>
+  <xs:element name="SetSecretQuestionsToUser" type="tns:SetSecretQuestionsToUser"/>
+  <xs:element name="SetSecretQuestionsToUserResponse" type="tns:SetSecretQuestionsToUserResponse"/>
+  <xs:complexType name="SetSecretQuestionsToUser">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="reqObj" type="tns:loginRegistrationRespContract"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="loginRegistrationRespContract">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="answer1" type="xs:string"/>
+      <xs:element minOccurs="0" name="answer2" type="xs:string"/>
+      <xs:element minOccurs="0" name="DOB" type="xs:string"/>
+      <xs:element minOccurs="0" name="loginId" type="xs:string"/>
+      <xs:element minOccurs="0" name="nativeState" type="xs:string"/>
+      <xs:element minOccurs="0" name="question1" type="xs:string"/>
+      <xs:element minOccurs="0" name="question2" type="xs:string"/>
+      <xs:element name="questionId1" type="xs:int"/>
+      <xs:element name="questionId2" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SetSecretQuestionsToUserResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="GetSecretQuestions">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="GetSecretQuestionsResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:secretQuestionsRespContract"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="secretQuestionsRespContract">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="message" type="xs:string"/>
+      <xs:element name="QID" type="xs:int"/>
+      <xs:element minOccurs="0" name="question" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="GetQuestionsToUser">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="contactId" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="GetQuestionsToUserResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:secretQuestionsRespContract"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="CustomFault" nillable="true" type="xs:string"/>
+</xs:schema>

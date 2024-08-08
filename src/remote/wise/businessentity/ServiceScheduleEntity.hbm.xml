@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 27, 2012 12:44:46 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+ <class name="remote.wise.businessentity.ServiceScheduleEntity" table="service_schedule">
+  <id name="serviceScheduleId" type="int">
+   <column default="0" name="serviceScheduleId"/>
+   <generator class="identity"/>
+  </id>
+  <many-to-one class="remote.wise.businessentity.EngineTypeEntity"
+   fetch="join" name="engineTypeId">
+   <column name="Engine_Type_ID"/>
+  </many-to-one>
+  <many-to-one class="remote.wise.businessentity.AssetTypeEntity"
+   fetch="join" name="assetTypeId">
+   <column name="Asset_Type_ID"/>
+  </many-to-one>
+  <many-to-one class="remote.wise.businessentity.AssetGroupEntity"
+   fetch="join" name="assetGroupId">
+   <column name="Asset_Group_ID"/>
+  </many-to-one>
+  <property generated="never" lazy="false" name="serviceName" type="java.lang.String">
+   <column name="serviceName"/>
+  </property>
+  <property generated="never" lazy="false" name="scheduleName" type="java.lang.String">
+   <column name="scheduleName"/>
+  </property>
+  <property generated="never" lazy="false" name="durationSchedule" type="int">
+   <column name="Duration_Schedule"/>
+  </property>
+  <property generated="never" lazy="false" name="engineHoursSchedule" type="long">
+   <column name="EngineHours_Schedule"/>
+  </property>
+  <property generated="never" lazy="false" name="dbmsPartCode" type="java.lang.String">
+   <column name="DBMS_partCode"/>
+  </property>
+  <!-- DF20191220:Abhishek:: added colummns for Extended Warranty service . -->
+  <property generated="never" lazy="false" name="callTypeId" type="int">
+   <column name="call_type_id"/>
+  </property>
+  <property generated="never" lazy="false" name="CallType" type="java.lang.String">
+   <column name="call_type"/>
+  </property> 
+  <property generated="never" lazy="false" name="CallSubType" type="java.lang.String">
+   <column name="call_sub_type"/>
+  </property>
+  <property generated="never" lazy="false" name="MonthlyVisit" type="int">
+   <column name="monthly_visit"/>
+  </property>
+  <property generated="never" lazy="false" name="ServiceType" type="java.lang.String">
+   <column name="service_type"/>
+  </property>
+ </class>
+</hibernate-mapping>

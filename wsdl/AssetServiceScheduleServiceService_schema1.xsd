@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://webservice.service.wise.remote/" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://webservice.service.wise.remote/">
+  <xs:element name="GetAssetServiceScheduleService" type="tns:GetAssetServiceScheduleService"/>
+  <xs:element name="GetAssetServiceScheduleServiceResponse" type="tns:GetAssetServiceScheduleServiceResponse"/>
+  <xs:element name="SetAssetServiceScheduleService" type="tns:SetAssetServiceScheduleService"/>
+  <xs:element name="SetAssetServiceScheduleServiceResponse" type="tns:SetAssetServiceScheduleServiceResponse"/>
+  <xs:complexType name="GetAssetServiceScheduleService">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="reqObj" type="tns:assetServiceScheduleGetReqContract"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="assetServiceScheduleGetReqContract">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="serialNumber" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="GetAssetServiceScheduleServiceResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:assetServiceScheduleGetRespContract"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="assetServiceScheduleGetRespContract">
+    <xs:sequence>
+      <xs:element name="dealerId" type="xs:int"/>
+      <xs:element minOccurs="0" name="dealerName" type="xs:string"/>
+      <xs:element minOccurs="0" name="engineHoursSchedule" type="xs:long"/>
+      <xs:element name="eventId" type="xs:int"/>
+      <xs:element minOccurs="0" name="hoursToNextService" type="xs:long"/>
+      <xs:element minOccurs="0" name="scheduleName" type="xs:string"/>
+      <xs:element minOccurs="0" name="scheduledDate" type="xs:string"/>
+      <xs:element minOccurs="0" name="serialNumber" type="xs:string"/>
+      <xs:element minOccurs="0" name="serviceName" type="xs:string"/>
+      <xs:element name="serviceScheduleId" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SetAssetServiceScheduleService">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="setAssetServiceSchedule" type="tns:assetServiceScheduleRespContract"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="assetServiceScheduleRespContract">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="installationDate" type="xs:string"/>
+      <xs:element minOccurs="0" name="serialNumber" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SetAssetServiceScheduleServiceResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="CustomFault" nillable="true" type="xs:string"/>
+</xs:schema>

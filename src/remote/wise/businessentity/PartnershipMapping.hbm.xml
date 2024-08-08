@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 19, 2012 1:49:40 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.PartnershipMapping" table="partnership">
+  		<composite-id>
+         <key-many-to-one
+            name="accountFromId"
+            class="remote.wise.businessentity.AccountEntity"
+            column="Account_From_ID">
+         </key-many-to-one>
+         <key-many-to-one
+            name="accountToId"
+            class="remote.wise.businessentity.AccountEntity"
+            column="Account_To_ID">
+         </key-many-to-one>
+         </composite-id>
+      	 <many-to-one name="partnerId" class="remote.wise.businessentity.PartnerRoleEntity" fetch="join">
+            <column name="Partner_ID" />
+        </many-to-one>
+  	
+   </class>
+</hibernate-mapping>

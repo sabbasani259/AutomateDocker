@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 26, 2012 8:54:14 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.ParameterTypeEntity" table="parameter_type">
+        <id name="parameterTypeId" type="int">
+            <column name="Parameter_Type_ID" default="0"/>
+            <generator class="identity" />
+        </id>
+        <many-to-one name="standardId" class="remote.wise.businessentity.IndustryStandardEntity" fetch="join">
+            <column name="Standard_Id" />
+        </many-to-one>
+        <property name="parameterTypeName" type="java.lang.String">
+            <column name="Parameter_Type_Name" />
+        </property>
+    </class>
+</hibernate-mapping>

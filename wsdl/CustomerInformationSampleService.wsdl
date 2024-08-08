@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="CustomerInformationSampleService" targetNamespace="http://webservices.EAintegration.wise.remote/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://webservices.EAintegration.wise.remote/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<import namespace="http://webservices.EAintegration.wise.remote/" schemaLocation="CustomerInformationSampleService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="processEACustomerDataResponse">
+    <wsdl:part name="parameters" element="tns:processEACustomerDataResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="processEACustomerData">
+    <wsdl:part name="parameters" element="tns:processEACustomerData">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="CustomerInformationSample">
+    <wsdl:operation name="processEACustomerData">
+      <wsdl:input name="processEACustomerData" message="tns:processEACustomerData">
+    </wsdl:input>
+      <wsdl:output name="processEACustomerDataResponse" message="tns:processEACustomerDataResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="CustomerInformationSampleServiceSoapBinding" type="tns:CustomerInformationSample">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="processEACustomerData">
+      <soap:operation soapAction="processEACustomerData" style="document"/>
+      <wsdl:input name="processEACustomerData">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="processEACustomerDataResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="CustomerInformationSampleService">
+    <wsdl:port name="CustomerInformationSamplePort" binding="tns:CustomerInformationSampleServiceSoapBinding">
+      <soap:address location="http://localhost:9090/CustomerInformationSamplePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 8 Feb, 2013 11:00:43 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.ReportMasterListEntity" table="report_master_list">
+        <id name="reportId" type="int">
+            <column name="report_ID" />
+            <generator class="assigned" />
+        </id>
+        <property name="reportName" type="java.lang.String">
+            <column name="report_name" />
+        </property>
+        <property name="reportDescription" type="java.lang.String">
+            <column name="report_description" />
+        </property>
+    </class>
+</hibernate-mapping>

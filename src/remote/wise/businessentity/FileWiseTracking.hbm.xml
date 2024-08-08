@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+ <class name="remote.wise.businessentity.FileWiseTracking" table="File_Wise_Tracking">
+  <id name="serialNumber" type="java.lang.String">
+   <column name="Serial_Number"/>
+   <generator class="assigned"/>
+  </id>
+  <property generated="never" lazy="false" name="rollOff" type="java.lang.String">
+   <column name="Rolloff"/>
+  </property>
+  <property generated="never" lazy="false" name="gateOut" type="java.lang.String">
+   <column name="Gateout"/>
+  </property><property generated="never" lazy="false" name="saleD2C" type="java.lang.String">
+   <column name="SalefromD2C"/>
+  </property><property generated="never" lazy="false" name="personality" type="java.lang.String">
+   <column name="Personality"/>
+  </property><property generated="never" lazy="false" name="installation" type="java.lang.String">
+   <column name="Installation"/>
+  </property>
+ </class>
+</hibernate-mapping>

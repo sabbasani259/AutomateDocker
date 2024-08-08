@@ -1,0 +1,118 @@
+package remote.wise.EAintegration.EAclient;
+
+import org.apache.logging.log4j.Logger;
+
+import remote.wise.EAintegration.clientPackage.ServiceHistoryDetails.ServiceHistoryDetailsService;
+import remote.wise.EAintegration.clientPackage.ServiceHistoryDetails.ServiceHistoryDetailsServiceService;
+import remote.wise.EAintegration.dataContract.ServiceHistoryInputContract;
+import remote.wise.EAintegration.handler.ErrorMessageHandler;
+import remote.wise.log.FatalErrorLogging.FatalLoggerClass;
+import remote.wise.log.InfoLogging.InfoLoggerClass;
+import remote.wise.service.webservice.ServiceHistoryDetailsRESTService;
+import remote.wise.util.CommonUtil;
+
+public class ServiceHistoryClient 
+{
+	public String invokeServiceHistory(ServiceHistoryInputContract reqObj) 
+	{
+		Logger iLogger = InfoLoggerClass.logger;
+		Logger fLogger = FatalLoggerClass.logger;
+		
+		String status="SUCCESS";
+		int wsdlError=0;
+//		ServiceHistoryDetailsServiceService service1=null;
+//		ServiceHistoryDetailsService port1=null;
+		ServiceHistoryDetailsRESTService serviceObj = new ServiceHistoryDetailsRESTService();
+		
+		try
+		{
+		
+			//creating WebService Client
+//			iLogger.info("Service History - "+reqObj.getSerialNumber()+" : Get the wsdl location");
+//			service1 = new ServiceHistoryDetailsServiceService();
+			
+			//Create WebService
+//			iLogger.info("Service History - "+reqObj.getSerialNumber()+" : Get the webservice port");
+//			port1 = service1.getServiceHistoryDetailsServicePort();
+			
+			//Call webservice method
+			iLogger.info("Service History - "+reqObj.getSerialNumber()+" :Invoke webservice");
+			//DF20190423:IM20018382-Adding additonal field jobCardDetails
+			//DF20200131:aj20119610-Adding additional field callTypeId
+			iLogger.info("Service History - Input"+"Serial Number:"+reqObj.getSerialNumber()+",  "+"DealerCode:"+reqObj.getDealerCode()+",  "+"JobCardNumber:"+reqObj.getJobCardNumber()+
+					",  "+"Dbms PartCode:"+reqObj.getDbmsPartCode()+",  "+"Serviced Date:"+reqObj.getServicedDate() +"Job Card Details"+reqObj.getJobCardDetails() + "CallTypeId"+reqObj.getCallTypeId()+
+					" , MessageId:"+reqObj.getMessageId()+", fileRef:"+reqObj.getFileRef()+", Process:"+reqObj.getProcess()+"" +
+					" , RJobCode:"+reqObj.getReprocessJobCode());
+			//DF20190423:IM20018382-Adding additional field jobCardDetails
+			/*status = port1.setServiceHistoryDetails(reqObj.getSerialNumber(), reqObj.getDealerCode(),
+					reqObj.getJobCardNumber(), reqObj.getDbmsPartCode(), reqObj.getServicedDate(),reqObj.getJobCardDetails(), reqObj.getMessageId(), 
+					reqObj.getFileRef(), reqObj.getProcess(), reqObj.getReprocessJobCode());*/
+			
+			status = serviceObj.setServiceHistoryDetails(reqObj.getSerialNumber(), reqObj.getDealerCode(),
+					reqObj.getJobCardNumber(), reqObj.getDbmsPartCode(),reqObj.getServicedDate(), reqObj.getJobCardDetails(),reqObj.getCallTypeId(),  reqObj.getMessageId(), 
+					reqObj.getFileRef(), reqObj.getProcess(), reqObj.getReprocessJobCode());
+			
+			iLogger.info("Service History - "+reqObj.getSerialNumber()+" :Returned from webservice, Status: "+status);
+		}
+		
+		/* DF20150806 - Rajani Nagaraju - If the wsdl is not available catch the error and take necessary actions */
+		catch(Exception e)
+		{
+			wsdlError=1;
+			
+			status="FAILURE-ServiceHistoryDetailsService:WSDL not available";
+			fLogger.fatal("Service History - "+reqObj.getSerialNumber()+"ServiceHistoryDetailsService:WSDL not available");
+			
+		}
+		
+		/* DF20150806 - Rajani Nagaraju - If the wsdl is not available, store the details in Faultdetails table 
+		 * so that the record will be reprocessed automatically. Otherwise, since the file is already moved to archived, we will have no trace of records
+		 * that are not processed
+		 */
+		if(wsdlError==1 /*|| port1==null || service1==null*/)
+		{
+			if(reqObj.getSerialNumber()==null)
+				reqObj.setSerialNumber("");
+			if(reqObj.getDealerCode()==null)
+				reqObj.setDealerCode("");
+			if(reqObj.getJobCardNumber()==null)
+				reqObj.setJobCardNumber("");
+			if(reqObj.getDbmsPartCode()==null)
+				reqObj.setDbmsPartCode("");
+			if(reqObj.getServicedDate()==null)
+				reqObj.setServicedDate("");
+			//DF20190423:IM20018382-Null check for additonal field jobCardDetails
+			if(reqObj.getJobCardDetails()==null)
+				reqObj.setJobCardDetails("");
+			
+			//DF20190423:IM20018382-Adding additonal field jobCardDetails to messageString
+			String messageString = reqObj.getSerialNumber()+"|"+reqObj.getDealerCode()+"|"+reqObj.getJobCardNumber()+"|"+
+								reqObj.getDbmsPartCode()+"|"+reqObj.getServicedDate()+"|"+reqObj.getJobCardDetails();
+			
+			fLogger.fatal("Service History - "+messageString+" Exception:: Put the record into fault details");
+			
+			ErrorMessageHandler errorHandler = new ErrorMessageHandler();
+			/*errorHandler.handleErrorMessages(reqObj.getMessageId(), messageString, reqObj.getFileRef(), reqObj.getProcess(), 
+					reqObj.getReprocessJobCode(),"ServiceHistoryDetailsService WSDL not available");*/
+			errorHandler.handleErrorMessages_new(reqObj.getMessageId(), messageString, reqObj.getFileRef(), reqObj.getProcess(), 
+					reqObj.getReprocessJobCode(),"ServiceHistoryDetailsService WSDL not available","0002","Service Invokation");
+			
+			//DF20180207:KO369761 - Inserting datacount to log details table for tracing.
+			if(reqObj.getMessageId()!=null && reqObj.getMessageId().split("\\|").length<2){
+				String uStatus=CommonUtil.updateInterfaceLogDetails(reqObj.getFileRef(), "failureCount", 1);
+				iLogger.info("Status on updating data into interface log details table :"+uStatus);
+			}
+		}
+		
+		else{
+			//DF20180207:KO369761 - updating datacount to log details table for tracing.
+			String uStatus = null;
+			if(reqObj.getMessageId()!=null && reqObj.getMessageId().split("\\|").length<2){
+				uStatus = CommonUtil.updateInterfaceLogDetails(reqObj.getFileRef(), "successfullServiceInvocation", 1);
+				iLogger.info("Status on updating data into interface log details table :"+uStatus);
+			}
+		}
+		
+		return status;
+	}
+}

@@ -1,0 +1,164 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="remote.wise.businessentity.CommReportEnhancedEntity" table="com_rep_oem_enhanced">
+		<id name="serialNumber" type="java.lang.String">
+   <column name="Serial_Number"/>
+   <generator class="assigned"/>
+  		</id>
+		 <property name="dealerAccountId" type="int">
+            <column name="Dealer_AccountId" />
+        </property>
+        <property name="dealerCode" type="java.lang.String">
+            <column name="DealerCode" />
+        </property>
+        <property name="dealerName" type="java.lang.String">
+            <column name="Dealer_Name" />
+        </property>
+        <property name="city" type="java.lang.String">
+            <column name="City" />
+        </property>
+        <property name="state" type="java.lang.String">
+            <column name="State" />
+        </property>
+        <property name="owner" type="java.lang.String">
+            <column name="Owner" />
+        </property>
+        
+        
+        <!-- tinytext -->
+        <property name="tmh" type="java.lang.String">
+            <column name="tmh" />
+        </property>
+        <property name="version" type="java.lang.String">
+            <column name="version" />
+        </property>
+        
+        <property  name="pktCreatedTS"
+			type="java.sql.Timestamp">
+			<column name="Pkt_Created_TS" />
+		</property>
+		<property  name="pktRecdTS"
+			type="java.sql.Timestamp">
+			<column name="Pkt_Recd_TS" />
+		</property>
+		<property  name="rollOffDate"
+			type="java.sql.Timestamp">
+			<column name="Roll_Off_Date" />
+		</property>
+		<property  name="deviceStatus"
+			type="java.lang.String">
+			<column name="device_status" />
+		</property>
+		        <property name="lat" type="java.lang.String">
+            <column name="Lat" />
+        </property>
+		
+		        <property name="lon" type="java.lang.String">
+            <column name="Lon" />
+        </property>
+		
+		        <property name="simNo" type="java.lang.String">
+            <column name="SIM_No" />
+        </property>
+        <property  name="installedDate"
+			type="java.sql.Timestamp">
+			<column name="Installed_date" />
+		</property>
+		<property  name="dateSys"
+			type="java.sql.Timestamp">
+			<column name="Date_sys" />
+		</property>
+          <property name="jobId" type="int">
+            <column name="job_id" />
+        </property>
+        <property name="BPCode" type="java.lang.String">
+            <column name="BP_code" />
+        </property>  
+          <property name="renewalFlag" type="java.lang.String">
+            <column name="Renewal_Flag" />
+        </property>  
+		<property  name="renewalDate"
+			type="java.sql.Timestamp">
+			<column name="Renewal_date" />
+		</property>
+		<property name="renewState" type="java.lang.String">
+            <column name="Renew_state" />
+        </property>
+        <property name="country" type="java.lang.String">
+            <column name="Country" />
+        </property>
+        <property name="countryCode" type="java.lang.String">
+            <column name="countrycode" />
+        </property>
+        <property name="plant" type="java.lang.String">
+            <column name="plant" />
+        </property>
+        <property name="customerCode" type="java.lang.String">
+            <column name="CustomerCode" />
+        </property>
+        <property name="customerName" type="java.lang.String">
+            <column name="CustomerName" />
+        </property>
+        <property name="zonalCode" type="java.lang.String">
+            <column name="ZonalCode" />
+        </property>
+        <property name="zone" type="java.lang.String">
+            <column name="Zone" />
+        </property>
+        <property name="regionCode" type="java.lang.String">
+            <column name="RegionCode" />
+        </property>
+        <property name="model" type="java.lang.String">
+            <column name="Model" />
+        </property>
+        <property name="profile" type="java.lang.String">
+            <column name="Profile" />
+        </property>
+        <property name="extendedWarranty" type="java.lang.String">
+            <column name="extended_warranty" />
+        </property>
+        <property name="mobile" type="java.lang.String">
+            <column name="mobile" />
+        </property>
+         <property name="customerMobile" type="java.lang.String">
+            <column name="Customer_Mobile"/>
+        </property>
+        <property name="communicatingCity" type="java.lang.String">
+            <column name="communicating_city" />
+        </property>
+        <property name="communicatingState" type="java.lang.String">
+            <column name="communicating_state" />
+        </property>
+        <property name="communicatingAddress" type="java.lang.String">
+            <column name="communicating_address" />
+        </property>
+        <property  name="lastUpdatedTimestamp"
+			type="java.sql.Timestamp">
+			<column name="Last_Updated_Timestamp" />
+		</property>
+		<property  name="adressLastUpdated"
+			type="java.util.Date">
+			<column name="adressLastUpdated" />
+		</property>
+		<property name="commCity" type="java.lang.String">
+            <column name="Comm_City" />
+        </property>
+        <property name="commState" type="java.lang.String">
+            <column name="Comm_State" />
+        </property>
+        <property name="commAddress" type="java.lang.String">
+            <column name="Comm_Address" />
+        </property>
+        <property name="commDistrict" type="java.lang.String">
+            <column name="Comm_District" />
+        </property>
+        <property name="vdCity" type="java.lang.String">
+            <column name="VD_City" />
+        </property>
+        <property name="vdState" type="java.lang.String">
+            <column name="VD_State" />
+        </property>
+	</class>
+</hibernate-mapping>

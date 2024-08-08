@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="AssetEventLogServiceService" targetNamespace="http://webservice.service.wise.remote/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://webservice.service.wise.remote/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<import namespace="http://webservice.service.wise.remote/" schemaLocation="AssetEventLogServiceService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="GetAssetEventLogResponse">
+    <wsdl:part name="parameters" element="tns:GetAssetEventLogResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GetAssetEventLog">
+    <wsdl:part name="parameters" element="tns:GetAssetEventLog">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="CustomFault">
+    <wsdl:part name="CustomFault" element="tns:CustomFault">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="AssetEventLogService">
+    <wsdl:operation name="GetAssetEventLog">
+      <wsdl:input name="GetAssetEventLog" message="tns:GetAssetEventLog">
+    </wsdl:input>
+      <wsdl:output name="GetAssetEventLogResponse" message="tns:GetAssetEventLogResponse">
+    </wsdl:output>
+      <wsdl:fault name="CustomFault" message="tns:CustomFault">
+    </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="AssetEventLogServiceServiceSoapBinding" type="tns:AssetEventLogService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="GetAssetEventLog">
+      <soap:operation soapAction="GetAssetEventLog" style="document"/>
+      <wsdl:input name="GetAssetEventLog">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="GetAssetEventLogResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="CustomFault">
+        <soap:fault name="CustomFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="AssetEventLogServiceService">
+    <wsdl:port name="AssetEventLogServicePort" binding="tns:AssetEventLogServiceServiceSoapBinding">
+      <soap:address location="http://localhost:9090/AssetEventLogServicePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://webservice.service.wise.remote/" elementFormDefault="unqualified" targetNamespace="http://webservice.service.wise.remote/" version="1.0">
+<xs:element name="GetLandmarkActivityReport" type="tns:GetLandmarkActivityReport"/>
+<xs:element name="GetLandmarkActivityReportResponse" type="tns:GetLandmarkActivityReportResponse"/>
+<xs:complexType name="GetLandmarkActivityReport">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ReqObj" type="tns:landmarkActivityReportReqContract"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="landmarkActivityReportReqContract">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="fromDate" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="landmarkCategoryIDList" nillable="true" type="xs:int"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="landmarkIdList" nillable="true" type="xs:int"/>
+      <xs:element minOccurs="0" name="loginId" type="xs:string"/>
+      <xs:element name="loginTenancyId" type="xs:int"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="machineGroupIdList" nillable="true" type="xs:int"/>
+      <xs:element minOccurs="0" name="period" type="xs:string"/>
+      <xs:element minOccurs="0" name="toDate" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="GetLandmarkActivityReportResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:landmarkActivityReportRespContract"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="landmarkActivityReportRespContract">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="landMarkCategoryName" type="xs:string"/>
+      <xs:element minOccurs="0" name="landMarkName" type="xs:string"/>
+      <xs:element name="landmarkCategoryId" type="xs:int"/>
+      <xs:element name="landmarkId" type="xs:int"/>
+      <xs:element name="longestDurationAtLandmarkInMinutes" type="xs:long"/>
+      <xs:element name="machineGroupId" type="xs:int"/>
+      <xs:element minOccurs="0" name="machineGroupName" type="xs:string"/>
+      <xs:element minOccurs="0" name="nickname" type="xs:string"/>
+      <xs:element name="numberOfArrivals" type="xs:int"/>
+      <xs:element name="numberOfdepartures" type="xs:int"/>
+      <xs:element minOccurs="0" name="serialNumber" type="xs:string"/>
+      <xs:element name="totalDurationAtLandmarkInMinutes" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

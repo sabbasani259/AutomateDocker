@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated May 3, 2013 6:22:26 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+ <class name="remote.wise.businessentity.FotaVersionEntity" table="fota_version">
+  <id name="versionId" type="java.lang.String">
+   <column name="Version_ID"/>
+   <generator class="assigned"/>
+  </id>
+  <property generated="never" lazy="false" name="version_date" type="java.sql.Timestamp">
+   <column name="Version_Date"/>
+  </property>
+  <property access="field" generated="never" lazy="false"
+   name="file_path" type="java.lang.String">
+   <column name="File_Path"/>
+  </property>
+  <property access="field" generated="never" lazy="false" name="level" type="java.lang.String">
+   <column name="level"/>
+  </property>
+  <property access="field" generated="never" lazy="false" name="value" type="int">
+   <column name="value"/>
+  </property>
+ </class>
+</hibernate-mapping>

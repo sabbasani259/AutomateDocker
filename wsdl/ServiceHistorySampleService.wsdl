@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="ServiceHistorySampleService" targetNamespace="http://webservices.EAintegration.wise.remote/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://webservices.EAintegration.wise.remote/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<import namespace="http://webservices.EAintegration.wise.remote/" schemaLocation="ServiceHistorySampleService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="processEAServiceHistory">
+    <wsdl:part name="parameters" element="tns:processEAServiceHistory">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="processEAServiceHistoryResponse">
+    <wsdl:part name="parameters" element="tns:processEAServiceHistoryResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="ServiceHistorySample">
+    <wsdl:operation name="processEAServiceHistory">
+      <wsdl:input name="processEAServiceHistory" message="tns:processEAServiceHistory">
+    </wsdl:input>
+      <wsdl:output name="processEAServiceHistoryResponse" message="tns:processEAServiceHistoryResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ServiceHistorySampleServiceSoapBinding" type="tns:ServiceHistorySample">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="processEAServiceHistory">
+      <soap:operation soapAction="processEAServiceHistory" style="document"/>
+      <wsdl:input name="processEAServiceHistory">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="processEAServiceHistoryResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ServiceHistorySampleService">
+    <wsdl:port name="ServiceHistorySamplePort" binding="tns:ServiceHistorySampleServiceSoapBinding">
+      <soap:address location="http://localhost:9090/ServiceHistorySamplePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

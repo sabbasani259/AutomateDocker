@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Apr 9, 2014 3:16:48 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+ <class name="remote.wise.businessentity.BusinessEventEntity" table="business_event"> 
+<id name="eventID" type="int">
+			<column default="0" name="Event_ID" />
+			<generator class="identity" />
+		</id>
+  <!-- <property name = "eventId" column = "Event_ID" type = "int"/> -->
+   <property generated="never" lazy="false" name="eventDescription" type="java.lang.String">
+   <column name="Event_Description"/>
+   </property>
+   <property generated="never" lazy="false" name="eventName" type="java.lang.String">
+   <column name="Event_Name"/>
+   </property>
+   </class>
+</hibernate-mapping>

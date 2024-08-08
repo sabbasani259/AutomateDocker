@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 27, 2012 11:49:46 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+ <class name="remote.wise.businessentity.RoleEntity" table="role">
+  <id name="role_id" type="int">
+   <column default="1" name="Role_ID"/>
+   <generator class="identity"/>
+  </id>
+  <property generated="never" lazy="false" name="role_name" type="java.lang.String">
+   <column name="Role_Name"/>
+  </property>
+   <set lazy="true" name="contact_list" sort="unsorted" table="contact">
+   <key>
+    <column name="Role_ID"/>
+   </key>
+   <one-to-many class="remote.wise.businessentity.ContactEntity"/>
+  </set>
+  <many-to-one class="remote.wise.businessentity.ClientEntity" fetch="join" name="client_id">
+   <column name="Client_ID"/>
+  </many-to-one>
+  
+ </class>
+</hibernate-mapping>

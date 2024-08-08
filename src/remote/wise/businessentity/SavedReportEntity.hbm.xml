@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 13 Feb, 2013 4:11:56 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.SavedReportEntity" table="reports_saved">
+    	<composite-id>
+          
+         <key-many-to-one
+            name="reportId"
+            class="remote.wise.businessentity.ReportMasterListEntity"
+            column="Report_Id">
+         </key-many-to-one>
+         <key-many-to-one
+            name="contactId"
+            class="remote.wise.businessentity.ContactEntity"
+            column="Contact_Id">
+         </key-many-to-one>
+         </composite-id>
+       <property name="fieldValue" type="java.lang.String">
+            <column name="Field_Value" />
+        </property>
+        	    	 <property name="fieldId"  type="java.lang.String">
+        	    	<column name="Field_Id" />
+        	    	  </property>
+        	
+    </class>
+</hibernate-mapping>

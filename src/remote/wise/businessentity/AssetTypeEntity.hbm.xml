@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 4, 2012 3:49:01 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+ <class name="remote.wise.businessentity.AssetTypeEntity" table="asset_type">
+  <id name="asset_type_id" type="int">
+   <column default="0" name="Asset_Type_ID"/>
+   <generator class="identity"/>
+  </id>
+  <property generated="never" lazy="false" name="asset_type_name" type="java.lang.String">
+   <column name="Asset_Type_Name"/>
+  </property>
+  <property generated="never" lazy="false" name="assetTypeCode" type="java.lang.String">
+   <column name="Asset_Type_Code"/>
+  </property>
+  <property generated="never" lazy="false" name="assetImage" type="java.lang.String">
+   <column name="Asset_ImageFile_Name"/>
+  </property>
+  <many-to-one class="remote.wise.businessentity.ClientEntity"
+   fetch="join" name="client_id">
+   <column name="Client_ID"/>
+  </many-to-one>
+ </class>
+</hibernate-mapping>

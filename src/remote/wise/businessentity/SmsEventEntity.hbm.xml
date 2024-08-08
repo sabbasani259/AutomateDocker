@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 5, 2014 10:05:47 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.SmsEventEntity" table="SMS_Event">
+        <id name="smsId" type="int">
+            <column default="0" name="SMS_Id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="smsEventId" class="remote.wise.businessentity.SmsEventDetailsEntity" fetch="join">
+            <column name="SMS_Event_Id" />
+        </many-to-one>
+        <property name="eventId" type="int">
+            <column name="Event_Id" />
+        </property>
+        <property name="eventClosedTime" type="java.sql.Timestamp">
+            <column name="Event_Closed_Time" />
+        </property>
+        <property name="status" type="java.lang.String">
+            <column name="Status" />
+        </property>
+    </class>
+</hibernate-mapping>

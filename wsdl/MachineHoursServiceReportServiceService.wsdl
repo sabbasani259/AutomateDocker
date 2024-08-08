@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="MachineHoursServiceReportServiceService" targetNamespace="http://webservice.service.wise.remote/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://webservice.service.wise.remote/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<import namespace="http://webservice.service.wise.remote/" schemaLocation="MachineHoursServiceReportServiceService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="GetMachineHoursServiceReportServiceResponse">
+    <wsdl:part name="parameters" element="tns:GetMachineHoursServiceReportServiceResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GetMachineHoursServiceReportService">
+    <wsdl:part name="parameters" element="tns:GetMachineHoursServiceReportService">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="CustomFault">
+    <wsdl:part name="CustomFault" element="tns:CustomFault">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="MachineHoursServiceReportService">
+    <wsdl:operation name="GetMachineHoursServiceReportService">
+      <wsdl:input name="GetMachineHoursServiceReportService" message="tns:GetMachineHoursServiceReportService">
+    </wsdl:input>
+      <wsdl:output name="GetMachineHoursServiceReportServiceResponse" message="tns:GetMachineHoursServiceReportServiceResponse">
+    </wsdl:output>
+      <wsdl:fault name="CustomFault" message="tns:CustomFault">
+    </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="MachineHoursServiceReportServiceServiceSoapBinding" type="tns:MachineHoursServiceReportService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="GetMachineHoursServiceReportService">
+      <soap:operation soapAction="GetMachineHoursServiceReportService" style="document"/>
+      <wsdl:input name="GetMachineHoursServiceReportService">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="GetMachineHoursServiceReportServiceResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="CustomFault">
+        <soap:fault name="CustomFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="MachineHoursServiceReportServiceService">
+    <wsdl:port name="MachineHoursServiceReportServicePort" binding="tns:MachineHoursServiceReportServiceServiceSoapBinding">
+      <soap:address location="http://localhost:9090/MachineHoursServiceReportServicePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

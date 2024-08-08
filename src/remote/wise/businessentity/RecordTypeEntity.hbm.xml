@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 15, 2013 2:10:36 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.RecordTypeEntity" table="record_type">
+        <id name="recordTypeId" type="int">
+            <column default="0" name="Record_Type_Id" />
+            <generator class="identity" />
+        </id>
+        <property name="messageId" type="java.lang.String">
+            <column name="Message_Id" />
+        </property>
+        <property name="recordTypeName" type="java.lang.String">
+            <column name="Record_Type_Name" />
+        </property>
+        <property name="packetId" type="java.lang.String">
+            <column name="Packet_Id" />
+        </property>
+    </class>
+</hibernate-mapping>

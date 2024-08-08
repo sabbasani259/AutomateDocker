@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="DealerMappingSampleService" targetNamespace="http://webservices.EAintegration.wise.remote/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://webservices.EAintegration.wise.remote/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<import namespace="http://webservices.EAintegration.wise.remote/" schemaLocation="DealerMappingSampleService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="processEAdealerMappingDataResponse">
+    <wsdl:part name="parameters" element="tns:processEAdealerMappingDataResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="processEAdealerMappingData">
+    <wsdl:part name="parameters" element="tns:processEAdealerMappingData">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="DealerMappingSample">
+    <wsdl:operation name="processEAdealerMappingData">
+      <wsdl:input name="processEAdealerMappingData" message="tns:processEAdealerMappingData">
+    </wsdl:input>
+      <wsdl:output name="processEAdealerMappingDataResponse" message="tns:processEAdealerMappingDataResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="DealerMappingSampleServiceSoapBinding" type="tns:DealerMappingSample">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="processEAdealerMappingData">
+      <soap:operation soapAction="processEAdealerMappingData" style="document"/>
+      <wsdl:input name="processEAdealerMappingData">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="processEAdealerMappingDataResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="DealerMappingSampleService">
+    <wsdl:port name="DealerMappingSamplePort" binding="tns:DealerMappingSampleServiceSoapBinding">
+      <soap:address location="http://localhost:9090/DealerMappingSamplePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

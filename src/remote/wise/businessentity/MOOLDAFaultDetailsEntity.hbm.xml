@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="remote.wise.businessentity.MOOLDAFaultDetailsEntity"
+		table="MOOLDA_FaultDetails">
+		<id name="faultID" type="int">
+			<column default="0" name="FaultID" />
+			<generator class="identity" />
+		</id>
+		<property name="serialNumber" type="java.lang.String">
+			<column name="SerialNumber" />
+		</property>
+		<property name="profileData" type="java.lang.String">
+			<column name="ProfileData" />
+		</property>
+		<property name="rejectionPoint" type="java.lang.String">
+			<column name="RejectionPoint" />
+		</property>
+		<property name="createdTimeStamp" type="java.lang.String">
+			<column name="Created_TimeStamp" />
+		</property>
+	</class>
+</hibernate-mapping>

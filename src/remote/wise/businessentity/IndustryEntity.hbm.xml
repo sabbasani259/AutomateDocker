@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 29, 2012 5:46:47 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.IndustryEntity" table="industry">
+        <id name="industry_id" type="int">
+            <column default="1" name="Industry_ID" />
+            <generator class="identity" />
+        </id>
+        <property name="industry_name" type="java.lang.String">
+            <column name="Industry_Name" />
+        </property>
+        <set name="client_list" table="Clients" inverse="false" lazy="true">
+            <key>
+                <column name="Industy_ID" />
+            </key>
+            <one-to-many class="remote.wise.businessentity.ClientEntity" />
+        </set>
+    </class>
+</hibernate-mapping>

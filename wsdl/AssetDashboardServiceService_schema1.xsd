@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://webservice.service.wise.remote/" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://webservice.service.wise.remote/">
+  <xs:element name="GetAssetDashboardDetails" type="tns:GetAssetDashboardDetails"/>
+  <xs:element name="GetAssetDashboardDetailsResponse" type="tns:GetAssetDashboardDetailsResponse"/>
+  <xs:complexType name="GetAssetDashboardDetails">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="reqObj" type="tns:assetDashboardReqContract"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="assetDashboardReqContract">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="alertSeverityList" nillable="true" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="alertTypeIdList" nillable="true" type="xs:int"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="landmarkCategoryIdList" nillable="true" type="xs:int"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="landmarkIdList" nillable="true" type="xs:int"/>
+      <xs:element minOccurs="0" name="loginId" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="machineGroupIdList" nillable="true" type="xs:int"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="machineGroupTypeIdList" nillable="true" type="xs:int"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="machineProfileIdList" nillable="true" type="xs:int"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="modelList" nillable="true" type="xs:int"/>
+      <xs:element name="ownStock" type="xs:boolean"/>
+      <xs:element name="pageNumber" type="xs:int"/>
+      <xs:element minOccurs="0" name="serialNumber" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="tenancyIdList" nillable="true" type="xs:int"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="userTenancyIdList" nillable="true" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="GetAssetDashboardDetailsResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:assetDashboardRespContract"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="assetDashboardRespContract">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="assetImage" type="xs:string"/>
+      <xs:element minOccurs="0" name="connectivityStatus" type="xs:string"/>
+      <xs:element minOccurs="0" name="dueForService" type="xs:string"/>
+      <xs:element minOccurs="0" name="engineStatus" type="xs:string"/>
+      <xs:element minOccurs="0" name="engineTypeName" type="xs:string"/>
+      <xs:element minOccurs="0" name="externalBatteryInVolts" type="xs:string"/>
+      <xs:element minOccurs="0" name="externalBatteryStatus" type="xs:string"/>
+      <xs:element minOccurs="0" name="fuelLevel" type="xs:string"/>
+      <xs:element minOccurs="0" name="highCoolantTemperature" type="xs:string"/>
+      <xs:element minOccurs="0" name="lastPktReceivedTime" type="xs:string"/>
+      <xs:element minOccurs="0" name="lastReportedTime" type="xs:string"/>
+      <xs:element minOccurs="0" name="latitude" type="xs:string"/>
+      <xs:element minOccurs="0" name="lifeHours" type="xs:string"/>
+      <xs:element minOccurs="0" name="longitude" type="xs:string"/>
+      <xs:element minOccurs="0" name="lowEngineOilPressure" type="xs:string"/>
+      <xs:element minOccurs="0" name="machineStatus" type="xs:string"/>
+      <xs:element minOccurs="0" name="modelName" type="xs:string"/>
+      <xs:element minOccurs="0" name="nickName" type="xs:string"/>
+      <xs:element minOccurs="0" name="notes" type="xs:string"/>
+      <xs:element minOccurs="0" name="profileName" type="xs:string"/>
+      <xs:element minOccurs="0" name="serialNumber" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="CustomFault" nillable="true" type="xs:string"/>
+</xs:schema>

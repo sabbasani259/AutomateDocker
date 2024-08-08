@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="RJcbRollOffSampleService" targetNamespace="http://webservices.EAintegration.wise.remote/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://webservices.EAintegration.wise.remote/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<import namespace="http://webservices.EAintegration.wise.remote/" schemaLocation="RJcbRollOffSampleService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="reprocessEARollOffdata">
+    <wsdl:part name="parameters" element="tns:reprocessEARollOffdata">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="reprocessEARollOffdataResponse">
+    <wsdl:part name="parameters" element="tns:reprocessEARollOffdataResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="RJcbRollOffSample">
+    <wsdl:operation name="reprocessEARollOffdata">
+      <wsdl:input name="reprocessEARollOffdata" message="tns:reprocessEARollOffdata">
+    </wsdl:input>
+      <wsdl:output name="reprocessEARollOffdataResponse" message="tns:reprocessEARollOffdataResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="RJcbRollOffSampleServiceSoapBinding" type="tns:RJcbRollOffSample">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="reprocessEARollOffdata">
+      <soap:operation soapAction="reprocessEARollOffdata" style="document"/>
+      <wsdl:input name="reprocessEARollOffdata">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="reprocessEARollOffdataResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="RJcbRollOffSampleService">
+    <wsdl:port name="RJcbRollOffSamplePort" binding="tns:RJcbRollOffSampleServiceSoapBinding">
+      <soap:address location="http://localhost:9090/RJcbRollOffSamplePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

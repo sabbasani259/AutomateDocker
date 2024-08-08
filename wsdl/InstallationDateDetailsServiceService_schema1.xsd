@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://webservice.service.wise.remote/" elementFormDefault="unqualified" targetNamespace="http://webservice.service.wise.remote/" version="1.0">
+<xs:element name="setAssetServiceSchedule" type="tns:setAssetServiceSchedule"/>
+<xs:element name="setAssetServiceScheduleResponse" type="tns:setAssetServiceScheduleResponse"/>
+<xs:complexType name="setAssetServiceSchedule">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="serialNumber" type="xs:string"/>
+      <xs:element minOccurs="0" name="installationDate" type="xs:string"/>
+      <xs:element minOccurs="0" name="dealerCode" type="xs:string"/>
+      <xs:element minOccurs="0" name="customerCode" type="xs:string"/>
+      <xs:element minOccurs="0" name="messageId" type="xs:string"/>
+      <xs:element minOccurs="0" name="fileRef" type="xs:string"/>
+      <xs:element minOccurs="0" name="process" type="xs:string"/>
+      <xs:element minOccurs="0" name="reprocessJobCode" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="setAssetServiceScheduleResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

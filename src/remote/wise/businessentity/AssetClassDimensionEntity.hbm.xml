@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jan 8, 2013 4:55:29 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+ <class name="remote.wise.businessentity.AssetClassDimensionEntity" table="asset_class_dimension">
+  <id name="assetClassDimensionId" type="int">
+   <column default="0" name="Asset_Class_Dimension_ID"/>
+   <generator class="identity"/>
+  </id>
+  <property generated="never" lazy="false" name="assetTypeId" type="int">
+   <column name="Asset_Type_ID"/>
+  </property>
+  <property generated="never" lazy="false" name="assetClassId" type="int">
+   <column name="Asset_Class_ID"/>
+  </property>
+  <property generated="never" lazy="false" name="assetClassName" type="java.lang.String">
+   <column name="Asset_Class_Name"/>
+  </property>
+  <property generated="never" lazy="false" name="assetGroupId" type="int">
+   <column name="Asset_Group_ID"/>
+  </property>
+  <property generated="never" lazy="false" name="assetGroupName" type="java.lang.String">
+   <column name="Asset_Group_Name"/>
+  </property>
+  <property generated="never" lazy="false" name="assetTypeName" type="java.lang.String">
+   <column name="Asset_Type_Name"/>
+  </property>
+  <property generated="never" lazy="false" name="productId" type="int">
+   <column name="Product_ID"/>
+  </property>
+ </class>
+</hibernate-mapping>

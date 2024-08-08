@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 1, 2013 2:23:59 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+ <class name="remote.wise.businessentity.ServiceDetailsReportEntity" table="service_details_report">
+  <id name="serialNumber" type="java.lang.String">
+   <column name="Serial_Number"/>
+   <generator class="assigned"/>
+  </id>
+  <property generated="never" lazy="false" name="serviceScheduleName" type="java.lang.String">
+   <column name="Service_Schedule_Name"/>
+  </property>
+  <property generated="never" lazy="false" name="lastServiceName" type="java.lang.String">
+   <column name="Last_Service_Name"/>
+  </property>
+  <property generated="never" lazy="false" name="lastServiceDate" type="java.sql.Timestamp">
+   <column name="Last_Service_Date"/>
+  </property>
+  <property generated="never" lazy="false" name="lastServiceHours" type="java.lang.String">
+   <column name="Last_Service_Hours"/>
+  </property>
+  <property generated="never" lazy="false" name="nextServiceName" type="java.lang.String">
+   <column name="Next_Service_Name"/>
+  </property>
+  <property generated="never" lazy="false" name="nextServiceDate" type="java.sql.Timestamp">
+   <column name="Next_Service_Date"/>
+  </property>
+  <property generated="never" lazy="false" name="nextServiceHours" type="java.lang.String">
+   <column name="Next_Service_Hours"/>
+  </property>
+  <property generated="never" lazy="false" name="totalEngineHours" type="java.lang.String">
+   <column name="Total_Engine_Hours"/>
+  </property>
+  <property generated="never" lazy="false" name="lastUpdated" type="java.sql.Timestamp">
+   <column name="Last_Updated"/>
+  </property>
+  <property generated="never" lazy="false" name="eventId" type="int">
+   <column name="Event_ID"/>
+  </property>
+ </class>
+</hibernate-mapping>

@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 8, 2012 11:31:31 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+ <class name="remote.wise.businessentity.ProductEntity" table="products">
+  <id name="productId" type="int">
+   <column default="0" name="Product_ID"/>
+   <generator class="identity"/>
+  </id>
+  <property generated="never" lazy="false" name="productName" type="java.lang.String">
+   <column name="Product_Name"/>
+  </property>
+  <many-to-one class="remote.wise.businessentity.ClientEntity"
+   fetch="join" name="clientId">
+   <column name="Client_ID"/>
+  </many-to-one>
+  <many-to-one class="remote.wise.businessentity.AssetClassEntity"
+   fetch="join" name="assetClassId">
+   <column name="Asset_Class_ID"/>
+  </many-to-one>
+  <many-to-one class="remote.wise.businessentity.AssetGroupEntity"
+   fetch="join" name="assetGroupId">
+   <column name="Asset_Group_ID"/>
+  </many-to-one>
+  <many-to-one class="remote.wise.businessentity.AssetTypeEntity"
+   fetch="join" name="assetTypeId">
+   <column name="Asset_Type_ID"/>
+  </many-to-one>
+  <many-to-one class="remote.wise.businessentity.EngineTypeEntity"
+   fetch="join" name="engineTypeId">
+   <column name="Engine_Type_id"/>
+  </many-to-one>
+  <property generated="never" lazy="false" name="make" type="int">
+   <column name="Make"/>
+  </property>
+ </class>
+</hibernate-mapping>

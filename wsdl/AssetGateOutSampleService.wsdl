@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="AssetGateOutSampleService" targetNamespace="http://webservices.EAintegration.wise.remote/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://webservices.EAintegration.wise.remote/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<import namespace="http://webservices.EAintegration.wise.remote/" schemaLocation="AssetGateOutSampleService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="processEAassetGateOut">
+    <wsdl:part name="parameters" element="tns:processEAassetGateOut">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="processEAassetGateOutResponse">
+    <wsdl:part name="parameters" element="tns:processEAassetGateOutResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="AssetGateOutSample">
+    <wsdl:operation name="processEAassetGateOut">
+      <wsdl:input name="processEAassetGateOut" message="tns:processEAassetGateOut">
+    </wsdl:input>
+      <wsdl:output name="processEAassetGateOutResponse" message="tns:processEAassetGateOutResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="AssetGateOutSampleServiceSoapBinding" type="tns:AssetGateOutSample">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="processEAassetGateOut">
+      <soap:operation soapAction="processEAassetGateOut" style="document"/>
+      <wsdl:input name="processEAassetGateOut">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="processEAassetGateOutResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="AssetGateOutSampleService">
+    <wsdl:port name="AssetGateOutSamplePort" binding="tns:AssetGateOutSampleServiceSoapBinding">
+      <soap:address location="http://localhost:9090/AssetGateOutSamplePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

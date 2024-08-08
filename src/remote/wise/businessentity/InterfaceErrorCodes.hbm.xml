@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+ <class name="remote.wise.businessentity.InterfaceErrorCodes" table="Interface_Error_Codes">
+  <id name="errorcode" type="java.lang.String">
+   <column name="Error_Code"/>
+   <generator class="assigned"/>
+  </id>
+  <property generated="never" lazy="false" name="errorMessage" type="java.lang.String">
+   <column name="Error_Message"/>
+  </property>
+ </class>
+</hibernate-mapping>

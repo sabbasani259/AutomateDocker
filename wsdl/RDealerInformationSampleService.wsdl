@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="RDealerInformationSampleService" targetNamespace="http://webservices.EAintegration.wise.remote/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://webservices.EAintegration.wise.remote/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<import namespace="http://webservices.EAintegration.wise.remote/" schemaLocation="RDealerInformationSampleService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="reprocessEADealerDataResponse">
+    <wsdl:part name="parameters" element="tns:reprocessEADealerDataResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="reprocessEADealerData">
+    <wsdl:part name="parameters" element="tns:reprocessEADealerData">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="RDealerInformationSample">
+    <wsdl:operation name="reprocessEADealerData">
+      <wsdl:input name="reprocessEADealerData" message="tns:reprocessEADealerData">
+    </wsdl:input>
+      <wsdl:output name="reprocessEADealerDataResponse" message="tns:reprocessEADealerDataResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="RDealerInformationSampleServiceSoapBinding" type="tns:RDealerInformationSample">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="reprocessEADealerData">
+      <soap:operation soapAction="reprocessEADealerData" style="document"/>
+      <wsdl:input name="reprocessEADealerData">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="reprocessEADealerDataResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="RDealerInformationSampleService">
+    <wsdl:port name="RDealerInformationSamplePort" binding="tns:RDealerInformationSampleServiceSoapBinding">
+      <soap:address location="http://localhost:9090/RDealerInformationSamplePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

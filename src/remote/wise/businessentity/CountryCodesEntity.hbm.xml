@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="remote.wise.businessentity.CountryCodesEntity"
+		table="country_codes">
+		<id name="countryName" type="java.lang.String">
+			<column name="country_name" />
+			<generator class="assigned" />
+		</id>
+		<property name="countryCode" type="java.lang.String">
+			<column name="country_code" />
+		</property>
+		<property name="timeZone" type="java.lang.String">
+			<column name="TimeZones" />
+		</property>
+	</class>
+</hibernate-mapping>

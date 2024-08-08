@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="RServiceHistorySampleService" targetNamespace="http://webservices.EAintegration.wise.remote/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://webservices.EAintegration.wise.remote/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<import namespace="http://webservices.EAintegration.wise.remote/" schemaLocation="RServiceHistorySampleService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="reprocessEAServiceHistoryResponse">
+    <wsdl:part name="parameters" element="tns:reprocessEAServiceHistoryResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="reprocessEAServiceHistory">
+    <wsdl:part name="parameters" element="tns:reprocessEAServiceHistory">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="RServiceHistorySample">
+    <wsdl:operation name="reprocessEAServiceHistory">
+      <wsdl:input name="reprocessEAServiceHistory" message="tns:reprocessEAServiceHistory">
+    </wsdl:input>
+      <wsdl:output name="reprocessEAServiceHistoryResponse" message="tns:reprocessEAServiceHistoryResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="RServiceHistorySampleServiceSoapBinding" type="tns:RServiceHistorySample">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="reprocessEAServiceHistory">
+      <soap:operation soapAction="reprocessEAServiceHistory" style="document"/>
+      <wsdl:input name="reprocessEAServiceHistory">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="reprocessEAServiceHistoryResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="RServiceHistorySampleService">
+    <wsdl:port name="RServiceHistorySamplePort" binding="tns:RServiceHistorySampleServiceSoapBinding">
+      <soap:address location="http://localhost:9090/RServiceHistorySamplePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="LoginRegistrationServiceService" targetNamespace="http://webservice.service.wise.remote/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://webservice.service.wise.remote/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<import namespace="http://webservice.service.wise.remote/" schemaLocation="LoginRegistrationServiceService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="GetSecretQuestionsResponse">
+    <wsdl:part name="parameters" element="tns:GetSecretQuestionsResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="SetSecretQuestionsToUserResponse">
+    <wsdl:part name="parameters" element="tns:SetSecretQuestionsToUserResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GetSecretQuestions">
+    <wsdl:part name="parameters" element="tns:GetSecretQuestions">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="SetSecretQuestionsToUser">
+    <wsdl:part name="parameters" element="tns:SetSecretQuestionsToUser">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GetQuestionsToUser">
+    <wsdl:part name="parameters" element="tns:GetQuestionsToUser">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GetQuestionsToUserResponse">
+    <wsdl:part name="parameters" element="tns:GetQuestionsToUserResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="CustomFault">
+    <wsdl:part name="CustomFault" element="tns:CustomFault">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="LoginRegistrationService">
+    <wsdl:operation name="SetSecretQuestionsToUser">
+      <wsdl:input name="SetSecretQuestionsToUser" message="tns:SetSecretQuestionsToUser">
+    </wsdl:input>
+      <wsdl:output name="SetSecretQuestionsToUserResponse" message="tns:SetSecretQuestionsToUserResponse">
+    </wsdl:output>
+      <wsdl:fault name="CustomFault" message="tns:CustomFault">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetSecretQuestions">
+      <wsdl:input name="GetSecretQuestions" message="tns:GetSecretQuestions">
+    </wsdl:input>
+      <wsdl:output name="GetSecretQuestionsResponse" message="tns:GetSecretQuestionsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetQuestionsToUser">
+      <wsdl:input name="GetQuestionsToUser" message="tns:GetQuestionsToUser">
+    </wsdl:input>
+      <wsdl:output name="GetQuestionsToUserResponse" message="tns:GetQuestionsToUserResponse">
+    </wsdl:output>
+      <wsdl:fault name="CustomFault" message="tns:CustomFault">
+    </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="LoginRegistrationServiceServiceSoapBinding" type="tns:LoginRegistrationService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="SetSecretQuestionsToUser">
+      <soap:operation soapAction="SetSecretQuestionsToUser" style="document"/>
+      <wsdl:input name="SetSecretQuestionsToUser">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="SetSecretQuestionsToUserResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="CustomFault">
+        <soap:fault name="CustomFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetSecretQuestions">
+      <soap:operation soapAction="GetSecretQuestions" style="document"/>
+      <wsdl:input name="GetSecretQuestions">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="GetSecretQuestionsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetQuestionsToUser">
+      <soap:operation soapAction="GetQuestionsToUser" style="document"/>
+      <wsdl:input name="GetQuestionsToUser">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="GetQuestionsToUserResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="CustomFault">
+        <soap:fault name="CustomFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="LoginRegistrationServiceService">
+    <wsdl:port name="LoginRegistrationServicePort" binding="tns:LoginRegistrationServiceServiceSoapBinding">
+      <soap:address location="http://localhost:9090/LoginRegistrationServicePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

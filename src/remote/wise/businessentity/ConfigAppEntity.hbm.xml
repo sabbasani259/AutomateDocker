@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 12, 2012 11:17:38 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+ <class name="remote.wise.businessentity.ConfigAppEntity" table="application_configuration">
+  <id name="configuration_id" type="int">
+   <column name="Configuration_ID"/>
+   <generator class="assigned"/>
+  </id>
+  <property generated="never" lazy="false" name="services" type="java.lang.String">
+   <column name="Services"/>
+  </property>
+  <property access="field" generated="never" lazy="false"
+   name="isStatus" type="boolean">
+   <column name="Status"/>
+  </property>
+  <property access="field" generated="never" lazy="false"
+   name="modifiedBy" type="java.lang.String">
+   <column name="modified_by"/>
+  </property>
+  <property access="field" generated="never" lazy="false"
+   name="modifiedOn" type="java.sql.Timestamp">
+   <column name="modified_on"/>
+  </property>
+ </class>
+</hibernate-mapping>

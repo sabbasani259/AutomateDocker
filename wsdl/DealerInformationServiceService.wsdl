@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="DealerInformationServiceService" targetNamespace="http://webservice.service.wise.remote/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://webservice.service.wise.remote/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<import namespace="http://webservice.service.wise.remote/" schemaLocation="DealerInformationServiceService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="setDealerDetails">
+    <wsdl:part name="parameters" element="tns:setDealerDetails">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="setDealerDetailsResponse">
+    <wsdl:part name="parameters" element="tns:setDealerDetailsResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="DealerInformationService">
+    <wsdl:operation name="setDealerDetails">
+      <wsdl:input name="setDealerDetails" message="tns:setDealerDetails">
+    </wsdl:input>
+      <wsdl:output name="setDealerDetailsResponse" message="tns:setDealerDetailsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="DealerInformationServiceServiceSoapBinding" type="tns:DealerInformationService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="setDealerDetails">
+      <soap:operation soapAction="setDealerDetails" style="document"/>
+      <wsdl:input name="setDealerDetails">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="setDealerDetailsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="DealerInformationServiceService">
+    <wsdl:port name="DealerInformationServicePort" binding="tns:DealerInformationServiceServiceSoapBinding">
+      <soap:address location="http://localhost:9090/DealerInformationServicePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

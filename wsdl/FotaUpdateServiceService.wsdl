@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="FotaUpdateServiceService" targetNamespace="http://webservice.service.wise.remote/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://webservice.service.wise.remote/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<import namespace="http://webservice.service.wise.remote/" schemaLocation="FotaUpdateServiceService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="FotaUpdateResponse">
+    <wsdl:part name="parameters" element="tns:FotaUpdateResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="FotaUpdate">
+    <wsdl:part name="parameters" element="tns:FotaUpdate">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="FotaUpdateService">
+    <wsdl:operation name="FotaUpdate">
+      <wsdl:input name="FotaUpdate" message="tns:FotaUpdate">
+    </wsdl:input>
+      <wsdl:output name="FotaUpdateResponse" message="tns:FotaUpdateResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="FotaUpdateServiceServiceSoapBinding" type="tns:FotaUpdateService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="FotaUpdate">
+      <soap:operation soapAction="FotaUpdate" style="document"/>
+      <wsdl:input name="FotaUpdate">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="FotaUpdateResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="FotaUpdateServiceService">
+    <wsdl:port name="FotaUpdateServicePort" binding="tns:FotaUpdateServiceServiceSoapBinding">
+      <soap:address location="http://localhost:9090/FotaUpdateServicePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

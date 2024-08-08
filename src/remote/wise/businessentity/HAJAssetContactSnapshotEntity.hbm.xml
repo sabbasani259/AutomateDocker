@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jan 21, 2015 2:41:52 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+ <class name="remote.wise.businessentity.HAJAssetContactSnapshotEntity" table="HAJ_contact_snapshot_new">
+  <id name="contactID" type="java.lang.String">
+   <column name="Contact_ID"/>
+   <generator class="assigned"/>
+  </id>
+  <property generated="never" lazy="false" name="email_Id" type="java.lang.String">
+   <column name="Primary_Email_ID"/>
+  </property>
+  <property generated="never" lazy="false" name="first_Name" type="java.lang.String">
+   <column name="First_Name"/>
+  </property>
+  <property generated="never" lazy="false" name="last_Name" type="java.lang.String">
+   <column name="Last_Name"/>
+  </property>
+  <property generated="never" lazy="false" name="mobile_Number" type="java.lang.String">
+   <column name="Primary_Moblie_Number"/>
+  </property>
+  <property generated="never" lazy="false" name="sendFlag" type="int">
+   <column name="Send_Flag"/>
+  </property>
+  <property generated="never" lazy="false" name="accountID" type="int">
+   <column name="Account_ID"/>
+  </property>
+  <property generated="never" lazy="false" name="password" type="java.lang.String">
+   <column name="Password"/>
+  </property>
+ </class>
+</hibernate-mapping>

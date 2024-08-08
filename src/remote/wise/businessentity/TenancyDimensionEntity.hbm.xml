@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jan 8, 2013 5:09:03 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.TenancyDimensionEntity" table="tenancy_dimension">
+       <!--  <id name="tenancyId" type="int">
+            <column name="Tenancy_ID" />
+            <generator class="assigned" />
+        </id> -->
+         <id name="tenacy_Dimension_Id" type="int">
+            <column name="Tenancy_Dimension_ID" />
+            <generator class="assigned" />
+        </id>
+         <property name="tenancyId" type="int">
+            <column name="Tenancy_ID" />
+        </property>
+        <property name="tenancyName" type="java.lang.String">
+            <column name="Tenancy_Name" />
+        </property>
+        <property name="parentTenancyId" type="int">
+            <column name="Parent_Tenancy_ID" />
+        </property>
+        <property name="tenancyTypeId" type="int">
+            <column name="Tenancy_Type_ID" />
+        </property>
+        <property name="tenancyTypeName" type="java.lang.String">
+            <column name="Tenancy_Type_Name" />
+        </property>
+        <property name="parentTenancyName" type="java.lang.String">
+            <column name="Parent_Tenancy_Name" />
+        </property>
+        <property generated="never" lazy="false" name="last_updated" type="java.sql.Timestamp">
+   			<column name="Last_Updated"/>
+  		</property>
+    </class>
+</hibernate-mapping>

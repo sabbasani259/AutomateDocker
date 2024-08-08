@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="RAssetProfileSampleService" targetNamespace="http://webservices.EAintegration.wise.remote/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://webservices.EAintegration.wise.remote/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<import namespace="http://webservices.EAintegration.wise.remote/" schemaLocation="RAssetProfileSampleService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="reprocessEAassetProfielData">
+    <wsdl:part name="parameters" element="tns:reprocessEAassetProfielData">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="reprocessEAassetProfielDataResponse">
+    <wsdl:part name="parameters" element="tns:reprocessEAassetProfielDataResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="RAssetProfileSample">
+    <wsdl:operation name="reprocessEAassetProfielData">
+      <wsdl:input name="reprocessEAassetProfielData" message="tns:reprocessEAassetProfielData">
+    </wsdl:input>
+      <wsdl:output name="reprocessEAassetProfielDataResponse" message="tns:reprocessEAassetProfielDataResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="RAssetProfileSampleServiceSoapBinding" type="tns:RAssetProfileSample">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="reprocessEAassetProfielData">
+      <soap:operation soapAction="reprocessEAassetProfielData" style="document"/>
+      <wsdl:input name="reprocessEAassetProfielData">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="reprocessEAassetProfielDataResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="RAssetProfileSampleService">
+    <wsdl:port name="RAssetProfileSamplePort" binding="tns:RAssetProfileSampleServiceSoapBinding">
+      <soap:address location="http://localhost:9090/RAssetProfileSamplePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

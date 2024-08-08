@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 4, 2012 2:45:49 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+ <class name="remote.wise.businessentity.AssetExtendedDetailsEntity" table="asset_profile">
+  <composite-id mapped="false" unsaved-value="undefined">
+   <key-many-to-one class="remote.wise.businessentity.AssetEntity"
+    column="serialNumber" name="serial_number"/>
+  </composite-id>
+  <property generated="never" lazy="false" name="OperatingStartTime" type="java.sql.Timestamp">
+   <column name="operatingStartTime"/>
+  </property>
+  <property generated="never" lazy="false" name="OperatingEndTime" type="java.sql.Timestamp">
+   <column name="operatingEndTime"/>
+  </property>
+  <property generated="never" lazy="false" name="UsageCategory" type="java.lang.String">
+   <column name="usgaeCategory"/>
+  </property>
+  <property generated="never" lazy="false" name="Offset" type="java.lang.String">
+   <column name="offset"/>
+  </property>
+  <property generated="never" lazy="false" name="DriverName" type="java.lang.String">
+   <column name="driverName"/>
+  </property>
+  <property generated="never" lazy="false" name="DriverContactNumber" type="java.lang.String">
+   <column name="driverContactNo"/>
+  </property>
+  <property generated="never" lazy="false" name="notes" type="java.lang.String">
+   <column name="notes"/>
+  </property>
+  <property generated="never" lazy="false" name="Device_Status" type="java.lang.String">
+   <column name="Device_Status"/>
+  </property>
+  <many-to-one class="remote.wise.businessentity.CustomAssetClassEntity"
+   fetch="join" name="customAssetClass">
+   <column name="Custom_Class_ID"/>
+  </many-to-one>
+    <!-- DF20181211 :Mani : Adding new column -->
+   <property generated="never" lazy="false" name="CmhUpdatedTime" type="java.sql.Timestamp">
+   <column name="CmhUpdatedTime"/>
+  </property>
+ </class>
+</hibernate-mapping>

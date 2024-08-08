@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://webservice.service.wise.remote/" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://webservice.service.wise.remote/">
+  <xs:element name="GetMasterServiceSchedule" type="tns:GetMasterServiceSchedule"/>
+  <xs:element name="GetMasterServiceScheduleResponse" type="tns:GetMasterServiceScheduleResponse"/>
+  <xs:element name="setMasterServiceScheduleDetails" type="tns:setMasterServiceScheduleDetails"/>
+  <xs:element name="setMasterServiceScheduleDetailsResponse" type="tns:setMasterServiceScheduleDetailsResponse"/>
+  <xs:complexType name="GetMasterServiceSchedule">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="reqObj" type="tns:masterServiceScheduleRequestContract"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="masterServiceScheduleRequestContract">
+    <xs:sequence>
+      <xs:element name="assetGroupId" type="xs:int"/>
+      <xs:element name="assetTypeId" type="xs:int"/>
+      <xs:element name="engineTypeId" type="xs:int"/>
+      <xs:element minOccurs="0" name="scheduleName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="GetMasterServiceScheduleResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:masterServiceScheduleResponseContract"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="masterServiceScheduleResponseContract">
+    <xs:sequence>
+      <xs:element name="assetGroupId" type="xs:int"/>
+      <xs:element name="assetTypeId" type="xs:int"/>
+      <xs:element minOccurs="0" name="asset_group_name" type="xs:string"/>
+      <xs:element minOccurs="0" name="asset_type_name" type="xs:string"/>
+      <xs:element minOccurs="0" name="dbmsPartCode" type="xs:string"/>
+      <xs:element name="durationSchedule" type="xs:int"/>
+      <xs:element name="engineHoursSchedule" type="xs:long"/>
+      <xs:element name="engineTypeId" type="xs:int"/>
+      <xs:element minOccurs="0" name="engineTypeName" type="xs:string"/>
+      <xs:element minOccurs="0" name="scheduleName" type="xs:string"/>
+      <xs:element minOccurs="0" name="serviceName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setMasterServiceScheduleDetails">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="servicePlan" type="xs:string"/>
+      <xs:element minOccurs="0" name="serviceName" type="xs:string"/>
+      <xs:element minOccurs="0" name="scheduleName" type="xs:string"/>
+      <xs:element minOccurs="0" name="dbmsPartCode" type="xs:string"/>
+      <xs:element minOccurs="0" name="assetGroupCode" type="xs:string"/>
+      <xs:element minOccurs="0" name="assetTypeCode" type="xs:string"/>
+      <xs:element minOccurs="0" name="engineTypeCode" type="xs:string"/>
+      <xs:element minOccurs="0" name="engineHours" type="xs:string"/>
+      <xs:element minOccurs="0" name="days" type="xs:string"/>
+      <xs:element minOccurs="0" name="messageId" type="xs:string"/>
+      <xs:element minOccurs="0" name="fileRef" type="xs:string"/>
+      <xs:element minOccurs="0" name="process" type="xs:string"/>
+      <xs:element minOccurs="0" name="reprocessJobCode" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setMasterServiceScheduleDetailsResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="CustomFault" nillable="true" type="xs:string"/>
+</xs:schema>

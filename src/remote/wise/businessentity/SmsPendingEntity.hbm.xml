@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="remote.wise.businessentity.SmsPendingEntity" table="sms_pending">
+		<id name="reqId" type="int">
+			<column default="0" name="req_id" />
+			<generator class="identity" />
+		</id>
+		<property generated="never" lazy="false" name="mobileNumber"
+			type="java.lang.String">			
+			<column name="mobile_number" />
+		</property>
+		<property generated="never" lazy="false" name="smsBody"
+			type="java.lang.String">
+			<column name="sms_body" />
+		</property>
+		<property generated="never" lazy="false" name="generatedTime"
+			type="java.sql.Timestamp">
+			<column name="generated_time" />
+		</property>
+	</class>
+</hibernate-mapping>

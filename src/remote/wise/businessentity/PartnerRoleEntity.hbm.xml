@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 19, 2012 1:45:20 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.PartnerRoleEntity" table="partner">
+        <id name="partnerId" type="int">
+            <column default="0" name="Partner_ID" />
+            <generator class="identity" />
+        </id>
+        <property name="partnerRole" type="java.lang.String">
+            <column name="Partner_Role" />
+        </property>
+        <property name="reversePartnerRole" type="java.lang.String">
+            <column name="Reverse_Partner_Role" />
+        </property>
+    </class>
+</hibernate-mapping>

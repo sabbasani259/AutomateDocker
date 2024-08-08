@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="CustomerInformationServiceService" targetNamespace="http://webservice.service.wise.remote/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://webservice.service.wise.remote/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<import namespace="http://webservice.service.wise.remote/" schemaLocation="CustomerInformationServiceService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="setCustomerDetailsResponse">
+    <wsdl:part name="parameters" element="tns:setCustomerDetailsResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="setCustomerDetails">
+    <wsdl:part name="parameters" element="tns:setCustomerDetails">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="CustomerInformationService">
+    <wsdl:operation name="setCustomerDetails">
+      <wsdl:input name="setCustomerDetails" message="tns:setCustomerDetails">
+    </wsdl:input>
+      <wsdl:output name="setCustomerDetailsResponse" message="tns:setCustomerDetailsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="CustomerInformationServiceServiceSoapBinding" type="tns:CustomerInformationService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="setCustomerDetails">
+      <soap:operation soapAction="setCustomerDetails" style="document"/>
+      <wsdl:input name="setCustomerDetails">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="setCustomerDetailsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="CustomerInformationServiceService">
+    <wsdl:port name="CustomerInformationServicePort" binding="tns:CustomerInformationServiceServiceSoapBinding">
+      <soap:address location="http://localhost:9090/CustomerInformationServicePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

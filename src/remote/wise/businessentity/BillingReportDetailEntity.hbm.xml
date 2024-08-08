@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Apr 3, 2014 10:47:29 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.BillingReportDetailEntity" table="billing_report_detail">
+    	<composite-id mapped="false" unsaved-value="undefined">
+   			<key-many-to-one class="remote.wise.businessentity.AssetEntity"
+    						 column="Serial_Number" name="serial_number"/>
+ 		</composite-id>
+ 		<many-to-one class="remote.wise.businessentity.BillingReportEntity"
+   					 fetch="join" name="billing_id">
+   					 <column name="Billing_ID"/>
+  		</many-to-one>
+        <property name="rolledOffDate" type="java.sql.Timestamp">
+            <column name="RolledOff_Date" />
+        </property>
+    </class>
+</hibernate-mapping>

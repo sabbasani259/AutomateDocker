@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 28, 2012 3:30:25 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+ <class name="remote.wise.businessentity.TenancyEntity" table="tenancy">
+  <id name="tenancy_id" type="int">
+   <column default="1" name="Tenancy_ID"/>
+   <generator class="identity"/>
+  </id>
+  <property generated="never" lazy="false" name="tenancy_name" type="java.lang.String">
+   <column name="Tenancy_Name"/>
+  </property>
+  <property generated="never" lazy="false" name="parent_tenancy_name" type="java.lang.String">
+   <column name="Parent_Tenancy_Name"/>
+  </property>
+  <property generated="never" lazy="false" name="Operating_Start_Time" type="java.sql.Timestamp">
+   <column name="Operating_Start_Time"/>
+  </property>
+  <property generated="never" lazy="false" name="Operating_End_Time" type="java.sql.Timestamp">
+   <column name="Operating_End_Time"/>
+  </property>
+   <property generated="never" lazy="false" name="tenancyCode" type="java.lang.String">
+   <column name="Tenancy_Code"/>
+  </property>
+  <many-to-one class="remote.wise.businessentity.TenancyEntity"
+   fetch="join" lazy = "false" name="parent_tenancy_id">
+   <column name="Parent_Tenancy_ID"/>
+  </many-to-one>
+  <property generated="never" lazy="false" name="createdBy" type="java.lang.String">
+   <column name="CreatedBy"/>
+  </property>
+  <property generated="never" lazy="false" name="createdDate" type="java.sql.Timestamp">
+   <column name="CreatedDate"/>
+  </property>
+  <set lazy="true" name="child_tenancies" sort="unsorted" table="tenancy">
+   <key>
+    <column name="Parent_Tenancy_ID"/>
+   </key>
+   <one-to-many class="remote.wise.businessentity.TenancyEntity"/>
+  </set>
+  <many-to-one class="remote.wise.businessentity.ClientEntity"
+   fetch="join" name="client_id">
+   <column name="Client_ID"/>
+  </many-to-one>
+  <many-to-one class="remote.wise.businessentity.TenancyTypeEntity"
+   fetch="join" lazy="false" name="tenancy_type_id">
+   <column name="Tenancy_Type_ID"/>
+  </many-to-one>
+  <!-- //Df20180117 @Roopa Multiple BP code changes -->
+		<property generated="never" lazy="false" name="mappingCode" type="java.lang.String">
+			<column name="mapping_code"/>
+		</property>
+ </class>
+</hibernate-mapping>

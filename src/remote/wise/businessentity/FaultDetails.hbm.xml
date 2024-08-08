@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Apr 24, 2013 12:12:30 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+	<class name="remote.wise.businessentity.FaultDetails" table="fault_details">
+		<id name="messageId" type="java.lang.String">
+			<column name="Message_ID" />
+			<generator class="assigned" />
+		</id>
+		<property generated="never" lazy="false" name="messageString"
+			type="java.lang.String">
+			<column name="Message_String" />
+		</property>
+		<property generated="never" lazy="false" name="fileName"
+			type="java.lang.String">
+			<column name="File_Name" />
+		</property>
+		<property generated="never" lazy="false" name="process"
+			type="java.lang.String">
+			<column name="Process" />
+		</property>
+		<property generated="never" lazy="false" name="reprocessJobCode"
+			type="java.lang.String">
+			<column name="Reprocess_Job_Code" />
+		</property>
+		<property generated="never" lazy="false" name="reprocessTimeStamp"
+			type="java.sql.Timestamp">
+			<column name="Reprocess_TimeStamp" />
+		</property>
+		<property generated="never" lazy="false" name="failureCounter"
+			type="int">
+			<column name="Failure_Counter" />
+		</property>
+		<property generated="never" lazy="false" name="failureCause"
+			type="java.lang.String">
+			<column name="Failure_Cause" />
+		</property>
+		<!-- DF20180207 @Maniratnam:: Adding extra columns as a part of interfaces 
+			Backtracking -->
+		<many-to-one class="remote.wise.businessentity.InterfaceErrorCodes"
+			fetch="join" lazy="false" name="errorCode">
+			<column name="Error_Code" />
+		</many-to-one>
+		<property generated="never" lazy="false" name="rejectionPoint"
+			type="java.lang.String">
+			<column name="Rejection_Point" />
+		</property>
+		<property generated="never" lazy="false" name="deletionFlag"
+	type="int">
+	<column name="deletion_flag" />
+</property>
+	</class>
+</hibernate-mapping>

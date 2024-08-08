@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="JcbRollOffSampleService" targetNamespace="http://webservices.EAintegration.wise.remote/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://webservices.EAintegration.wise.remote/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<import namespace="http://webservices.EAintegration.wise.remote/" schemaLocation="JcbRollOffSampleService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="processEARollOffdata">
+    <wsdl:part name="parameters" element="tns:processEARollOffdata">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="processEARollOffdataResponse">
+    <wsdl:part name="parameters" element="tns:processEARollOffdataResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="JcbRollOffSample">
+    <wsdl:operation name="processEARollOffdata">
+      <wsdl:input name="processEARollOffdata" message="tns:processEARollOffdata">
+    </wsdl:input>
+      <wsdl:output name="processEARollOffdataResponse" message="tns:processEARollOffdataResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="JcbRollOffSampleServiceSoapBinding" type="tns:JcbRollOffSample">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="processEARollOffdata">
+      <soap:operation soapAction="processEARollOffdata" style="document"/>
+      <wsdl:input name="processEARollOffdata">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="processEARollOffdataResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="JcbRollOffSampleService">
+    <wsdl:port name="JcbRollOffSamplePort" binding="tns:JcbRollOffSampleServiceSoapBinding">
+      <soap:address location="http://localhost:9090/JcbRollOffSamplePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

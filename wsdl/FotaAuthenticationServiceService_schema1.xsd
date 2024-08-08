@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://webservice.service.wise.remote/" targetNamespace="http://webservice.service.wise.remote/" version="1.0">
+<xs:element name="FotaAuthentication" type="tns:FotaAuthentication"/>
+<xs:element name="FotaAuthenticationResponse" type="tns:FotaAuthenticationResponse"/>
+<xs:complexType name="FotaAuthentication">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="reqObj" type="tns:fotaAuthenticationReqContract"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="fotaAuthenticationReqContract">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="fotaimeiNumber" type="xs:string"/>
+      <xs:element minOccurs="0" name="fotasessionId" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="FotaAuthenticationResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:fotaAuthenticationRespContract"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="fotaAuthenticationRespContract">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="sessionId" type="xs:string"/>
+      <xs:element minOccurs="0" name="status" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="FotaFinalAlertServiceService" targetNamespace="http://webservice.service.wise.remote/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://webservice.service.wise.remote/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<import namespace="http://webservice.service.wise.remote/" schemaLocation="FotaFinalAlertServiceService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="FotaFinalAlert">
+    <wsdl:part name="parameters" element="tns:FotaFinalAlert">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="FotaFinalAlertResponse">
+    <wsdl:part name="parameters" element="tns:FotaFinalAlertResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="FotaFinalAlertService">
+    <wsdl:operation name="FotaFinalAlert">
+      <wsdl:input name="FotaFinalAlert" message="tns:FotaFinalAlert">
+    </wsdl:input>
+      <wsdl:output name="FotaFinalAlertResponse" message="tns:FotaFinalAlertResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="FotaFinalAlertServiceServiceSoapBinding" type="tns:FotaFinalAlertService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="FotaFinalAlert">
+      <soap:operation soapAction="FotaFinalAlert" style="document"/>
+      <wsdl:input name="FotaFinalAlert">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="FotaFinalAlertResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="FotaFinalAlertServiceService">
+    <wsdl:port name="FotaFinalAlertServicePort" binding="tns:FotaFinalAlertServiceServiceSoapBinding">
+      <soap:address location="http://localhost:9090/FotaFinalAlertServicePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="AssetSaleFromD2CserviceService" targetNamespace="http://webservice.service.wise.remote/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://webservice.service.wise.remote/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<import namespace="http://webservice.service.wise.remote/" schemaLocation="AssetSaleFromD2CserviceService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="assetSaleFromDealerToCust">
+    <wsdl:part name="parameters" element="tns:assetSaleFromDealerToCust">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="assetSaleFromDealerToCustResponse">
+    <wsdl:part name="parameters" element="tns:assetSaleFromDealerToCustResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="AssetSaleFromD2Cservice">
+    <wsdl:operation name="assetSaleFromDealerToCust">
+      <wsdl:input name="assetSaleFromDealerToCust" message="tns:assetSaleFromDealerToCust">
+    </wsdl:input>
+      <wsdl:output name="assetSaleFromDealerToCustResponse" message="tns:assetSaleFromDealerToCustResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="AssetSaleFromD2CserviceServiceSoapBinding" type="tns:AssetSaleFromD2Cservice">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="assetSaleFromDealerToCust">
+      <soap:operation soapAction="assetSaleFromDealerToCust" style="document"/>
+      <wsdl:input name="assetSaleFromDealerToCust">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="assetSaleFromDealerToCustResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="AssetSaleFromD2CserviceService">
+    <wsdl:port name="AssetSaleFromD2CservicePort" binding="tns:AssetSaleFromD2CserviceServiceSoapBinding">
+      <soap:address location="http://localhost:9090/AssetSaleFromD2CservicePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

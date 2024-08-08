@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+	<!DOCTYPE
+ hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd"
+	>
+	<!-- Generated Oct 28, 2012 2:59:34 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+	<class name="remote.wise.businessentity.AccountEntity" table="account">
+		<id name="account_id" type="int">
+			<column default="0" name="Account_ID"/>
+			<generator class="identity"/>
+		</id>
+		<property generated="never" lazy="false" name="no_of_employees" type="java.lang.Long">
+			<column name="Number_of_employees"/>
+		</property>
+		<property generated="never" lazy="false" name="phone_no" type="java.lang.String">
+			<column name="Phone"/>
+		</property>
+		<property generated="never" lazy="false" name="mobile_no" type="java.lang.String">
+			<column name="Mobile"/>
+		</property>
+		<property generated="never" lazy="false" name="emailId" type="java.lang.String">
+			<column name="Email_ID"/>
+		</property>
+		<property generated="never" lazy="false" name="account_name" type="java.lang.String">
+			<column name="Account_Name"/>
+		</property>
+		<property generated="never" lazy="false" name="description" type="java.lang.String">
+			<column name="Description"/>
+		</property>
+		<property generated="never" lazy="false" name="site_location" type="java.lang.String">
+			<column name="Site"/>
+		</property>
+		<property generated="never" lazy="false" name="accountCode" type="java.lang.String">
+			<column name="Account_Code"/>
+		</property>
+		<property generated="never" lazy="false" name="fax" type="java.lang.String">
+			<column name="Fax"/>
+		</property>
+		<property generated="never" lazy="false" name="status" type="boolean">
+			<column name="Status"/>
+		</property>
+		<many-to-one class="remote.wise.businessentity.AccountEntity" lazy="false" fetch="join" name="parent_account_id">
+			<column name="Parent_ID"/>
+		</many-to-one>
+		<property generated="never" lazy="false" name="year_started" type="java.util.Date">
+			<column name="Year_Started"/>
+		</property>
+		<property generated="never" lazy="false" name="owner_id" type="int">
+			<column name="Owner_ID"/>
+		</property>
+		<many-to-one class="remote.wise.businessentity.ClientEntity" fetch="join" name="client_id">
+			<column name="Client_ID"/>
+		</many-to-one>
+		<many-to-one class="remote.wise.businessentity.AddressEntity" fetch="join" name="addressId">
+			<column name="Address_ID"/>
+		</many-to-one>
+		<property generated="never" lazy="false" name="timeZone"
+			type="java.lang.String">
+			<column name="timeZone" />
+		</property>
+		<property generated="never" lazy="false" name="countryCode"
+			type="java.lang.String">
+			<column name="CountryCode" />
+		</property>
+		<property generated="never" lazy="false" name="MAFlag" type="boolean">
+			<column name="MAFlag"/>
+		</property>
+		<!-- //Df20180117 @Roopa Multiple BP code changes -->
+		<property generated="never" lazy="false" name="mappingCode" type="java.lang.String">
+			<column name="mapping_code"/>
+		</property>
+		<!-- DF20190312 :mani: account creation tracebility for creation nd updation -->
+		 <property generated="never" lazy="false" name="createdOn" type="java.sql.Timestamp">
+   <column name="created_on"/>
+  </property>
+  		 <property generated="never" lazy="false" name="updatedOn" type="java.sql.Timestamp">
+   <column name="last_updated_on"/>
+  </property>
+	</class>
+</hibernate-mapping>

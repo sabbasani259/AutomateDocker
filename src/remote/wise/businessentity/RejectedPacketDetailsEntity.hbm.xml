@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 17, 2014 1:58:30 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.RejectedPacketDetailsEntity" table="rejected_packet_details">
+        <id name="rejectionId" type="int">
+            <column default="0" name="Rejection_ID" />
+            <generator class="identity" />
+        </id>
+        <property name="serialNumber" type="java.lang.String">
+            <column name="Serial_Number" />
+        </property>
+        <property name="transactionTime" type="java.sql.Timestamp">
+            <column name="Transaction_Timestamp" />
+        </property>
+        <property name="createdTime" type="java.sql.Timestamp">
+            <column name="Created_Timestamp" />
+        </property>
+        <property name="rejectionCause" type="java.lang.String">
+            <column name="Rejection_Cause" />
+        </property>
+        <property name="txnForRejection" type="int">
+            <column default="0" name="Transaction_Number" />
+        </property>
+    </class>
+</hibernate-mapping>

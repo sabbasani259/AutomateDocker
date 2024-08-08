@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 27, 2012 10:58:11 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+ <class name="remote.wise.businessentity.CustomAssetGroupEntity" table="custom_asset_group">
+  <id name="group_id" type="int">
+   <column default="1" name="Group_ID"/>
+   <generator class="identity"/>
+  </id>
+  <property generated="never" lazy="false" name="level" type="int">
+   <column name="Level"/>
+  </property>
+  <property generated="never" lazy="false" name="group_name" type="java.lang.String">
+   <column name="Group_Name"/>
+  </property>
+  <property generated="never" lazy="false" name="parent_group_name" type="java.lang.String">
+   <column name="Parent_Group_Name"/>
+  </property>
+  <property generated="never" lazy="false" name="group_description" type="java.lang.String">
+   <column name="Group_Description"/>
+  </property>
+  <property generated="never" lazy="false" name="active_status" type="int">
+   <column name="Active_Status"/>
+  </property>
+  <many-to-one class="remote.wise.businessentity.CustomAssetGroupEntity"
+   fetch="join" name="asset_group_type">
+   <column name="Parent_Group_ID"/>
+  </many-to-one>
+  <many-to-one class="remote.wise.businessentity.ClientEntity"
+   fetch="join" name="client_id">
+   <column name="Client_ID"/>
+  </many-to-one>
+  <many-to-one class="remote.wise.businessentity.TenancyEntity"
+   fetch="join" name="tenancy_id">
+   <column name="Tenancy_ID"/>
+  </many-to-one>
+ </class>
+</hibernate-mapping>

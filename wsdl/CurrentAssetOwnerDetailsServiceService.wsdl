@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="CurrentAssetOwnerDetailsServiceService" targetNamespace="http://webservice.service.wise.remote/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://webservice.service.wise.remote/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<import namespace="http://webservice.service.wise.remote/" schemaLocation="CurrentAssetOwnerDetailsServiceService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="setCurrentOwnerDetailsResponse">
+    <wsdl:part name="parameters" element="tns:setCurrentOwnerDetailsResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="setCurrentOwnerDetails">
+    <wsdl:part name="parameters" element="tns:setCurrentOwnerDetails">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="CurrentAssetOwnerDetailsService">
+    <wsdl:operation name="setCurrentOwnerDetails">
+      <wsdl:input name="setCurrentOwnerDetails" message="tns:setCurrentOwnerDetails">
+    </wsdl:input>
+      <wsdl:output name="setCurrentOwnerDetailsResponse" message="tns:setCurrentOwnerDetailsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="CurrentAssetOwnerDetailsServiceServiceSoapBinding" type="tns:CurrentAssetOwnerDetailsService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="setCurrentOwnerDetails">
+      <soap:operation soapAction="setCurrentOwnerDetails" style="document"/>
+      <wsdl:input name="setCurrentOwnerDetails">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="setCurrentOwnerDetailsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="CurrentAssetOwnerDetailsServiceService">
+    <wsdl:port name="CurrentAssetOwnerDetailsServicePort" binding="tns:CurrentAssetOwnerDetailsServiceServiceSoapBinding">
+      <soap:address location="http://localhost:9090/CurrentAssetOwnerDetailsServicePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

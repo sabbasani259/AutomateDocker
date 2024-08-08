@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated May 6, 2013 2:10:46 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+ <class name="remote.wise.businessentity.FotaAuthenticationEntity" table="fota_authentication">
+  <composite-id mapped="false" unsaved-value="undefined">
+   <key-property name="fotaId" type="int">
+    <column name="FOTA_ID"/>
+   </key-property>
+   <key-property name="imeiNo" type="java.lang.String">
+    <column name="IMEI_Number"/>
+   </key-property>
+  </composite-id>
+   <many-to-one name="versionId" class="remote.wise.businessentity.FotaVersionEntity" fetch="join">
+            <column name="Version_ID" />
+    </many-to-one>
+  <property generated="never" lazy="false" name="sessionId" type="java.lang.String">
+   <column name="Session_ID"/>
+  </property>
+  <property generated="never" lazy="false" name="update_date" type="java.sql.Timestamp">
+   <column name="Update_Date"/>
+  </property>
+  <property generated="never" lazy="false" name="status" type="int">
+   <column name="Status"/>
+  </property>
+ </class>
+</hibernate-mapping>

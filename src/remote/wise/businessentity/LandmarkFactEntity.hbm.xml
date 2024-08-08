@@ -1,0 +1,152 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jan 10, 2013 9:59:48 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+
+<class entity-name="LandmarkFactEntity_DayAgg"
+  name="remote.wise.businessentity.LandmarkFactEntity" table="landmark_aggregate_fact_data_dayagg">
+  <composite-id mapped="false" unsaved-value="undefined">   
+   <key-property column="Serial_Number" name="serialNumber" type="java.lang.String"/>
+   <key-property column="Time_Key" name="time_key" type="java.sql.Timestamp"/>
+   <key-many-to-one
+        name="landmarkDimensionId"
+        class="remote.wise.businessentity.LandmarkDimensionEntity"
+        column="LandMark_Dimension_ID" />   
+  </composite-id>
+  <many-to-one class="remote.wise.businessentity.TenancyDimensionEntity"
+   fetch="join" name="tenacyDimensionId">
+   <column name="Tenancy_Dimension_ID"/>
+  </many-to-one>
+ <property generated="never" lazy="false" name="noOfArrivals" type="int">
+   	<column name="Number_of_Arrivals"/>
+  </property>
+   <property generated="never" lazy="false" name="noOfDepartures" type="int">
+   <column name="Number_of_Departures"/>
+  </property>
+   <property generated="never" lazy="false" name="totalDurationAtLandmark" type="long">
+   <column name="Total_Duration_at_Landmark"/>
+  </property>
+   <property generated="never" lazy="false" name="longestDurationAtLandmark" type="long">
+   <column name="Longest_Duration_at_Landmark"/>
+  </property>
+  
+ </class>
+ 
+ <class entity-name="LandmarkFactEntity_WeekAgg"
+  name="remote.wise.businessentity.LandmarkFactEntity" table="landmark_aggregate_fact_data_weekagg">
+  <composite-id mapped="false" unsaved-value="undefined">   
+   <key-property column="Serial_Number" name="serialNumber" type="java.lang.String"/>
+  <key-property column="Week" name="timeCount" type="int"/>
+   <key-property column="Year" name="year" type="int"/>
+   <key-many-to-one
+        name="landmarkDimensionId"
+        class="remote.wise.businessentity.LandmarkDimensionEntity"
+        column="LandMark_Dimension_ID" />   
+  </composite-id>
+  <many-to-one class="remote.wise.businessentity.TenancyDimensionEntity"
+   fetch="join" name="tenacyDimensionId">
+   <column name="Tenancy_Dimension_ID"/>
+  </many-to-one>
+ <property generated="never" lazy="false" name="noOfArrivals" type="int">
+   	<column name="Number_of_Arrivals"/>
+  </property>
+   <property generated="never" lazy="false" name="noOfDepartures" type="int">
+   <column name="Number_of_Departures"/>
+  </property>
+   <property generated="never" lazy="false" name="totalDurationAtLandmark" type="long">
+   <column name="Total_Duration_at_Landmark"/>
+  </property>
+   <property generated="never" lazy="false" name="longestDurationAtLandmark" type="long">
+   <column name="Longest_Duration_at_Landmark"/>
+  </property>
+  
+ </class>
+ 
+ <class entity-name="LandmarkFactEntity_MonthAgg"
+  name="remote.wise.businessentity.LandmarkFactEntity" table="landmark_aggregate_fact_data_monthagg">
+  <composite-id mapped="false" unsaved-value="undefined">   
+   <key-property column="Serial_Number" name="serialNumber" type="java.lang.String"/>
+   <key-property column="Month" name="timeCount" type="int"/>
+   <key-property column="Year" name="year" type="int"/>
+   <key-many-to-one
+        name="landmarkDimensionId"
+        class="remote.wise.businessentity.LandmarkDimensionEntity"
+        column="LandMark_Dimension_ID" />   
+  </composite-id>
+  <many-to-one class="remote.wise.businessentity.TenancyDimensionEntity"
+   fetch="join" name="tenacyDimensionId">
+   <column name="Tenancy_Dimension_ID"/>
+  </many-to-one>
+ <property generated="never" lazy="false" name="noOfArrivals" type="int">
+   	<column name="Number_of_Arrivals"/>
+  </property>
+   <property generated="never" lazy="false" name="noOfDepartures" type="int">
+   <column name="Number_of_Departures"/>
+  </property>
+   <property generated="never" lazy="false" name="totalDurationAtLandmark" type="long">
+   <column name="Total_Duration_at_Landmark"/>
+  </property>
+   <property generated="never" lazy="false" name="longestDurationAtLandmark" type="long">
+   <column name="Longest_Duration_at_Landmark"/>
+  </property>
+  
+ </class>
+ <class entity-name="LandmarkFactEntity_YearAgg"
+  name="remote.wise.businessentity.LandmarkFactEntity" table="landmark_aggregate_fact_data_yearagg">
+  <composite-id mapped="false" unsaved-value="undefined">   
+   <key-property column="Serial_Number" name="serialNumber" type="java.lang.String"/>
+   <key-property column="Year" name="year" type="int"/>
+   <key-many-to-one
+        name="landmarkDimensionId"
+        class="remote.wise.businessentity.LandmarkDimensionEntity"
+        column="LandMark_Dimension_ID" />   
+  </composite-id>
+  <many-to-one class="remote.wise.businessentity.TenancyDimensionEntity"
+   fetch="join" name="tenacyDimensionId">
+   <column name="Tenancy_Dimension_ID"/>
+  </many-to-one>
+ <property generated="never" lazy="false" name="noOfArrivals" type="int">
+   	<column name="Number_of_Arrivals"/>
+  </property>
+   <property generated="never" lazy="false" name="noOfDepartures" type="int">
+   <column name="Number_of_Departures"/>
+  </property>
+   <property generated="never" lazy="false" name="totalDurationAtLandmark" type="long">
+   <column name="Total_Duration_at_Landmark"/>
+  </property>
+   <property generated="never" lazy="false" name="longestDurationAtLandmark" type="long">
+   <column name="Longest_Duration_at_Landmark"/>
+  </property>
+  
+ </class>
+  <class entity-name="LandmarkFactEntity_QuarterAgg"
+  name="remote.wise.businessentity.LandmarkFactEntity" table="landmark_aggregate_fact_data_quarteragg">
+  <composite-id mapped="false" unsaved-value="undefined">   
+   <key-property column="Serial_Number" name="serialNumber" type="java.lang.String"/>
+   <key-property column="Quarter" name="timeCount" type="int"/>
+   <key-property column="Year" name="year" type="int"/>
+   <key-many-to-one
+        name="landmarkDimensionId"
+        class="remote.wise.businessentity.LandmarkDimensionEntity"
+        column="LandMark_Dimension_ID" />   
+  </composite-id>
+  <many-to-one class="remote.wise.businessentity.TenancyDimensionEntity"
+   fetch="join" name="tenacyDimensionId">
+   <column name="Tenancy_Dimension_ID"/>
+  </many-to-one>
+ <property generated="never" lazy="false" name="noOfArrivals" type="int">
+   	<column name="Number_of_Arrivals"/>
+  </property>
+   <property generated="never" lazy="false" name="noOfDepartures" type="int">
+   <column name="Number_of_Departures"/>
+  </property>
+   <property generated="never" lazy="false" name="totalDurationAtLandmark" type="long">
+   <column name="Total_Duration_at_Landmark"/>
+  </property>
+   <property generated="never" lazy="false" name="longestDurationAtLandmark" type="long">
+   <column name="Longest_Duration_at_Landmark"/>
+  </property>
+  
+ </class>
+ </hibernate-mapping>

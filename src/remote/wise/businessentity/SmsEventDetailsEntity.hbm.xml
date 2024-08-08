@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 5, 2014 10:07:23 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.SmsEventDetailsEntity" table="SMS_Event_Details">
+        <id name="smsEventId" type="int">
+            <column default="0" name="SMS_Event_Id" />
+            <generator class="identity" />
+        </id>
+        <property name="serialNumber" type="java.lang.String">
+            <column name="Serial_Number" />
+        </property>
+        <property name="gprsNotAvailable" type="int">
+            <column name="GPRS_Status" />
+        </property>
+        <property name="grpsServiceNotAllowed" type="int">
+            <column name="GPRS_Service" />
+        </property>
+        <property name="gprsServerCommFailed" type="int">
+            <column name="GPRS_Server_Comm" />
+        </property>
+        <property name="cmhr" type="java.lang.String">
+            <column name="HMR" />
+        </property>
+        <property name="batteryVoltage" type="java.lang.String">
+            <column name="Battery_Vol" />
+        </property>
+        <property name="internalBatteryLevel" type="java.lang.String">
+            <column name="Internal_Battery_BackUp" />
+        </property>
+        <property name="eventGeneratedTime" type="java.sql.Timestamp">
+            <column name="Event_Generated_Time" />
+        </property>
+   </class>
+</hibernate-mapping>

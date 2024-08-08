@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 20, 2012 5:13:53 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.LandmarkCategoryEntity" table="landmark_catagory">
+        <id name="Landmark_Category_ID" type="int">
+            <column name="Landmark_Category_ID" />
+            <generator class="assigned" />
+        </id>
+        <property name="Landmark_Category_Name" type="java.lang.String">
+            <column name="Landmark_Category_Name" />
+        </property>
+        <property name="Color_Code" type="java.lang.String">
+            <column name="Color_Code" />
+        </property>
+           <property name="Landmark_Category_Color_Code" type="java.lang.String">
+            <column name="Landmark_Category_Color_Code" />
+        </property>
+        
+        <many-to-one name="Tenancy_ID" class="remote.wise.businessentity.TenancyEntity" fetch="join">
+            <column name="Tenancy_ID" />
+        </many-to-one>
+             <property generated="never" lazy="false" name="ActiveStatus" type="int">
+   <column name="ActiveStatus"/>
+  </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+	<!DOCTYPE
+ hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd"
+	>
+	<!-- Generated Oct 28, 2012 2:59:34 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+	<class name="remote.wise.businessentity.ServiceHistoryFilesEntity" table="service_history_files">
+		<id name="serviceTktNumber" type="java.lang.String">
+            <column name="service_ticket_number" />
+            <generator class="assigned" />
+         </id>
+		<property generated="never" lazy="false" name="fileName" type="java.lang.String">
+			<column name="file_name"/>
+		</property>
+		<property generated="never" lazy="false" name="machineNumber" type="java.lang.String">
+			<column name="machine_number"/>
+		</property>
+	</class>
+</hibernate-mapping>

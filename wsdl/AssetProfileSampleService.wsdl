@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="AssetProfileSampleService" targetNamespace="http://webservices.EAintegration.wise.remote/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://webservices.EAintegration.wise.remote/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<import namespace="http://webservices.EAintegration.wise.remote/" schemaLocation="AssetProfileSampleService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="processEAassetProfileDataResponse">
+    <wsdl:part name="parameters" element="tns:processEAassetProfileDataResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="processEAassetProfileData">
+    <wsdl:part name="parameters" element="tns:processEAassetProfileData">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="AssetProfileSample">
+    <wsdl:operation name="processEAassetProfileData">
+      <wsdl:input name="processEAassetProfileData" message="tns:processEAassetProfileData">
+    </wsdl:input>
+      <wsdl:output name="processEAassetProfileDataResponse" message="tns:processEAassetProfileDataResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="AssetProfileSampleServiceSoapBinding" type="tns:AssetProfileSample">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="processEAassetProfileData">
+      <soap:operation soapAction="processEAassetProfileData" style="document"/>
+      <wsdl:input name="processEAassetProfileData">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="processEAassetProfileDataResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="AssetProfileSampleService">
+    <wsdl:port name="AssetProfileSamplePort" binding="tns:AssetProfileSampleServiceSoapBinding">
+      <soap:address location="http://localhost:9090/AssetProfileSamplePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

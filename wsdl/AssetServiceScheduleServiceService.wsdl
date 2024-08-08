@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="AssetServiceScheduleServiceService" targetNamespace="http://webservice.service.wise.remote/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://webservice.service.wise.remote/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<import namespace="http://webservice.service.wise.remote/" schemaLocation="AssetServiceScheduleServiceService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="SetAssetServiceScheduleServiceResponse">
+    <wsdl:part name="parameters" element="tns:SetAssetServiceScheduleServiceResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GetAssetServiceScheduleService">
+    <wsdl:part name="parameters" element="tns:GetAssetServiceScheduleService">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="SetAssetServiceScheduleService">
+    <wsdl:part name="parameters" element="tns:SetAssetServiceScheduleService">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="CustomFault">
+    <wsdl:part name="CustomFault" element="tns:CustomFault">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GetAssetServiceScheduleServiceResponse">
+    <wsdl:part name="parameters" element="tns:GetAssetServiceScheduleServiceResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="AssetServiceScheduleService">
+    <wsdl:operation name="GetAssetServiceScheduleService">
+      <wsdl:input name="GetAssetServiceScheduleService" message="tns:GetAssetServiceScheduleService">
+    </wsdl:input>
+      <wsdl:output name="GetAssetServiceScheduleServiceResponse" message="tns:GetAssetServiceScheduleServiceResponse">
+    </wsdl:output>
+      <wsdl:fault name="CustomFault" message="tns:CustomFault">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="SetAssetServiceScheduleService">
+      <wsdl:input name="SetAssetServiceScheduleService" message="tns:SetAssetServiceScheduleService">
+    </wsdl:input>
+      <wsdl:output name="SetAssetServiceScheduleServiceResponse" message="tns:SetAssetServiceScheduleServiceResponse">
+    </wsdl:output>
+      <wsdl:fault name="CustomFault" message="tns:CustomFault">
+    </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="AssetServiceScheduleServiceServiceSoapBinding" type="tns:AssetServiceScheduleService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="GetAssetServiceScheduleService">
+      <soap:operation soapAction="GetAssetServiceScheduleService" style="document"/>
+      <wsdl:input name="GetAssetServiceScheduleService">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="GetAssetServiceScheduleServiceResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="CustomFault">
+        <soap:fault name="CustomFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="SetAssetServiceScheduleService">
+      <soap:operation soapAction="SetAssetServiceScheduleService" style="document"/>
+      <wsdl:input name="SetAssetServiceScheduleService">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="SetAssetServiceScheduleServiceResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="CustomFault">
+        <soap:fault name="CustomFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="AssetServiceScheduleServiceService">
+    <wsdl:port name="AssetServiceScheduleServicePort" binding="tns:AssetServiceScheduleServiceServiceSoapBinding">
+      <soap:address location="http://localhost:9090/AssetServiceScheduleServicePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

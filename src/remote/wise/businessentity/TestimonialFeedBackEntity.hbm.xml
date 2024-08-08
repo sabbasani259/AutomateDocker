@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 3, 2015 5:51:02 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.TestimonialFeedBackEntity" table="testimonial_fdbk">
+        <id name="Feedback_ID" type="int">
+            <column name="Feedback_Id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="Contact_ID" class="remote.wise.businessentity.ContactEntity" fetch="join">
+            <column name="Contact_ID" />
+        </many-to-one>
+         <property name="image" type="java.sql.Blob">
+            <column name="image" />
+        </property>
+        <property name="FeedBack" type="java.lang.String">
+            <column name="Feedback" />
+        </property>
+        <property name="organisation_Name" type="java.lang.String">
+        	<column name="Organisation_Name"></column>
+        </property>
+        <property name="Current_Date" type="java.lang.String">
+            <column name="Created_Date" />
+        </property>
+        <property name="Rating" type="int">
+            <column name="Rating" />
+        </property>
+        <property name="Approved" type="boolean">
+            <column name="Approved" />
+        </property>
+        <property name="Approved_By" type="java.lang.String">
+            <column name="Approved_By" />
+        </property>
+        <property name="Approved_Date" type="java.lang.String">
+            <column name="Approved_Date" />
+        </property>
+        <property name="Edited_By" type="java.lang.String">
+            <column name="Edited_By" />
+        </property>
+        <property name="Category_Type" type="java.lang.String">
+            <column name="Category_Type" />
+        </property>
+    </class>
+</hibernate-mapping>

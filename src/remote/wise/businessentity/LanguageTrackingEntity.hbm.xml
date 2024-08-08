@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 27, 2015 12:32:04 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.LanguageTrackingEntity" table="lang_settings_trace">
+        <id name="trace_id" type="int">
+            <column name="trace_id" />
+            <generator class="increment" />
+        </id>
+        <many-to-one name="LoginId" class="remote.wise.businessentity.ContactEntity" fetch="join">
+            <column name="Contact_Id" />
+        </many-to-one>
+        <property name="old_lang" type="java.lang.String">
+            <column name="old_language" />
+        </property>
+        <property name="new_lang" type="java.lang.String">
+            <column name="new_language" />
+        </property>
+        <property name="lang_set_date" type="java.lang.String">
+            <column name="changed_date" />
+        </property>
+    </class>
+</hibernate-mapping>

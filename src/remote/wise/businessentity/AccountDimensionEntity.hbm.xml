@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jan 9, 2013 11:05:48 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.AccountDimensionEntity" table="account_dimension" >
+        <id name="accountDimensionId" type="int">
+            <column default="0" name="Account_Dimension_ID" />
+            <generator class="identity" />
+        </id>
+        <property name="accountId" type="int">
+            <column name="Account_ID" />
+        </property>
+        <property name="tenancyId" type="int">
+            <column name="Tenancy_ID" />
+        </property>
+        <property name="accountName" type="java.lang.String">
+            <column name="Account_Name" />
+        </property>
+    </class>
+</hibernate-mapping>

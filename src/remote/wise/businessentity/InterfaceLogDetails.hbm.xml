@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+ <class name="remote.wise.businessentity.InterfaceLogDetails" table="Interface_Log_Details">
+  <id name="filename" type="java.lang.String">
+   <column name="FileName"/>
+   <generator class="assigned"/>
+  </id>
+  <property generated="never" lazy="false" name="totalCount" type="int">
+   <column name="Total_Count"/>
+  </property>
+  <property generated="never" lazy="false" name="successfullyputtoqueue" type="int">
+   <column name="Successfully_put_to_queue"/>
+  </property><property generated="never" lazy="false" name="successfullServiceInvocation" type="int">
+   <column name="Successfull_Service_Invocation"/>
+  </property><property generated="never" lazy="false" name="sucessCount" type="int">
+   <column name="Success_Count"/>
+  </property><property generated="never" lazy="false" name="failureCount" type="int">
+   <column name="Failure_Count"/>
+  </property>
+ </class>
+</hibernate-mapping>

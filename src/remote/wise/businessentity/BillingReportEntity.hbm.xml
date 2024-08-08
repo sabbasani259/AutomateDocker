@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 18 Feb, 2014 2:30:24 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+   <class name="remote.wise.businessentity.BillingReportEntity" table="billing_report">
+        <id name="billing_id" type="int">
+            <column default="0" name="Billing_Id" />
+            <generator class="identity" />
+        </id>
+        <property name="actual_machine_count" type="long">
+            <column name="Actual_Machine_Count" />
+        </property>
+        <property name="commulative_Actual_machine_count" type="long">
+            <column name="Cummulative_Actual_Machine_Count" />
+        </property>
+        <property name="billing_cal" type="long">
+            <column name="Billing_calculation" />
+        </property>
+        <property name="year" type="int">
+            <column name="Year" />
+        </property>
+        <property name="month" type="int">
+            <column name="Month" />
+        </property>
+    </class>
+</hibernate-mapping>

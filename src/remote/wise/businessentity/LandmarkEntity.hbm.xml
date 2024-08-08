@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 20, 2012 5:13:53 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.LandmarkEntity" table="landmark">
+        <id name="Landmark_id" type="int">
+            <column name="landmark_id" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="Landmark_Category_ID" class="remote.wise.businessentity.LandmarkCategoryEntity" fetch="join">
+            <column name="landmark_category_id" />
+        </many-to-one>
+        <property name="Landmark_Name" type="java.lang.String">
+            <column name="landmark_name" />
+        </property>
+        <property name="Latitude" type="java.lang.String">
+            <column name="latitude" />
+        </property>
+        <property name="Longitude" type="java.lang.String">
+            <column name="longitude" />
+        </property>
+        <property name="Radius" type="double">
+            <column name="radius" />
+        </property>
+        <property name="Address" type="java.lang.String">
+            <column name="Address" />
+        </property>
+        <property name="IsArrival" type="int">
+            <column name="IsArrival" />
+        </property>
+        <property name="IsDeparture" type="int">
+            <column name="IsDeparture" />
+        </property>
+        <property generated="never" lazy="false" name="ActiveStatus" type="int">
+   <column name="ActiveStatus"/>
+  </property>
+   <property name="Login_Id" type="java.lang.String">
+            <column name="Login_Id" />
+        </property>
+         <property name="country_code" type="java.lang.String">
+            <column name="country_code" />
+        </property>
+    </class>
+</hibernate-mapping>

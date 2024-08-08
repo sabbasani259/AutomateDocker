@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+	<Properties>
+	 <!-- <Property name="log-path">/usr/local/EAP-6.0.1/jboss-eap-6.0/standalone/log/MWservicesLog</Property> -->
+	<!--  <Property name="log-path">/usr/local/EAP-WebApp/jboss-eap-6.0/standalone/log/MWservicesLog</Property>  -->
+	<!-- <Property name="log-path">/user/JCBLiveLink/NEWWISELOGS</Property> -->
+	<!-- AWS Staging Log path -->
+	<Property name="log-path">/data3/JCBLiveLink/NEWWISELOGS_ENGG</Property>
+	 <!-- <Property name="log-path">/usr/local/EAP-6.0.1-Interface/jboss-eap-6.0/standalone/log/MWservicesLog</Property> -->
+	 
+		<!-- SIT Log path -->
+		<!--  <Property name="log-path">/user/JCBLiveLink/MWservice_Logs</Property>  -->
+		
+	</Properties>
+	<Appenders>
+		<RollingFile name="InfoLogger" filename="${log-path}/InfoLog/infoLogger.log" filePattern="${log-path}/InfoLog/infoLogger-%d{yyyy-MM-dd-hh-a}.log" 
+									append="true" >
+			<PatternLayout>
+				<Pattern>%d{yyyy-MM-dd HH:mm:ss:SSS} %5p-%M()-%F:%L :: %m%n</Pattern>
+				
+				<!-- <Pattern>%d %p %c{1.} [%t] %m%n</Pattern> -->
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy  interval="12" modulate="true" />
+			</Policies>
+			<DefaultRolloverStrategy max="12"/>
+		</RollingFile>
+		<RollingFile name="FatalErrorLogger" filename="${log-path}/FatalErrorLog/fatalError.log" filePattern="${log-path}/FatalErrorLog/fatalError-%d{yyyy-MM-dd-hh-a}.log" 
+									append="true" >
+			<PatternLayout>
+				<Pattern>%d{yyyy-MM-dd HH:mm:ss:SSS} %5p-%M()-%F:%L :: %m%n</Pattern>
+				<!-- 	<Pattern>%d %p %c{1.} [%t] %m%n</Pattern> -->
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy  interval="12" modulate="true" />
+			</Policies>
+			<DefaultRolloverStrategy max="12"/>
+		</RollingFile>
+		<RollingFile name="RejectedPacketLogger" filename="${log-path}/RejectedPacketsLog/RejectedPackets.log"
+					filePattern="${log-path}/RejectedPacketsLog/RejectedPackets-%d{yyyy-MM-dd-hh-a}.log" append="true" >
+			<PatternLayout>
+				<Pattern>%d{yyyy-MM-dd HH:mm:ss:SSS} %5p-%M()-%F:%L :: %m%n</Pattern>
+				<!-- 	<Pattern>%d %p %c{1.} [%t] %m%n</Pattern> -->
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy  interval="12" modulate="true" />
+			</Policies>
+				<DefaultRolloverStrategy max="12"/>
+		</RollingFile>
+		<RollingFile name="BusinessErrorLogger" filename="${log-path}/BusinessErrorLog/businessError.log"
+					filePattern="${log-path}/BusinessErrorLog/businessError-%d{yyyy-MM-dd-hh-a}.log" append="true" >
+			<PatternLayout>
+				<Pattern>%d{yyyy-MM-dd HH:mm:ss:SSS} %5p-%M()-%F:%L :: %m%n</Pattern>
+					<!-- <Pattern>%d %p %c{1.} [%t] %m%n</Pattern> -->
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy  interval="12" modulate="true" />
+			</Policies>
+			<DefaultRolloverStrategy max="12"/>
+		</RollingFile>
+	</Appenders>
+
+	<Loggers>
+		<Logger name="remote.wise.log.InfoLogging" level="info" additivity="false" includeLocation="true">
+			<AppenderRef ref="InfoLogger" level="INFO"/>
+		</Logger>
+		<Logger name="remote.wise.log.FatalErrorLogging" level="error" additivity="false" includeLocation="true">
+			<AppenderRef ref="FatalErrorLogger" level="ERROR"/>
+		</Logger>
+		<Logger name="remote.wise.log.RejectedPacketLogging" level="error" additivity="false" includeLocation="true">
+			<AppenderRef ref="RejectedPacketLogger" level="INFO"/>
+		</Logger>
+		<Logger name="remote.wise.log.BusinessErrorLogging" level="error" additivity="false" includeLocation="true">
+			<AppenderRef ref="BusinessErrorLogger" level="ERROR"/>
+		</Logger>
+		<Root level="trace" additivity="false">
+		</Root>
+	</Loggers>
+</Configuration>

@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Mar 11, 2015 10:25:54 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="remote.wise.businessentity.AlertPacketDetailsEntity" table="alert_packet_details">
+        <id name="packetDetailsId" type="int">
+            <column name="Packet_Details_ID" default="0"/>
+            <generator class="identity" />
+        </id>
+         <property generated="never" lazy="false" name="serialNumber" type="java.lang.String">
+   			<column name="Serial_Number"/>
+  		</property>
+  		<property generated="never" lazy="false" name="transactionTime" type="java.lang.String">
+   			<column name="Transaction_Timestamp"/>
+  		</property>
+  		<property generated="never" lazy="false" name="createdTimestamp" type="java.lang.String">
+   			<column name="Created_Timestamp"/>
+  		</property>
+         <property name="parserObject" type="binary">
+            <column name="Parser_Object" />
+        </property>
+        <property generated="never" lazy="false" name="otherInfo" type="java.lang.String">
+   			<column name="Other_Info"/>
+  		</property>
+       
+        
+    </class>
+</hibernate-mapping>

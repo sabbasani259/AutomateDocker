@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://webservice.service.wise.remote/" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://webservice.service.wise.remote/">
+  <xs:element name="GetMachineHoursServiceReportService" type="tns:GetMachineHoursServiceReportService"/>
+  <xs:element name="GetMachineHoursServiceReportServiceResponse" type="tns:GetMachineHoursServiceReportServiceResponse"/>
+  <xs:complexType name="GetMachineHoursServiceReportService">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="reqObj" type="tns:machineHoursServiceReportReqContract"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="machineHoursServiceReportReqContract">
+    <xs:sequence>
+      <xs:element name="groupingOnAssetGroup" type="xs:boolean"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="machineGroupIdList" nillable="true" type="xs:int"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="machineProfileIdList" nillable="true" type="xs:int"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="modelIdList" nillable="true" type="xs:int"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="tenancyIdList" nillable="true" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="GetMachineHoursServiceReportServiceResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:machineHoursServiceReportRespContract"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="machineHoursServiceReportRespContract">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="approximateServiceDate" type="xs:string"/>
+      <xs:element minOccurs="0" name="hoursToNextService" type="xs:long"/>
+      <xs:element name="lastServiceHour" type="xs:int"/>
+      <xs:element minOccurs="0" name="location" type="xs:string"/>
+      <xs:element name="machineGroupId" type="xs:int"/>
+      <xs:element minOccurs="0" name="machineGroupName" type="xs:string"/>
+      <xs:element name="machineProfileId" type="xs:int"/>
+      <xs:element minOccurs="0" name="machineProfileName" type="xs:string"/>
+      <xs:element name="modelId" type="xs:int"/>
+      <xs:element minOccurs="0" name="modelName" type="xs:string"/>
+      <xs:element minOccurs="0" name="nextService" type="xs:string"/>
+      <xs:element minOccurs="0" name="nickName" type="xs:string"/>
+      <xs:element minOccurs="0" name="scheduleName" type="xs:string"/>
+      <xs:element minOccurs="0" name="serialNumber" type="xs:string"/>
+      <xs:element minOccurs="0" name="serviceDate" type="xs:string"/>
+      <xs:element minOccurs="0" name="serviceName" type="xs:string"/>
+      <xs:element minOccurs="0" name="severity" type="xs:string"/>
+      <xs:element minOccurs="0" name="status" type="xs:string"/>
+      <xs:element name="tenancyId" type="xs:int"/>
+      <xs:element minOccurs="0" name="tenancyName" type="xs:string"/>
+      <xs:element name="totalMachineLifeHours" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="CustomFault" nillable="true" type="xs:string"/>
+</xs:schema>

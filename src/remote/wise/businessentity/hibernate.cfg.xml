@@ -8,7 +8,7 @@
 		<!-- <property name="hibernate.connection.url">jdbc:mysql://10.106.68.8:3306/wisetest</property> -->
 		<!-- Change in db pwd for aws server -->
 		<!-- <property name="hibernate.connection.url">jdbc:mysql://10.179.12.74:3306/wise</property> -->
-		<property name="hibernate.connection.url">jdbc:mysql://10.210.196.240:3306/wise</property>
+		<property name="hibernate.connection.url">jdbc:mysql://10.210.196.240:3301/wise</property>
 		<!-- <property name="hibernate.connection.url">jdbc:mysql://10.106.68.10:3306/wise</property> -->
 		<!-- Change the connection properties during deployment -->
 		<property name="hibernate.connection.username">root</property>

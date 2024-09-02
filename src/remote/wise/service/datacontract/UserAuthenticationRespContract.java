@@ -16,14 +16,6 @@ public class UserAuthenticationRespContract
 	int sysGeneratedPassword;
 	boolean isSMS;
 	boolean isMap;
-	//CR469.n
-	int pwdExpired;
-	public int getPwdExpired() {
-		return pwdExpired;
-	}
-	public void setPwdExpired(int pwdExpired) {
-		this.pwdExpired = pwdExpired;
-	}
 	/**
 	 * @return the sysGeneratedPassword
 	 */

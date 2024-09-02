@@ -682,61 +682,6 @@ public class LoginRegistrationBO {
 		}
 		return message;
 	}
-	
-	
-	
-	/**
-	 * method to send e-mail to user with forgotten password
-	 * @param primaryEmailId
-	 * @param OTP
-	 * @return String
-	 */
-	//CR469.sn
-	public String sendMailWithOTP(String primaryEmailId, String otp){
-		String message =null;
-		Logger iLogger = InfoLoggerClass.logger;
-		Logger fLogger = FatalLoggerClass.logger;
-		try{	
-			//get LiveLink URL Details
-			Properties prop = new Properties();
-			String liveLink_URL=null;
-
-			prop.load(getClass().getClassLoader().getResourceAsStream("remote/wise/resource/properties/configuration.properties"));
-			if (prop.getProperty("deployenvironment").equalsIgnoreCase("SIT")) {
-				liveLink_URL= prop.getProperty("LiveLink_URL_SIT");
-			} else if (prop.getProperty("deployenvironment").equalsIgnoreCase("DEV")) {
-				liveLink_URL= prop.getProperty("LiveLink_URL_DEV");
-			} else if (prop.getProperty("deployenvironment").equalsIgnoreCase("QA")) {
-				liveLink_URL= prop.getProperty("LiveLink_URL_QA");
-			} else if (prop.getProperty("deployenvironment").equalsIgnoreCase("PROD")) {
-				liveLink_URL= prop.getProperty("LiveLink_URL_PROD");
-			} else {
-				liveLink_URL= prop.getProperty("LiveLink_URL");
-			}
-
-
-			String subject = "Your otp for New UserRegistration";
-			StringBuffer body = new StringBuffer();
-			body.append("Hello,\n");
-			body.append("Please find the otp below :\n\n");			
-			body.append("OTP  : "+otp + "\n");
-			
-			
-			body.append("With regards, \n");
-			body.append("JCB LiveLink Team.");
-
-			EmailTemplate emailTemplate = new EmailTemplate(primaryEmailId,subject,body.toString(),null);
-			new EmailHandler().handleEmailInKafka("EmailQueue", emailTemplate,0);
-			message ="Email with otp has been sent to user !";
-			iLogger.info("Email with otp has been sent to user !");
-		}
-		catch (Exception e) {
-			message ="Failed while sending email to user !!";
-			fLogger.error("Failed while sending email to user !!" + e.getMessage());
-
-		}
-		return message;
-	}//CR469.en
 
 	    // Determine LiveLink URL based on deployment environment
 	    private String determineLiveLinkURL(Properties prop) {
@@ -754,79 +699,6 @@ public class LoginRegistrationBO {
 	                return prop.getProperty("LiveLink_URL", "DEFAULT_URL");
 	        }
 	    }
-
-	  
-	
-	
-	
-	/**
-	 * method to send SMS to mobile 
-	 * @return otp
-	 */
-	    //CR469.sn
-	public String sendSMStoMobile(String mobileNumber,String otp) throws CustomFault{
-		String message =null,result=null;
-		Logger iLogger = InfoLoggerClass.logger;
-		Logger fLogger = FatalLoggerClass.logger;
-		Logger bLogger = BusinessErrorLoggerClass.logger;
-		List<String> toList = new ArrayList<String>();
-		
-		if(mobileNumber!=null)
-		{
-			toList.add(mobileNumber);
-		}
-		
-		String body = null;
-		if(otp!=null){
-			body = "OTP for the registered Mobile Number with JCB LiveLink is "+otp;	
-			result = "otp successfully sent to registered mobile number."+mobileNumber;
-		}
-		body = body + " - JCB LiveLink Team.";
-		List<String> msgBody = new ArrayList<String>();
-		msgBody.add(body);
-
-		SmsTemplate smsTemplate = new SmsTemplate();			
-		smsTemplate.setTo(toList);
-		smsTemplate.setMsgBody(msgBody);
-		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-		session.beginTransaction();
-		try{
-			String ResetService="Registration SMS";
-			boolean isRegStatus = false;
-			if(! (session.isOpen() ))
-			{
-				session = HibernateUtil.getSessionFactory().getCurrentSession();
-				session.getTransaction().begin();
-			} 
-			Query query = session.createQuery("select a.isStatus from ConfigAppEntity a where a.services='"+ResetService+"'");
-			Iterator itr1=query.list().iterator();
-			while(itr1.hasNext()){
-				isRegStatus = (Boolean) itr1.next();				
-			}
-			iLogger.info ("registration status from DB : "+ isRegStatus);
-			if(isRegStatus==true)
-			{
-				iLogger.info ("sending SMS : START");
-				new SmsHandler().handleSmsInKafka("SMSQueue", smsTemplate,0);
-				message = result; // Defect Id 1848 by Keerthi
-				iLogger.info(mobileNumber+":SMS with otp details has been sent to user !");
-			}
-			else 
-			{
-				bLogger.error(mobileNumber+":SMS with mobilenumber details cannot be sent : SMS Service turned OFF");
-				message ="SMS with mobilenumber details cannot be sent : SMS Service turned OFF";
-			}
-		}
-		catch (Exception e) {
-			message ="Failed while sending SMS to user !!";
-			fLogger.error("Failed while sending SMS to user !!" + e.getMessage());	
-			throw new remote.wise.exception.CustomFault("Problem while sending SMS. Please try again after some time."); // Defect Id 1848 by Keerthi
-		}
-		return message;
-	}//CR469.en
-	
-	
-	
 
 	/**
 	 * method to send e-mail to user with forgotten login id
@@ -1122,35 +994,6 @@ public class LoginRegistrationBO {
 				pstmt3.setString(3, encodedPwd);
 				pstmt3.setTimestamp(4, new Timestamp(currentDate.getTime()));
 				pstmt3 .executeUpdate();
-				
-				//CR469.sn
-				 // Retrieve CreatedTime from password_history for the latest password
-		        String selectCreationTimeQuery = "SELECT CreatedTime " +
-		                                         "FROM password_history " +
-		                                         "WHERE ID = ? " +
-		                                         "ORDER BY CreatedTime DESC LIMIT 1";
-		        System.out.print(selectCreationTimeQuery);
-		        pstmt4 = con.prepareStatement(selectCreationTimeQuery);
-		        pstmt4.setString(1, encodedLoginId);
-		        rs = pstmt4.executeQuery();
-
-		        Timestamp latestCreationTime = null;
-		        if (rs.next()) {
-		            latestCreationTime = rs.getTimestamp("CreatedTime");
-		        } else {
-		            fLogger.fatal("LoginRegistrationBO:updatePwdHistory: loginId:" + loginId + "; Failed to retrieve CreatedTime from password_history");
-		            return "FAILURE";
-		        }
-
-		        // Update password_creation_date in contact table with the latest CreatedTime
-		        String updateContactQuery = "UPDATE contact SET password_creation_date = '" + latestCreationTime + "' WHERE Contact_ID = '" + loginId + "'";
-		        pstmt5 = con.prepareStatement(updateContactQuery);
-		        pstmt5.executeUpdate();
-		        String updateQueryContact = "UPDATE contact SET pwd_Expired = 0 WHERE contact_ID = '" + loginId + "'";
-		        pstmt6 = con.prepareStatement(updateQueryContact);
-		        pstmt6.executeUpdate();
-		        System.out.print(updateQueryContact);
-		        System.out.print("contact table updated successfully");//CR469.sn
 
 			}
 			

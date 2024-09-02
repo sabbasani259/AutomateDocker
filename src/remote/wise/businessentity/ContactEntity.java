@@ -21,8 +21,6 @@ public class ContactEntity extends BaseBusinessEntity
 	private int sysGeneratedPassword;
 	private int resetPassCount;
 	private Timestamp LastUpdatedTime;
-	private int pwdExpired;
-	private Timestamp password_creation_date;
 	
 	
 	public Timestamp getLastUpdatedTime() {
@@ -277,22 +275,6 @@ public class ContactEntity extends BaseBusinessEntity
 
 	public void setAddressId(AddressEntity addressId) {
 		this.addressId = addressId;
-	}
-
-	public Timestamp getPassword_creation_date() {
-		return password_creation_date;
-	}
-
-	public void setPassword_creation_date(Timestamp password_creation_date) {
-		this.password_creation_date = password_creation_date;
-	}
-
-	public int getPwdExpired() {
-		return pwdExpired;
-	}
-
-	public void setPwdExpired(int pwdExpired) {
-		this.pwdExpired = pwdExpired;
 	}
 
 	public int getResetPassCount() {

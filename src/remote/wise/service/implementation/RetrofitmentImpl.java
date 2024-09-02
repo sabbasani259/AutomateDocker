@@ -77,9 +77,8 @@ public class RetrofitmentImpl {
 		}
 
 		//4. Check if user is SA or not
-		//CR469:20408644:Sai Divya  roleName Changed from JCB Admin to JCB Account 		
 		if (!roleName.equalsIgnoreCase("Super Admin") && !roleName.equalsIgnoreCase("Dealer")
-				&& !roleName.equalsIgnoreCase("JCB Account") && !roleName.equalsIgnoreCase("Dealer Admin")) {
+				&& !roleName.equalsIgnoreCase("JCB Admin") && !roleName.equalsIgnoreCase("Dealer Admin")) {
 			infoLogger.info("FAILURE:User do not have rights to proceed further");
 			status = "FAILURE:User do not have rights to proceed further";
 			return status;
@@ -306,9 +305,8 @@ public class RetrofitmentImpl {
 		String accountIdsString = new ListToStringConversion().getIntegerListString(accountIds).toString();
 
 		//3. Check if user is SA/Dealer or not
-		//CR469:20408644:Sai Divya  roleName Changed from JCB Admin to JCB Account 
 		if (!roleName.equalsIgnoreCase("Super Admin") && !roleName.equalsIgnoreCase("Dealer")
-				&& !roleName.equalsIgnoreCase("JCB Account") && !roleName.equalsIgnoreCase("Dealer Admin")) {
+				&& !roleName.equalsIgnoreCase("JCB Admin") && !roleName.equalsIgnoreCase("Dealer Admin")) {
 			infoLogger.info("FAILURE:User do not have rights to proceed further");
 			return null;
 		}
@@ -408,9 +406,8 @@ public class RetrofitmentImpl {
 		}
 
 		//4. Check if user is SA or not
-		//CR469:20408644:Sai Divya  roleName Changed from JCB Admin to JCB Account 
 		if (!roleName.equalsIgnoreCase("Super Admin") && !roleName.equalsIgnoreCase("Dealer")
-				&& !roleName.equalsIgnoreCase("JCB Account") && !roleName.equalsIgnoreCase("Dealer Admin")) {
+				&& !roleName.equalsIgnoreCase("JCB Admin") && !roleName.equalsIgnoreCase("Dealer Admin")) {
 			infoLogger.info("INVALID:User do not have rights to proceed further");
 			status = "INVALID:User do not have rights to proceed further";
 			response.put("status", status);

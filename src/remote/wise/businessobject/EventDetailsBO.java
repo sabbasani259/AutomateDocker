@@ -3798,7 +3798,7 @@ public class EventDetailsBO extends BaseBusinessObject
 
 					
 			//For SMS Users
-			//DefectID : 985 - AssetDiagnostic fix to handle the alert generation based on event wise preference for JCB Account and CC.
+			//DefectID : 985 - AssetDiagnostic fix to handle the alert generation based on event wise preference for JCB Admin and CC.
 			HashMap<ContactEntity, List<Integer>> smsContactEventId = new HashMap<ContactEntity,List<Integer>>();
 			HashMap<ContactEntity, List<Integer>> smsContactEventTypeId = new HashMap<ContactEntity,List<Integer>>();
 			if( ! (finalContactEntity==null || finalContactEntity.isEmpty()) )
@@ -3806,9 +3806,8 @@ public class EventDetailsBO extends BaseBusinessObject
 				for(int t=0; t<finalContactEntity.size(); t++)
 				{
 					//If the user is CC/Admin - Event wise preference
-					//CR469:20408644:Sai Divya  roleName Changed from JCB Admin to JCB Account 
 					if( (finalContactEntity.get(t).getRole().getRole_name().equalsIgnoreCase("Customer Care"))
-							|| (finalContactEntity.get(t).getRole().getRole_name().equalsIgnoreCase("JCB Account")) )
+							|| (finalContactEntity.get(t).getRole().getRole_name().equalsIgnoreCase("JCB Admin")) )
 					{
 						Query q = session.createQuery(" select d.eventId " +
 								" from PreferenceEntity a, CatalogValuesEntity b, PreferenceCatalogEntity c, EventEntity d " +
@@ -3885,7 +3884,7 @@ public class EventDetailsBO extends BaseBusinessObject
 				for(int y=0; y<finalEmailContactEntity.size(); y++)
 				{
 					if( (finalEmailContactEntity.get(y).getRole().getRole_name().equalsIgnoreCase("Customer Care")) ||
-							(finalEmailContactEntity.get(y).getRole().getRole_name().equalsIgnoreCase("JCB Account")) )//roleName changed from JCBAdmin to JCB Account.CR469.n
+							(finalEmailContactEntity.get(y).getRole().getRole_name().equalsIgnoreCase("JCB Admin")) )
 					{
 						emailAdminUsers.add(finalEmailContactEntity.get(y));
 					}
@@ -4652,6 +4651,7 @@ public class EventDetailsBO extends BaseBusinessObject
 			//DF20170821 - SU334449 - GeoCoding Library changed from google api to MapMyIndia. 
 			GeocodingLibrary lib = new  GeocodingLibrary();
 			@SuppressWarnings("static-access")
+			//Leela - Commenting bcz using mmi instead of google
 			//LocationDetails locationDetails = lib.getLocationDetails(latitude, longitude);
 			LocationDetailsMMI locationDetails = lib.getLocationDetailsMMI(latitude, longitude);
 			String address = locationDetails.getAddress();
@@ -4660,7 +4660,7 @@ public class EventDetailsBO extends BaseBusinessObject
 				NumberFormat formatter = new DecimalFormat("0.##"); 
 				latitude = formatter.format(Double.parseDouble(latitude));
 				longitude = formatter.format(Double.parseDouble(longitude));
-				locationAddress=""+latitude+","+longitude+" Address Undefined by MMI Maps";
+				locationAddress=""+latitude+","+longitude+" Address Undefined by Google Maps";
 
 			}
 
@@ -5193,6 +5193,9 @@ public class EventDetailsBO extends BaseBusinessObject
 
 									if(latitude!=null  && longitude!=null)
 									{
+										
+										//loc = new LocationByLatLon().getLocationDetails(longitude, latitude);
+										// Leela - commenting Bcz of using mmi instead og google
 										//loc = new LocationByLatLon().getLocationDetails(longitude, latitude);
 										loc = GetSetLocationJedis.getLocationDetailsMMI(latitude, longitude);
 									}
@@ -5408,7 +5411,7 @@ public class EventDetailsBO extends BaseBusinessObject
 			          AssetEventEntity assetEvent = (AssetEventEntity)itr.next();
 			          rowUpdateCounter++;
 
-			         // LocationDetails loc = null;
+			          //LocationDetails loc = null;
 			          LocationDetailsMMI loc = null;
 			          try
 			          {
@@ -5434,12 +5437,13 @@ public class EventDetailsBO extends BaseBusinessObject
 
 			            if ((latitude != null) && (longitude != null))
 			            {
+			            	// Leela - commenting Bcz of using mmi instead og google
 			              //loc = GetSetLocationJedis.getLocationDetails(latitude, longitude, redisPool);
-			              loc = GetSetLocationJedis.getLocationDetailsMMI(latitude, longitude);
+			            	loc = GetSetLocationJedis.getLocationDetailsMMI(latitude, longitude);
 
 			              if (loc == null) {
-			               // loc = new LocationByLatLon().getLocationDetails(longitude, latitude);
-			                loc = GetSetLocationJedis.getLocationDetailsMMI(latitude, longitude);
+			                //loc = new LocationByLatLon().getLocationDetails(longitude, latitude);
+			            	  loc = GetSetLocationJedis.getLocationDetailsMMI(latitude, longitude);
 			              }
 
 			            }
@@ -6365,10 +6369,9 @@ public class EventDetailsBO extends BaseBusinessObject
 								session.getTransaction().begin();
 							}
 							//System.out.println("final contact"+finalContactEntity.get(t).getContact_id());
-							//If the user is CC/Admin - Event wise preference
-							//CR469:20408644:Sai Divya  roleName Changed from JCB Admin to JCB Account 
+							//If the user is CC/Admin - Event wise preference 
 							if( (finalContactEntity.get(t).getRole().getRole_name().equalsIgnoreCase("Customer Care"))
-									|| (finalContactEntity.get(t).getRole().getRole_name().equalsIgnoreCase("JCB Account")) )
+									|| (finalContactEntity.get(t).getRole().getRole_name().equalsIgnoreCase("JCB Admin")) )
 							{
 								//System.out.println("Inside final event id contact list");
 								Query q = session.createQuery(" select d.eventId " +
@@ -6651,7 +6654,7 @@ public class EventDetailsBO extends BaseBusinessObject
 					List<ContactEntity> smsSubscribers = new LinkedList<ContactEntity>();
 					List<ContactEntity> emailSubscribers = new LinkedList<ContactEntity>();
 					
-					//************************************ STEP4: Check the SMS and Email Communication Settings at the event level (As set by JCB Account)
+					//************************************ STEP4: Check the SMS and Email Communication Settings at the event level (As set by JCB Admin)
 					EventEntity event = (EventEntity) eventIdValueMap.keySet().toArray()[i];
 					String eventValue = (String)eventIdValueMap.values().toArray()[i];
 					

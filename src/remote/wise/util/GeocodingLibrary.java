@@ -73,9 +73,11 @@ public class GeocodingLibrary {
 		return getLocationDetailsOSM(lattitude,longitude);
 	}
 	
+	
+	
 	public static LocationDetailsMMI getLocationDetailsMMI(String lattitude, String  longitude){
 		return getLocationDetailsFromOSMMMI(lattitude,longitude);
-	}		
+	}
 	
 	/**
 	 * 
@@ -773,6 +775,7 @@ public class GeocodingLibrary {
 		try {
 			// Leela 	
 			//	url = new URL("https://apis.mapmyindia.com/advancedmaps/v1/abcc5a513059e4737bd9a37a7fe616d4/rev_geocode?lng="+latlong.split(",")[1]+"&lat="+latlong.split(",")[0]);
+			//URL url = new URL("https://apis.mappls.com/advancedmaps/v1/abcc5a513059e4737bd9a37a7fe616d4/rev_geocode?lat="+lattitude+"&lng="+longitude+"&identifier="+"JCB1234");
 			URL url = new URL("https://apis.mappls.com/advancedmaps/v1/d165e34a786426176ab5d2ab8ac80175/rev_geocode?lat="+lattitude+"&lng="+longitude);
 
 			System.setProperty("http.keepAlive", "false");
@@ -831,8 +834,6 @@ public class GeocodingLibrary {
 				
 				if(rec.getString("city")!=null && rec.getString("city").trim().length()>0)
 					locationDetails.setCity(rec.getString("city"));
-				else if(rec.getString("village")!=null && rec.getString("village").trim().length()>0)
-					locationDetails.setCity(rec.getString("village"));				
 				else
 					locationDetails.setCity("undefined");
 				
@@ -846,6 +847,20 @@ public class GeocodingLibrary {
 				else
 					locationDetails.setVillage("undefined");
 				
+//				locationDetails.setAddress(rec.getString("formatted_address"));
+//				locationDetails.setCountry(rec.getString("area"));
+//				locationDetails.setState(rec.getString("state"));
+//				locationDetails.setCity(rec.getString("city"));
+//				locationDetails.setDistrict(rec.getString("district"));
+//
+//				//					if(!(rec.getString("city").equalsIgnoreCase("")))
+//				//						locationDetails.setCity(rec.getString("city"));
+//				//					else
+//				//						locationDetails.setCity(rec.getString("district"));
+//
+//				locationDetails.setVillage(rec.getString("village"));  //adding village as part of MMI poc changes
+				//System.out.println("Address:"+locationDetails.getAddress()+"State:"+locationDetails.getState()+"City:"+locationDetails.getCity()+"Country:"+locationDetails.getCountry());
+
 				iLogger.info("locationDetails  : " + locationDetails);
 			}catch (Exception e) {
 

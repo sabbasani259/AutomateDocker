@@ -10691,8 +10691,7 @@ try
 					while(roleItr.hasNext())
 					{
 						contact = (ContactEntity) roleItr.next();
-						//CR469:20408644:Sai Divya  roleName Changed from JCB Admin to JCB Account 
-						if( (contact.getRole().getRole_name().equalsIgnoreCase("JCB Account")) ||
+						if( (contact.getRole().getRole_name().equalsIgnoreCase("JCB Admin")) ||
 								(contact.getRole().getRole_name().equalsIgnoreCase("JCB HO"))	||
 								//DefectId:20150518 @Suprava Remove JCB RO for non communicated machines 
 								(contact.getRole().getRole_name().equalsIgnoreCase("Super Admin")) ||

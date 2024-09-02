@@ -27,7 +27,6 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="role_name" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="SMS" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
  *         &lt;element name="sysGeneratedPassword" type="{http://www.w3.org/2001/XMLSchema}int"/>
- *         &lt;element name="pwdExpired" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *         &lt;element name="tenancyNameIDProxyUser" type="{http://www.w3.org/2001/XMLSchema}string" maxOccurs="unbounded" minOccurs="0"/>
  *         &lt;element name="user_name" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *       &lt;/sequence>
@@ -48,7 +47,6 @@ import javax.xml.bind.annotation.XmlType;
     "roleName",
     "sms",
     "sysGeneratedPassword",
-    "pwdExpired",
     "tenancyNameIDProxyUser",
     "userName"
 })
@@ -65,8 +63,6 @@ public class UserAuthenticationRespContract {
     @XmlElement(name = "SMS")
     protected boolean sms;
     protected int sysGeneratedPassword;
-    //CR469.n
-    protected int pwdExpired;
     @XmlElement(nillable = true)
     protected List<String> tenancyNameIDProxyUser;
     @XmlElement(name = "user_name")
@@ -223,15 +219,6 @@ public class UserAuthenticationRespContract {
     public void setSysGeneratedPassword(int value) {
         this.sysGeneratedPassword = value;
     }
-
-    
-    public int getPwdExpired() {
-		return pwdExpired;
-	}
-
-	public void setPwdExpired(int value) {
-		this.pwdExpired = value;
-	}
 
 	/**
      * Gets the value of the tenancyNameIDProxyUser property.

@@ -81,12 +81,6 @@
   </many-to-one>
   <property generated="never" lazy="false" name="sysGeneratedPassword" type="int">
    <column default = "0" name="sys_gen_password"/>
-  </property> 
-   <property generated="never" lazy="false" name="pwdExpired" type="int">
-   <column default = "0" name="pwd_Expired"/>
-  </property>
-  <property generated="never" lazy="false" name="password_creation_date" type="java.sql.Timestamp">
-   <column name="password_creation_date"/>
   </property>
   <!-- JCB6622 : 20240805 : Dhiraj Kumar : Email Flooding security fix -->
   <property generated="never" lazy="false" name="resetPassCount" type="int">

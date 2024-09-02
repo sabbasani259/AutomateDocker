@@ -56,8 +56,6 @@ public class UserAuthenticationImpl
 	int isTenancyAdmin;
 	boolean isSMS;
 	boolean isMap;
-	//CR469.n
-	int pwdExpired;
 	HashMap<String, HashMap<Integer,String>> tenancyNameIDProxyUser = new HashMap<String, HashMap<Integer,String>>();
 	
 
@@ -97,75 +95,6 @@ public class UserAuthenticationImpl
 		if(!isUserValid.equals("SUCCESS")){
 			throw new CustomFault(isUserValid);
 		}
-		
-		//CR469.sn
-		response = new UserAuthenticationRespContract();
-		ConnectMySQL connMySql = new ConnectMySQL();
-
-		try (Connection prodConnection = connMySql.getConnection();
-		     Statement statement = prodConnection.createStatement()) {
-
-		    // Step 1: Execute query to retrieve Role_ID from contact table
-		    String query = "SELECT Role_ID FROM contact WHERE Contact_ID='" + login_id + "'";
-		    statement.execute(query);
-		    ResultSet rs = statement.getResultSet();
-		    int roleId = 0;
-		    
-		    if (rs.next()) {
-		        roleId = rs.getInt("Role_ID");
-		    } else {
-		        throw new CustomFault("Role ID not found for login ID: " + login_id);
-		    }
-
-		    // Step 2: Retrieve roleName from role table based on Role_ID
-		    String rollQuery = "SELECT Role_Name FROM role WHERE Role_ID = '" + roleId + "'";
-		    String roleName = null;
-
-		    try (PreparedStatement rollStmt = prodConnection.prepareStatement(rollQuery)) {
-		        ResultSet rollRs = rollStmt.executeQuery();
-
-		        // Retrieve roleName
-		        if (rollRs.next()) {
-		            roleName = rollRs.getString("Role_Name");
-		        } else {
-		            throw new CustomFault("Role name not found for Role ID: " + roleId);
-		        }
-		    }
-
-		    // Check password expiry for specific roles
-		    if ("Dealer".equals(roleName) || "DealerAdmin".equals(roleName)) {
-		        try {
-		            int pwdExpired = isPasswordExpired(login_id);
-		            
-		            UserDetailsBO userDetails = new UserDetailsBO();
-		            // Update contact table with pwdExpired status
-		            String updateQuery = "UPDATE contact SET pwd_Expired = " + pwdExpired + " WHERE contact_id = '" + login_id + "'";
-		            iLogger.info("Update Query for pwdExpired: " + updateQuery);
-		           response.setPwdExpired(pwdExpired);
-		          
-		            System.out.println(pwdExpired);
-		            int rowsAffected = statement.executeUpdate(updateQuery);
-		            if (rowsAffected > 0) {
-		                iLogger.info("pwdExpired status updated successfully for login ID: " + login_id);
-		            } else {
-		                iLogger.error("Failed to update pwdExpired status for login ID: " + login_id);
-		            }
-		        } catch (SQLException e) {
-		            e.printStackTrace();
-		            throw new CustomFault("Error checking or updating password expiry: " + e.getMessage());
-		        }
-		    } else {
-		        iLogger.info("Role '" + roleName + "' does not require password expiry check.");
-		    }
-
-		} catch (SQLException e) {
-		    e.printStackTrace();
-		    throw new CustomFault("Database connection error: " + e.getMessage());
-		}//CR469.en
-
-
-	        
-        
 		//---------------Get User Details from UserDetailsBO----------------------
 		UserDetailsBO userDetails = new UserDetailsBO();
 		//Df20171010 @Roopa checking if the error counter > 5 returning the msg
@@ -314,7 +243,6 @@ public class UserAuthenticationImpl
 					response.setIsTenancyAdmin(userDetails.getContact().getIs_tenancy_admin());
 					response.setSysGeneratedPassword(userDetails.getContact().getSysGeneratedPassword());
 					//added by smitha on july 1st 2013...DefectId: 790
-					response.setPwdExpired(userDetails.getContact().getPwdExpired());
 					response.setSMS(userDetails.isSMS());
 					response.setMap(userDetails.isMap());
 					
@@ -468,59 +396,5 @@ public class UserAuthenticationImpl
 		return response;
 
 	}
-
-	/**
-     * Method to check if password has expired for the given login_id
-     * @param login_id
-     * @return true if password is expired, false otherwise
-     * @throws SQLException
-     */
-	//CR469.sn
-	private int isPasswordExpired(String login_id) throws SQLException {
-        Logger iLogger = InfoLoggerClass.logger;
-        Logger fLogger = FatalLoggerClass.logger;
-        
-        iLogger.info("Checking if password is expired for login_id: " + login_id);
-        
-        String query = "SELECT password_creation_date FROM contact WHERE Contact_ID = '" + login_id + "'";
-        ConnectMySQL connMySql  = new ConnectMySQL(); 
-        
-        try (Connection prodConnection = connMySql.getConnection();
-                Statement statement = prodConnection.createStatement();
-                ResultSet resultSet = statement.executeQuery(query)) {
-               
-               if (resultSet.next()) {
-                   Timestamp passwordCreationTimestamp = resultSet.getTimestamp("password_creation_date");
-                   
-                   if (passwordCreationTimestamp != null) {
-                       LocalDateTime passwordCreationDate = passwordCreationTimestamp.toLocalDateTime();
-                       LocalDateTime now = LocalDateTime.now();
-                       iLogger.info("Password creation date: " + passwordCreationDate);
-                       iLogger.info("Current date: " + now);
-                       
-                       long daysSincePasswordCreation = ChronoUnit.DAYS.between(passwordCreationDate, now);
-                       
-                       // Check if password has expired (more than 90 days old)
-                       if (daysSincePasswordCreation >= 90) {
-                           iLogger.info("Password has expired for login_id: " + login_id);
-                           return 1; // Password expired
-                       } else {
-                           iLogger.info("Password is not expired for login_id: " + login_id);
-                           return 0; // Password not expired
-                       }
-                   } else {
-                       iLogger.info("Password creation date is null for login_id: " + login_id);
-                       return 0; // Password not expired
-                   }
-               } else {
-            	   iLogger.info("No password creation date found for login_id: " + login_id);
-                   return 0; // Password not expired
-               }
-               
-           } catch (SQLException e) {
-               fLogger.error("SQL Exception occurred while checking password expiry: " + e.getMessage());
-               throw e; // Rethrow the exception to handle it in the calling method
-           }
-       }//CR469.en
 
 }

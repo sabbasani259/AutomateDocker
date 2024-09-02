@@ -121,15 +121,6 @@ public class UserDetailsBO extends BaseBusinessObject {
 	private String primaryEmailId;
 	private int sysGeneratedPassword;
 	private int tenancyAdminCount;
-	private int pwdExpired;
-
-	public int getPwdExpired() {
-		return pwdExpired;
-	}
-
-	public void setPwdExpired(int pwdExpired) {
-		this.pwdExpired = pwdExpired;
-	}
 
 	/**
 	 * @return the sysGeneratedPassword
@@ -2727,9 +2718,6 @@ public class UserDetailsBO extends BaseBusinessObject {
 						sysGeneratedPassword = contact
 								.getSysGeneratedPassword();
 						// System.out
-						//CR469.sn
-						pwdExpired=contact.getPwdExpired();
-//						iLogger.info(pwdExpired);//CR469.en
 						iLogger.info("role "
 								+ contact.getRole().getRole_id());
 					} else {
@@ -2863,7 +2851,6 @@ public class UserDetailsBO extends BaseBusinessObject {
 				iLogger.info("Last Login Date: " + last_login_date);
 				iLogger.info("smsService: " + isSMS);
 				iLogger.info("mapService : " + isMap);
-				iLogger.info("pwdExpired :"+ pwdExpired);
 			
 			iLogger.info("isGeneratedPassword:"+sysGeneratedPassword);
 			iLogger.info("isGeneratedPassword:"+sysGeneratedPassword);
@@ -3826,7 +3813,7 @@ public class UserDetailsBO extends BaseBusinessObject {
 			LoginId = LoginId.split("\\|")[0];
 		}
 		
-		//DF20181109 :MANI: checking role hierachy while creating a user. ex : Dealer should not create a user as JCB Account
+		//DF20181109 :MANI: checking role hierachy while creating a user. ex : Dealer should not create a user as JCB Admin
 		if(roleEntity!=null && tenancyEntity!=null){
 			String rolName=roleEntity.getRole_name();
 			iLogger.info(rolName);
@@ -3835,8 +3822,7 @@ public class UserDetailsBO extends BaseBusinessObject {
 			iLogger.info(tenancyType);
 			if((tenancyType.equalsIgnoreCase("Global"))||(tenancyType.equalsIgnoreCase("Regional")))
 			{
-				//CR469:20408644:Sai Divya  roleName Changed from JCB Admin to JCB Account 
-				if(!(rolName.equalsIgnoreCase("JCB Account") || rolName.equalsIgnoreCase("Customer Care") || rolName.equalsIgnoreCase("JCB HO") ||
+				if(!(rolName.equalsIgnoreCase("JCB Admin") || rolName.equalsIgnoreCase("Customer Care") || rolName.equalsIgnoreCase("JCB HO") ||
 						rolName.equalsIgnoreCase("Super Admin")))
 				{
 					throw new CustomFault("Invalid request,role id mismatch while user creation.");
@@ -5303,7 +5289,7 @@ public class UserDetailsBO extends BaseBusinessObject {
 		String CustomerFleetManager=null;
 		String OEMHO=null;
 		try {
-			// DefectID:1822-----Smitha-----Only JCB Account,JCB HO and CFM and if the user is tenancy admin and down the hierarchy if other JCB Account,JCB HO and CFM exists then it sets the status as false.
+			// DefectID:1822-----Smitha-----Only JCB Admin,JCB HO and CFM and if the user is tenancy admin and down the hierarchy if other JCB Admin,JCB HO and CFM exists then it sets the status as false.
 			try {
 				prop.load(getClass()
 						.getClassLoader()
@@ -5474,7 +5460,7 @@ public class UserDetailsBO extends BaseBusinessObject {
 		String CustomerFleetManager=null;
 		String OEMHO=null;
 		try {
-				// DefectID:1822-----Smitha-----Only JCB Account,JCB HO and CFM and if the user is tenancy admin and down the hierarchy if other JCB Account,JCB HO and CFM exists then it sets the status as false.
+				// DefectID:1822-----Smitha-----Only JCB Admin,JCB HO and CFM and if the user is tenancy admin and down the hierarchy if other JCB Admin,JCB HO and CFM exists then it sets the status as false.
 			try {
 				prop.load(getClass()
 						.getClassLoader()

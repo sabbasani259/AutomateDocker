@@ -57,9 +57,18 @@ public class LLPremiumServiceImpl {
 		try{
 			
 			if(premiumFlag.equalsIgnoreCase("1")){
-				query = "select aos1.serial_number,at.Asset_Type_Code,ag.Asseet_Group_Name as profile,aos1.Asset_Type_ID,a.Renewal_Date,a.Install_Date,a.PremFlag,llps1.LLPremStartDate,llps1.LLPremEndDate,croe.Dealer_Name,croe.CustomerName,croe.Customer_Mobile,at.asset_type_name as model,croe.Zone from (select serial_number,Asset_Type_ID,Asset_Group_ID from asset_owner_snapshot where account_id in (select account_id from account_tenancy where tenancy_id in ("+tenancyId+"))) as aos1" 
+				//Prasanna:20240820:CR484 Premium Tab and Report Changes.o
+//				query = "select aos1.serial_number,at.Asset_Type_Code,ag.Asseet_Group_Name as profile,aos1.Asset_Type_ID,a.Renewal_Date,a.Install_Date,a.PremFlag,llps1.LLPremStartDate,llps1.LLPremEndDate,croe.Dealer_Name,croe.CustomerName,croe.Customer_Mobile,at.asset_type_name as model,croe.Zone from (select serial_number,Asset_Type_ID,Asset_Group_ID from asset_owner_snapshot where account_id in (select account_id from account_tenancy where tenancy_id in ("+tenancyId+"))) as aos1" 
+//						+" inner join (select * from asset where premFlag = '"+premiumFlag+"') a ON a.serial_number = aos1.serial_number" 
+//						+" inner join (select llps.serial_number as serial_number, llps.updatedOn, max(llps.LLPremStartDate) as LLPremStartDate,max(llps.LLPremEndDate) as LLPremEndDate from LLPremiumSubs AS llps, (select serial_number, max(updatedOn) as updatedOn from LLPremiumSubs AS llps group by serial_number) as temp where llps.serial_number=temp.serial_number and llps.updatedOn = temp.updatedOn group by llps.serial_number) as llps1 ON llps1.serial_number = a.serial_number"
+//						//+" inner join (select serial_number,max(SubsEndDate) as Renewal_Date  from asset_renewal_data group by serial_number) ard ON aos1.serial_number = ard.serial_number"
+//						+" inner join (select * from asset_type where Asset_Type_Code in (select Asset_Type_Code from LLPremiumModels)) at ON aos1.Asset_Type_ID = at.Asset_Type_ID"
+//						+" inner join asset_group ag ON aos1.Asset_Group_ID = ag.Asset_Group_ID"
+//						+" left outer join  com_rep_oem_enhanced croe ON  aos1.serial_number=croe.serial_number";
+				//Prasanna:20240820:CR484 Premium Tab and Report Changes.n
+				query = "select aos1.serial_number,at.Asset_Type_Code,ag.Asseet_Group_Name as profile,aos1.Asset_Type_ID,a.Renewal_Date,a.Install_Date,a.PremFlag,llps1.LLPremStartDate,llps1.LLPremEndDate,llps1.LLPremPunchingDate,croe.Dealer_Name,croe.CustomerName,croe.Customer_Mobile,at.asset_type_name as model,croe.Zone from (select serial_number,Asset_Type_ID,Asset_Group_ID from asset_owner_snapshot where account_id in (select account_id from account_tenancy where tenancy_id in ("+tenancyId+"))) as aos1" 
 						+" inner join (select * from asset where premFlag = '"+premiumFlag+"') a ON a.serial_number = aos1.serial_number" 
-						+" inner join (select llps.serial_number as serial_number, llps.updatedOn, max(llps.LLPremStartDate) as LLPremStartDate,max(llps.LLPremEndDate) as LLPremEndDate from LLPremiumSubs AS llps, (select serial_number, max(updatedOn) as updatedOn from LLPremiumSubs AS llps group by serial_number) as temp where llps.serial_number=temp.serial_number and llps.updatedOn = temp.updatedOn group by llps.serial_number) as llps1 ON llps1.serial_number = a.serial_number"
+						+" inner join (select llps.serial_number as serial_number, llps.updatedOn, max(llps.LLPremStartDate) as LLPremStartDate,max(llps.LLPremEndDate) as LLPremEndDate,max(llps.LLPremPunchingDate) as LLPremPunchingDate from LLPremiumSubs AS llps, (select serial_number, max(updatedOn) as updatedOn from LLPremiumSubs AS llps group by serial_number) as temp where llps.serial_number=temp.serial_number and llps.updatedOn = temp.updatedOn group by llps.serial_number) as llps1 ON llps1.serial_number = a.serial_number"
 						//+" inner join (select serial_number,max(SubsEndDate) as Renewal_Date  from asset_renewal_data group by serial_number) ard ON aos1.serial_number = ard.serial_number"
 						+" inner join (select * from asset_type where Asset_Type_Code in (select Asset_Type_Code from LLPremiumModels)) at ON aos1.Asset_Type_ID = at.Asset_Type_ID"
 						+" inner join asset_group ag ON aos1.Asset_Group_ID = ag.Asset_Group_ID"
@@ -231,6 +240,10 @@ public class LLPremiumServiceImpl {
 						tableMap.put("premiumEndDate",resultSet.getString("LLPremEndDate").substring(0, 10));
 					else
 						tableMap.put("premiumEndDate","NA");
+					if(resultSet.getString("LLPremPunchingDate") != null)
+						tableMap.put("premPunchingDate",resultSet.getString("LLPremPunchingDate").substring(0, 10));
+					else
+						tableMap.put("premPunchingDate","NA");
 				}
 				
 				
@@ -275,10 +288,11 @@ public class LLPremiumServiceImpl {
 				else{
 					tableMap.put("installDate","NA");
 					if (premiumFlag.equalsIgnoreCase("0")) {
-
-						if (resultSet.getString("GateOutDate") != null)
-							tableMap.put("premiumPunchingDate", resultSet.getString("GateOutDate").substring(0, 10));
-						else
+						//Prasanna:20240820:CR484 Premium Tab and Report Changes.s 
+//						if (resultSet.getString("GateOutDate") != null)
+//							tableMap.put("premiumPunchingDate", resultSet.getString("GateOutDate").substring(0, 10));
+//						else
+						//Prasanna:20240820:CR484 Premium Tab and Report Changes.e
 							tableMap.put("premiumPunchingDate", "NA");
 
 					}

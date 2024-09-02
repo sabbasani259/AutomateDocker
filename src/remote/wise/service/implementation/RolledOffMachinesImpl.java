@@ -451,11 +451,11 @@ public class RolledOffMachinesImpl {
 //						workSheet.addCell(new jxl.write.Label(++cellIndex, 0, "fWVersion",
 //								normalFormat));
 						//2021-03-18:Shajesh : add owner in NMT
-						if(roleName.equalsIgnoreCase("JCB Account")  || roleName.equalsIgnoreCase("Super Admin"))
+						if(roleName.equalsIgnoreCase("JCB Admin")  || roleName.equalsIgnoreCase("Super Admin"))
 						workSheet.addCell(new jxl.write.Label(++cellIndex, 0, "Owner",
 								normalFormat));
 						//2021-03-18 : Shajesh : addition of dealer name in NMT
-						if(roleName.equalsIgnoreCase("JCB Account")  || roleName.equalsIgnoreCase("Super Admin")||roleName.equalsIgnoreCase("JCB HO")||roleName.equalsIgnoreCase("JCB RO"))
+						if(roleName.equalsIgnoreCase("JCB Admin")  || roleName.equalsIgnoreCase("Super Admin")||roleName.equalsIgnoreCase("JCB HO")||roleName.equalsIgnoreCase("JCB RO"))
 						workSheet.addCell(new jxl.write.Label(++cellIndex, 0, "Dealer",
 								normalFormat));
 
@@ -484,11 +484,11 @@ public class RolledOffMachinesImpl {
 //									implList.get(i).getProposedFWVersion(), normalFormat3));
 //							workSheet.addCell(new jxl.write.Label(++k, p + 1,
 //									implList.get(i).getStatus(), normalFormat3));
-							if(roleName.equalsIgnoreCase("JCB Account")  || roleName.equalsIgnoreCase("Super Admin"))
+							if(roleName.equalsIgnoreCase("JCB Admin")  || roleName.equalsIgnoreCase("Super Admin"))
 							workSheet.addCell(new jxl.write.Label(++k, p + 1,
 									implList.get(i).getSerialNumber().split("~")[1], normalFormat3));
 							//2021-03-18 : Shajesh : addition of dealer name in NMT
-							if(roleName.equalsIgnoreCase("JCB Account")  || roleName.equalsIgnoreCase("Super Admin")||roleName.equalsIgnoreCase("JCB HO")||roleName.equalsIgnoreCase("JCB RO"))
+							if(roleName.equalsIgnoreCase("JCB Admin")  || roleName.equalsIgnoreCase("Super Admin")||roleName.equalsIgnoreCase("JCB HO")||roleName.equalsIgnoreCase("JCB RO"))
 							workSheet.addCell(new jxl.write.Label(++k, p + 1,
 									implList.get(i).getSerialNumber().split("~")[2], normalFormat3));
 							p++;

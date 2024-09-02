@@ -265,9 +265,8 @@ public class MachineHoursServiceReportImpl {
     			e.printStackTrace();
     		}
            
-		 //Added by Kishore @DF20160106 for excel changes(Report will be sent as an email for the login user, user must be either JCB Account or Customer Care or JCB HO)                
-    		//CR469:20408644:Sai Divya  roleName Changed from JCB Admin to JCB Account 
-         if((userRole!=null) && (userRole.equalsIgnoreCase("JCB Account") || userRole.equalsIgnoreCase("Customer Care") || userRole.equalsIgnoreCase("JCB HO"))){
+		 //Added by Kishore @DF20160106 for excel changes(Report will be sent as an email for the login user, user must be either JCB Admin or Customer Care or JCB HO)                 
+         if((userRole!=null) && (userRole.equalsIgnoreCase("JCB Admin") || userRole.equalsIgnoreCase("Customer Care") || userRole.equalsIgnoreCase("JCB HO"))){
         	 iLogger.info("service hours report sending as a mail process start---------");
         	 // ***********   New excel changes by Kishore ****************** //        	 
              // ***********  Appending the current date to excel file name for Unique identification *****  //

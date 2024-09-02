@@ -434,7 +434,6 @@ public class RestApplication extends Application
 		singletons.add(new DataForUnallocatedMachineRestService());//CR462.n
 		
 		singletons.add(new OfflineAlertSeverityReportRESTServiceCsv());//ME100011411.n
-		singletons.add(new NewUserRegistrationRestService());//CR469.n
 		singletons.add(new ForgotPasswordExtendedService());//JCB6622.n
 		
 	}

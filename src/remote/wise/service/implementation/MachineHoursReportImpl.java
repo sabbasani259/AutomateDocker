@@ -422,7 +422,7 @@ public class MachineHoursReportImpl {
 		    		}
 
 
-		        if((userRole!=null) && (userRole.equalsIgnoreCase("JCB Account") || userRole.equalsIgnoreCase("Customer Care") || userRole.equalsIgnoreCase("JCB HO"))){
+		        if((userRole!=null) && (userRole.equalsIgnoreCase("JCB Admin") || userRole.equalsIgnoreCase("Customer Care") || userRole.equalsIgnoreCase("JCB HO"))){
 		        try {
 		        	
 		        		Date d=new Date();

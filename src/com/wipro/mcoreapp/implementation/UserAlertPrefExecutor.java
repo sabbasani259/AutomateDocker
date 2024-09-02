@@ -46,9 +46,8 @@ public class UserAlertPrefExecutor implements Callable
 			String emailsStatus="SUCCESS";
 			
 			HashMap<String,String> smsAlertPrefMap = new HashMap<String,String>();
-			HashMap<String,String> emailAlertPrefMap = new HashMap<String,String>();
-			//CR469:20408644:Sai Divya  roleName Changed from JCB Admin to JCB Account 
-			if(roleName.equalsIgnoreCase("JCB Account") || roleName.equalsIgnoreCase("Customer Care"))
+			HashMap<String,String> emailAlertPrefMap = new HashMap<String,String>(); 
+			if(roleName.equalsIgnoreCase("JCB Admin") || roleName.equalsIgnoreCase("Customer Care"))
 			{
 				for(int i=0; i<respContractList.size(); i++)
 				{

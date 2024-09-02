@@ -202,7 +202,7 @@ public class AccountDetailsImpl
 			}
 			
 			//DF20141211 - Rajani Nagaraju - Removing contact number as mandatory for account creation. Even if automatic Org group creation fails, 
-			//JCB Account can create Org Group on LL where in account deatails will not be sent again from SAP
+			//JCB Admin can create Org Group on LL where in account deatails will not be sent again from SAP
 			/*if( contactNumber==null || contactNumber.replaceAll("\\s","").length()==0)
 			{
 				throw new CustomFault("Mandatory parameter contactNumber is not received !!");
@@ -336,7 +336,7 @@ public class AccountDetailsImpl
 			}
 			
 			//DF20141211 - Rajani Nagaraju - Removing contact number as mandatory for account creation. Even if automatic Org group creation fails, 
-			//JCB Account can create Org Group on LL where in account deatails will not be sent again from SAP
+			//JCB Admin can create Org Group on LL where in account deatails will not be sent again from SAP
 			/*if( contactNumber==null || contactNumber.replaceAll("\\s","").length()==0)
 			{
 				throw new CustomFault("Mandatory parameter contactNumber is not received !!");

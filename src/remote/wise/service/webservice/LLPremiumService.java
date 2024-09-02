@@ -407,5 +407,126 @@ public class LLPremiumService {
 			fLogger.error("Exception:"+e.getMessage());
 		}
 		return response;
-	}	
+	}
+	//Sai Divya:20240822:CR484 Premium Tab and Report Changes.s 
+			@GET
+			@Path("/getPremiumMachinesReportOffline")
+			@Produces(MediaType.APPLICATION_JSON)
+			public String getPremiumMachinesReportOffline(@QueryParam("startDate") String startDate, @QueryParam("endDate") String endDate,@JsonProperty LinkedHashMap<String,Object> reqObj)  {
+				Logger infoLogger = InfoLoggerClass.logger;
+				Logger fLogger = FatalLoggerClass.logger;
+				infoLogger.info("Webservice getPremiumMachinesReportRO");
+				String response="";
+				try {
+					long startTime = System.currentTimeMillis();
+					infoLogger.info("Webservice input :"+reqObj);
+					CommonUtil util = new CommonUtil();
+					String isValidinput=null;
+					ListToStringConversion convert= new ListToStringConversion();
+
+					for(int i=0;i<reqObj.size();i++)
+					{
+						if(reqObj.get("tenancyIdList")!=null){
+							List<Integer> tenacnyList=(List<Integer>) reqObj.get("tenancyIdList");
+							String tenacnyListString=convert.getIntegerListString(tenacnyList).toString();
+							isValidinput = util.inputFieldValidation(tenacnyListString);
+							if(!isValidinput.equals("SUCCESS")){
+								throw new CustomFault(isValidinput);
+							}
+						}
+					}
+				
+				response = new LLPremiumReportImpl().reportForLLPremiumEligibleVins1(startDate,endDate,reqObj);
+				 long endTime = System.currentTimeMillis(); 
+			        long executionTime = endTime - startTime; // Calculate the execution time
+			        infoLogger.info("serviceName:LLPremiumService~Execution time: " + executionTime + " milliseconds");
+				
+				}
+				catch(Exception e){
+					e.printStackTrace();
+					fLogger.error("Exception:"+e.getMessage());
+				}
+				return response;
+			}
+			
+			@GET
+			//@Path("/getPremiumMachinesReportRO")
+			@Path("/getPremiumMachinesReport")
+			@Produces(MediaType.APPLICATION_JSON)
+			public List getPremiumMachinesReport(@QueryParam("startDate") String startDate, @QueryParam("endDate") String endDate,@JsonProperty LinkedHashMap<String,Object> reqObj)  {
+				Logger infoLogger = InfoLoggerClass.logger;
+				Logger fLogger = FatalLoggerClass.logger;
+				infoLogger.info("Webservice getPremiumMachinesReportRO");
+				List<HashMap<String, String>> response = new ArrayList<>();
+				try {
+					long startTime = System.currentTimeMillis();
+					infoLogger.info("Webservice input :"+reqObj);
+					CommonUtil util = new CommonUtil();
+					String isValidinput=null;
+					ListToStringConversion convert= new ListToStringConversion();
+
+					for(int i=0;i<reqObj.size();i++)
+					{
+						if(reqObj.get("tenancyIdList")!=null){
+							List<Integer> tenacnyList=(List<Integer>) reqObj.get("tenancyIdList");
+							String tenacnyListString=convert.getIntegerListString(tenacnyList).toString();
+							isValidinput = util.inputFieldValidation(tenacnyListString);
+							if(!isValidinput.equals("SUCCESS")){
+								throw new CustomFault(isValidinput);
+							}
+						}
+					}
+				
+				response = new LLPremiumReportImpl().reportForLLPremiumEligibleVins2(startDate,endDate,reqObj);
+				 long endTime = System.currentTimeMillis(); 
+			        long executionTime = endTime - startTime; // Calculate the execution time
+			        infoLogger.info("serviceName:LLPremiumService~Execution time: " + executionTime + " milliseconds");
+				
+				}
+				catch(Exception e){
+					e.printStackTrace();
+					fLogger.error("Exception:"+e.getMessage());
+				}
+				return response;
+			}
+			@GET
+			@Path("/getPremiumMachinesReportForIndiaHO")
+			@Produces(MediaType.APPLICATION_JSON)
+			public String getPremiumMachinesReportForIndiaHO(@JsonProperty LinkedHashMap<String,Object> reqObj)  {
+				Logger infoLogger = InfoLoggerClass.logger;
+				Logger fLogger = FatalLoggerClass.logger;
+				infoLogger.info("Webservice getPremiumMachinesReportRO");
+				String response="";
+				try {
+					long startTime = System.currentTimeMillis();
+					infoLogger.info("Webservice input :"+reqObj);
+					CommonUtil util = new CommonUtil();
+					String isValidinput=null;
+					ListToStringConversion convert= new ListToStringConversion();
+
+					for(int i=0;i<reqObj.size();i++)
+					{
+						if(reqObj.get("tenancyIdList")!=null){
+							List<Integer> tenacnyList=(List<Integer>) reqObj.get("tenancyIdList");
+							String tenacnyListString=convert.getIntegerListString(tenacnyList).toString();
+							isValidinput = util.inputFieldValidation(tenacnyListString);
+							if(!isValidinput.equals("SUCCESS")){
+								throw new CustomFault(isValidinput);
+							}
+						}
+					}
+				
+				response = new LLPremiumReportImpl().reportForLLPremiumVinsForIndiaHO(reqObj);
+				 long endTime = System.currentTimeMillis();
+			        long executionTime = endTime - startTime; // Calculate the execution time
+			        infoLogger.info("serviceName:LLPremiumService~Execution time: " + executionTime + " milliseconds");
+				
+				}
+				catch(Exception e){
+					e.printStackTrace();
+					fLogger.error("Exception:"+e.getMessage());
+				}
+				return response;
+			}
+			//Sai Divya:20240822:CR484 Premium Tab and Report Changes.e 
 }

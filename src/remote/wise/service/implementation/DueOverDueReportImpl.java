@@ -489,7 +489,7 @@ public class DueOverDueReportImpl
 		}
 		
 		//Added by Roopa @DF20151104 for excel changes(Report will be sent as an email to your email id)	
-		if((userRole!=null) && (userRole.equalsIgnoreCase("JCB Account") || userRole.equalsIgnoreCase("Customer Care") || userRole.equalsIgnoreCase("JCB HO"))){
+		if((userRole!=null) && (userRole.equalsIgnoreCase("JCB Admin") || userRole.equalsIgnoreCase("Customer Care") || userRole.equalsIgnoreCase("JCB HO"))){
 		
 		Date d=new Date();
 		String jasperDate = null;

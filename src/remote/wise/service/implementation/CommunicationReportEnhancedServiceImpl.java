@@ -165,11 +165,12 @@ public class CommunicationReportEnhancedServiceImpl {
 		        } 
 		        
 		} catch (SSLHandshakeException e) {
-			fLogger.info("Not able to call googleAPI,so existing!!,Please check and execute again "
+			fLogger.info("Not able to call OSM  ,so existing!!,Please check and execute again "
 					+ e.getMessage());
-			throw new SSLHandshakeException("Not able to call googleAPI");
+			throw new SSLHandshakeException("Not able to call OSM");
 		} catch (Exception e) {
-			fLogger.info("Issue is with GoogleAPI call " + e.getMessage());
+			fLogger.info("Issue is with  OSM call " + e.getMessage());
+
 		}
         
 		iLogger.info("Total time taken by Current Thread "

@@ -36,6 +36,7 @@ import remote.wise.businessentity.TenancyEntity;
 import remote.wise.log.FatalErrorLogging.FatalLoggerClass;
 import remote.wise.log.InfoLogging.InfoLoggerClass;
 import remote.wise.service.datacontract.LocationDetails;
+import remote.wise.service.datacontract.LocationDetailsMMI;
 import remote.wise.util.GetSetLocationJedis;
 import remote.wise.util.HibernateUtil;
 import remote.wise.util.ListToStringConversion;
@@ -222,7 +223,9 @@ public class ETLfactDataOLDBO {
 								}catch (Exception e) {
 									fLogger.fatal(" Exception when splitting location "+e.getMessage());
 								}
-								LocationDetails locObj = GetSetLocationJedis.getLocationDetails(latitude,longitude, redisPool);
+								// Leela - Commenting bcz of using mmi instead of google
+								//LocationDetails locObj = GetSetLocationJedis.getLocationDetails(latitude,longitude, redisPool);
+								LocationDetailsMMI locObj = GetSetLocationJedis.getLocationDetailsMMI(latitude,longitude);
 								
 								// exception scenario by osm/google by shrini 201605041040
 								if(aggregate.equalsIgnoreCase("AssetMonitoringFactDataDayAgg")){
@@ -423,7 +426,10 @@ public class ETLfactDataOLDBO {
 						
 							//Address = locationByLatLon.getLocation(Longitude, Latitude);
 //							LocationDetails locObj = locationByLatLon.getLocationDetails(Longitude, Latitude);
-							LocationDetails locObj = GetSetLocationJedis.getLocationDetails(Latitude,Longitude,redisPool);
+							// Leela - Commenting bcz using mmi instead of google 
+							//LocationDetails locObj = GetSetLocationJedis.getLocationDetails(Latitude,Longitude,redisPool);
+							LocationDetailsMMI locObj = GetSetLocationJedis.getLocationDetailsMMI(Latitude,Longitude);
+							
 							Address=locObj.getAddress();
 							iLogger.info("Address is" + Address);
 							

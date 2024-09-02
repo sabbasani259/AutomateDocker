@@ -15,6 +15,7 @@ import redis.clients.jedis.Jedis;
 import remote.wise.log.FatalErrorLogging.FatalLoggerClass;
 import remote.wise.log.InfoLogging.InfoLoggerClass;
 import remote.wise.service.datacontract.LocationDetails;
+import remote.wise.service.datacontract.LocationDetailsMMI;
 import remote.wise.util.CommonUtil;
 import remote.wise.util.ConnectMySQL;
 import remote.wise.util.GetSetLocationJedis;
@@ -165,10 +166,13 @@ public class ETLfactUpdateAddressExtended implements Runnable{
 				}catch (Exception e) {
 					fLogger.fatal("ETLFactBO : updateAddress "+" Serial_Number "+serial_Number+" time_key "+time_key+" Exception when splitting location "+e.getMessage());
 				}
-				LocationDetails locObj=null;
+				//LocationDetails locObj=null;
+				LocationDetailsMMI locObj=null;
 
 				try{
-					locObj = GetSetLocationJedis.getLocationDetails(latitude,longitude, redisPool);
+					// Leela - commenting bcz of using mmi instead of google
+					//locObj = GetSetLocationJedis.getLocationDetails(latitude,longitude, redisPool);
+					locObj = GetSetLocationJedis.getLocationDetailsMMI(latitude,longitude);
 				}
 				catch (Exception e) {
 					fLogger.fatal("ETLFactBO : updateAddress "+" Serial_Number "+serial_Number+" time_key "+time_key+" Exception while getting the location from GEOCoding service"+e.getMessage());

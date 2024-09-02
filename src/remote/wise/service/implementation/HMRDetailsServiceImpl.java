@@ -14,6 +14,7 @@ import redis.clients.jedis.Jedis;
 import remote.wise.log.FatalErrorLogging.FatalLoggerClass;
 import remote.wise.log.InfoLogging.InfoLoggerClass;
 import remote.wise.service.datacontract.LocationDetails;
+import remote.wise.service.datacontract.LocationDetailsMMI;
 import remote.wise.util.CommonUtil;
 import remote.wise.util.ConnectMySQL;
 import remote.wise.util.GetSetLocationJedis;
@@ -142,7 +143,8 @@ public class HMRDetailsServiceImpl {
 
 	//20191511: @Mamatha method to get the address
 	public String getAddressDetails(String vinNo, String lat, String longt) {
-		LocationDetails locObj = null;
+		//LocationDetails locObj = null;
+		LocationDetailsMMI locObj = null;
 		try {
 			Properties prop = new Properties();
 			prop.load(getClass().getClassLoader().getResourceAsStream(
@@ -151,8 +153,10 @@ public class HMRDetailsServiceImpl {
 			String redisPORT = prop.getProperty("geocodingredisport");
 			Jedis redisConnection = new Jedis(redisURL,
 					Integer.valueOf(redisPORT));
-			locObj = GetSetLocationJedis.getLocationDetails(lat, longt,
-					redisConnection);
+			
+			// Leela - Commenting bcz using mmi instead of google
+			//locObj = GetSetLocationJedis.getLocationDetails(lat, longt,redisConnection);
+			locObj = GetSetLocationJedis.getLocationDetailsMMI(lat, longt);
 		} catch (Exception ex) {
 			ex.getMessage();
 		}

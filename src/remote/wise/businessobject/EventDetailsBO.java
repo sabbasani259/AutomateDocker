@@ -71,6 +71,7 @@ import remote.wise.service.datacontract.AdminAlertPrefRespContract;
 import remote.wise.service.datacontract.AlertSummaryRespContract;
 import remote.wise.service.datacontract.AlertThresholdRespContract;
 import remote.wise.service.datacontract.LocationDetails;
+import remote.wise.service.datacontract.LocationDetailsMMI;
 import remote.wise.service.datacontract.ServiceDueOverDueRespContract;
 import remote.wise.service.implementation.AdminAlertPrefImpl;
 import remote.wise.service.implementation.AlertDetailsImpl;
@@ -4651,14 +4652,15 @@ public class EventDetailsBO extends BaseBusinessObject
 			//DF20170821 - SU334449 - GeoCoding Library changed from google api to MapMyIndia. 
 			GeocodingLibrary lib = new  GeocodingLibrary();
 			@SuppressWarnings("static-access")
-			LocationDetails locationDetails = lib.getLocationDetails(latitude, longitude);
+			//LocationDetails locationDetails = lib.getLocationDetails(latitude, longitude);
+			LocationDetailsMMI locationDetails = lib.getLocationDetailsMMI(latitude, longitude);
 			String address = locationDetails.getAddress();
 			if(address==null || address.equalsIgnoreCase("undefined"))
 			{
 				NumberFormat formatter = new DecimalFormat("0.##"); 
 				latitude = formatter.format(Double.parseDouble(latitude));
 				longitude = formatter.format(Double.parseDouble(longitude));
-				locationAddress=""+latitude+","+longitude+" Address Undefined by Google Maps";
+				locationAddress=""+latitude+","+longitude+" Address Undefined by MMI Maps";
 
 			}
 
@@ -5143,7 +5145,8 @@ public class EventDetailsBO extends BaseBusinessObject
 								AssetEventEntity assetEvent = (AssetEventEntity)itr.next();;
 								rowUpdateCounter++;
 
-								LocationDetails loc = null;
+								//LocationDetails loc = null;
+								LocationDetailsMMI loc = null;
 								try
 								{
 									String address =null;
@@ -5190,7 +5193,8 @@ public class EventDetailsBO extends BaseBusinessObject
 
 									if(latitude!=null  && longitude!=null)
 									{
-										loc = new LocationByLatLon().getLocationDetails(longitude, latitude);
+										//loc = new LocationByLatLon().getLocationDetails(longitude, latitude);
+										loc = GetSetLocationJedis.getLocationDetailsMMI(latitude, longitude);
 									}
 
 
@@ -5404,7 +5408,8 @@ public class EventDetailsBO extends BaseBusinessObject
 			          AssetEventEntity assetEvent = (AssetEventEntity)itr.next();
 			          rowUpdateCounter++;
 
-			          LocationDetails loc = null;
+			         // LocationDetails loc = null;
+			          LocationDetailsMMI loc = null;
 			          try
 			          {
 			            String address = null;
@@ -5429,10 +5434,12 @@ public class EventDetailsBO extends BaseBusinessObject
 
 			            if ((latitude != null) && (longitude != null))
 			            {
-			              loc = GetSetLocationJedis.getLocationDetails(latitude, longitude, redisPool);
+			              //loc = GetSetLocationJedis.getLocationDetails(latitude, longitude, redisPool);
+			              loc = GetSetLocationJedis.getLocationDetailsMMI(latitude, longitude);
 
 			              if (loc == null) {
-			                loc = new LocationByLatLon().getLocationDetails(longitude, latitude);
+			               // loc = new LocationByLatLon().getLocationDetails(longitude, latitude);
+			                loc = GetSetLocationJedis.getLocationDetailsMMI(latitude, longitude);
 			              }
 
 			            }

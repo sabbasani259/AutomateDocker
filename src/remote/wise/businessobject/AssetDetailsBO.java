@@ -99,7 +99,8 @@ import remote.wise.log.BusinessErrorLogging.BusinessErrorLoggerClass;
 	import remote.wise.service.implementation.AssetProvisioningImpl;
 	import remote.wise.service.implementation.DomainServiceImpl;
 	import remote.wise.service.implementation.FleetSummaryImpl;
-	import remote.wise.service.implementation.MachineProfileImpl;
+import remote.wise.service.implementation.InstallationDateDetailsImpl;
+import remote.wise.service.implementation.MachineProfileImpl;
 	import remote.wise.service.implementation.RolledOffMachinesImpl;
 	import remote.wise.service.implementation.StockSummaryImpl;
 	import remote.wise.util.AssetUtil;
@@ -3863,6 +3864,60 @@ import com.wipro.mcoreapp.implementation.AlertSubscriptionImpl;
 					session.update(asset);
 				}
 	
+				//CR487 : Sai Divya : Service Schedules update after personality details update.sn
+				Date installDate = null;
+				String dealerCode = null;
+				int productId = 0;
+				String installDateStr = null;
+				String vin;
+			    String selectVinQuery ="SELECT a.serial_number, a.install_date, ac.mapping_code FROM asset a "
+						+ " INNER JOIN asset_owner_snapshot aos on a.serial_number=aos.serial_number "
+						+ " INNER JOIN account ac on ac.account_id=aos.account_id "
+						+ " WHERE aos.account_type='Dealer' and ac.status=1 and a.serial_number like '%" + serialNumber + "%'";
+			    
+			    iLogger.info("selectVinQuery:" + selectVinQuery);
+				ConnectMySQL connFactory = new ConnectMySQL();
+				try (Connection conn = connFactory.getConnection();
+						Statement st = conn.createStatement();
+						ResultSet rs = st.executeQuery(selectVinQuery)) {
+
+					while (rs.next()) {
+						vin = rs.getString("serial_number");
+						installDate = rs.getDate("Install_Date");
+						dealerCode = rs.getString("mapping_code");
+					}
+				// Check if installDate is not null
+				if (installDate != null) {
+					 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); // Example format
+				        installDateStr = sdf.format(installDate);
+				        String updateQueryString = "UPDATE asset_service_schedule SET alert_gen_flag = 0 WHERE SerialNumber ='"+serialNumber+"'";
+				        int rowsAffected = st.executeUpdate(updateQueryString); 
+					    iLogger.info(updateQueryString);
+					 // 5.5 Add service schedule for the machine
+						String response = new InstallationDateDetailsImpl().setAssetserviceSchedule(serialNumber, installDateStr,
+								dealerCode, "", "", true);
+						if (!response.contains("SUCCESS")) {
+							iLogger.info("Failure occured in setting up Service Schedule for VIN " + serialNumber);
+							status = "FAILURE:Failure occured in setting up Service Schedule for VIN " + serialNumber;
+							return status;
+						}				   
+				} 
+				else {
+				    System.out.println("Install Date is not available.");
+				}
+			}
+				catch (Exception e) {
+					e.printStackTrace();
+					status = "FAILURE";
+					fLogger.fatal("Exception occurred : " + e.getMessage());
+				}
+				
+				if(! (session.isOpen() ))
+				{
+					session = HibernateUtil.getSessionFactory().getCurrentSession();
+					session.getTransaction().begin();
+				}
+				//CR487 : Sai Divya : Service Schedules update after personality details update.en
 				//Set the Product Details to assetOwnerSnapshot Entity
 				//DefectId:20150519 @ suprava AssetPersonality updation in AssetOwnerSnapshot table at run time
 				Query assetOwnerSnapshotQuery = session.createQuery("from AssetOwnerSnapshotEntity where serialNumber = '"+serialNumber+"'");

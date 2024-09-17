@@ -33,7 +33,8 @@ import remote.wise.util.DateUtil;
 public class VDStageVServiceImpl {
 
     	//List<String> bhlModelCodes = Arrays.asList("3DXS5", "3DXU5", "3DXX5", "4DXS5");//CR461.o
-  	List<String> bhlModelCodes = Arrays.asList("3DXS5", "3DXU5", "3DXX5", "4DXS5","ZLC2","ZLC4","ZLC3","ZLC1");//CR461.n
+//  	List<String> bhlModelCodes = Arrays.asList("3DXS5", "3DXU5", "3DXX5", "4DXS5","ZLC2","ZLC4","ZLC3","ZLC1");//CR461.n//ME100013013.o
+	List<String> bhlModelCodes = Arrays.asList("3DXS5", "3DXU5", "3DXX5", "4DXS5","ZLC2","ZLC4","ZLC3","ZLC1","ZBC5","ZLC5");//CR461.n//ME100013013.n
   	List<String> lodalModelCodes = Arrays.asList("ZL01", "ZL54", "ZL53", "5DCMM", "5DDMM", "5DEMM");
   	List<String> sslModelCodes = Arrays.asList("ZRO5", "ZRO3", "3DJDB", "3DHDB");
   	//List<String> wlsModelCodes = Arrays.asList("433S5", "440S5");//CR464.o

@@ -26,6 +26,13 @@ public class UserAssetDetailsRespContract
 	String simNumber;
 	String assetTypeCode;	//CR353.n
 	int Subscription; //CR353.n
+	String fuelLevel;
+	public String getFuelLevel() {
+		return fuelLevel;
+	}
+	public void setFuelLevel(String fuelLevel) {
+		this.fuelLevel = fuelLevel;
+	}
 	/**
 	 * @return the imeiNumber
 	 */

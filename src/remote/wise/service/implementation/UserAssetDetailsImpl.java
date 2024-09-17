@@ -47,11 +47,15 @@ public class UserAssetDetailsImpl
 				
 		//get asset details
 		AssetDetailsBO assetDetails = new AssetDetailsBO();
+		//20240916 : Prasanna : CR486,CR487 :MSGID 022,023
+		AssetDetailsBO assetDetails1 = new AssetDetailsBO();
 		assetDetails = assetDetails.getAssetProfile(reqObj.getSerialNumber());
-		
+		//20240916 : Prasanna : CR486,CR487 :MSGID 022,023
+		assetDetails1 = assetDetails1.getFuel(reqObj.getSerialNumber());
 		UserAssetDetailsRespContract response = new UserAssetDetailsRespContract();
 		//response.setSerialNumber(assetDetails.getSerialNumber());
-	
+		//20240916 : Prasanna : CR486,CR487 :MSGID 022,023
+		response.setFuelLevel(assetDetails1.getFuelLevel());
 		response.setAssetClassName(assetDetails.getAssetClassName());
 		//CR256: Added sale date for dislaying on Fleet General - Deepthi
 		response.setAssetGroupName(assetDetails.getAssetGroupName()+"#"+assetDetails.getSaleDate());

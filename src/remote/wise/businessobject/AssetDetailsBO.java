@@ -133,7 +133,22 @@ import com.wipro.mcoreapp.implementation.AlertSubscriptionImpl;
 		String simNumber;
 	
 		String iccidNumber;
-	
+		//20240916 : Prasanna : CR486,CR487 :MSGID 022,023
+		String fuelLevel;
+		String msg_id;
+		public String getMsg_id() {
+			return msg_id;
+		}
+		public void setMsg_id(String msg_id) {
+			this.msg_id = msg_id;
+		}
+		public String getFuelLevel() {
+			return fuelLevel;
+		}
+		public void setFuelLevel(String fuelLevel) {
+			this.fuelLevel = fuelLevel;
+		}
+
 		//ramu b added on 20200512 extendedWarrantytype
 		String extendedWarrantytype ;
 		String assetTypeCode;    //CR353.n
@@ -3556,6 +3571,49 @@ import com.wipro.mcoreapp.implementation.AlertSubscriptionImpl;
 		//************************************************ End of Get AssetprofileDetails ****************************************************
 	
 	
+		public AssetDetailsBO getFuel(String serialNumber) {
+		    Session session = HibernateUtil.getSessionFactory().openSession();
+		    session.beginTransaction();
+		    
+		    Logger fLogger = FatalLoggerClass.logger;
+		    Logger bLogger = BusinessErrorLoggerClass.logger;
+		    Logger iLogger = InfoLoggerClass.logger;
+		    ConnectMySQL connectionObj = new ConnectMySQL();
+		    AssetDetailsBO assetDetails = new AssetDetailsBO();
+		    String query ="select JSON_UNQUOTE(json_extract(TxnData,'$.MSG_ID')) as MSG_ID,JSON_UNQUOTE(json_extract(TxnData,'$.CURRENT_FUEL_AVAILABLE_IN_TANK')) as fuel_Level from asset_monitoring_snapshot where (json_extract(TxnData,'$.MSG_ID') = '022' or json_extract(TxnData,'$.MSG_ID') ='023') and Serial_Number='"+ serialNumber+"'";
+		    iLogger.info(query);
+		    try (Connection con = connectionObj.getConnection();
+				    Statement st = con.createStatement();
+				    ResultSet rs = st.executeQuery(query)) {
+		    	while(rs.next()) {
+		            AssetEntity assetEntity = getAssetEntity(serialNumber);
+		            if (assetEntity.getSerial_number() == null || !assetEntity.isActive_status()) {
+		                bLogger.error("Invalid Serial Number");
+		                throw new CustomFault("Invalid Serial Number");
+		            }
+		                String fuelLevel = rs.getString("fuel_Level");
+		                String msg_id = rs.getString("MSG_ID");
+		                iLogger.info("FuelLevel :"+fuelLevel);
+		                iLogger.info("msg_id :"+msg_id);
+		                if(msg_id=="022" || msg_id=="023")
+		                {
+		                	assetDetails.setFuelLevel(fuelLevel);
+		                }
+		                else
+		                {
+		                	assetDetails.setFuelLevel("NA");
+		                }
+		                
+		    	}
+		    } catch (Exception e) {
+		        fLogger.fatal("Exception: " + e.getMessage(), e);
+		        throw new RuntimeException("Error retrieving fuel level", e);
+		    } finally {
+		        session.getTransaction().commit();
+		        session.close();
+		    }
+		    return assetDetails;
+		}
 	
 		//Method 6: 
 		/** This method sets the asset personality details

@@ -3580,7 +3580,7 @@ import com.wipro.mcoreapp.implementation.AlertSubscriptionImpl;
 		    Logger iLogger = InfoLoggerClass.logger;
 		    ConnectMySQL connectionObj = new ConnectMySQL();
 		    AssetDetailsBO assetDetails = new AssetDetailsBO();
-		    String query ="select JSON_UNQUOTE(json_extract(TxnData,'$.MSG_ID')) as MSG_ID,JSON_UNQUOTE(json_extract(TxnData,'$.CURRENT_FUEL_AVAILABLE_IN_TANK')) as fuel_Level from asset_monitoring_snapshot where (json_extract(TxnData,'$.MSG_ID') = '022' or json_extract(TxnData,'$.MSG_ID') ='023') and Serial_Number='"+ serialNumber+"'";
+		    String query ="select JSON_UNQUOTE(json_extract(TxnData,'$.MSG_ID')) as MSG_ID,JSON_UNQUOTE(json_extract(TxnData,'$.CURRENT_FUEL_AVAILABLE_IN_TANK')) as fuel_Level from asset_monitoring_snapshot where ((json_extract(TxnData,'$.MSG_ID') = '022') or (json_extract(TxnData,'$.MSG_ID') ='023')) and Serial_Number='"+ serialNumber+"'";
 		    iLogger.info(query);
 		    try (Connection con = connectionObj.getConnection();
 				    Statement st = con.createStatement();
@@ -3595,7 +3595,7 @@ import com.wipro.mcoreapp.implementation.AlertSubscriptionImpl;
 		                String msg_id = rs.getString("MSG_ID");
 		                iLogger.info("FuelLevel :"+fuelLevel);
 		                iLogger.info("msg_id :"+msg_id);
-		                if(msg_id=="022" || msg_id=="023")
+		                if(msg_id.equals("022") || msg_id.equals("023"))
 		                {
 		                	assetDetails.setFuelLevel(fuelLevel);
 		                }

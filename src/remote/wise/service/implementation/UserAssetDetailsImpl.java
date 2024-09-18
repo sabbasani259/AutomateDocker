@@ -55,7 +55,12 @@ public class UserAssetDetailsImpl
 		UserAssetDetailsRespContract response = new UserAssetDetailsRespContract();
 		//response.setSerialNumber(assetDetails.getSerialNumber());
 		//20240916 : Prasanna : CR486,CR487 :MSGID 022,023
+		iLogger.info("AssetDetalis : "+assetDetails1.getFuelLevel());
 		response.setFuelLevel(assetDetails1.getFuelLevel());
+		if(assetDetails1.getFuelLevel()==null)
+		{
+			response.setFuelLevel("NA");
+		}
 		response.setAssetClassName(assetDetails.getAssetClassName());
 		//CR256: Added sale date for dislaying on Fleet General - Deepthi
 		response.setAssetGroupName(assetDetails.getAssetGroupName()+"#"+assetDetails.getSaleDate());

@@ -192,7 +192,7 @@ public class AssetPersonalityService
 		}
 
 		//If Failure in insertion, put the message to fault_details table
-		if(response.equalsIgnoreCase("FAILURE"))
+		if(response.toUpperCase().contains("FAILURE"))
 		{
 			if(engineNumber==null)
 				engineNumber="";

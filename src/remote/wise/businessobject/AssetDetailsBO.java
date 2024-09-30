@@ -135,13 +135,6 @@ import com.wipro.mcoreapp.implementation.AlertSubscriptionImpl;
 		String iccidNumber;
 		//20240916 : Prasanna : CR486,CR487 :MSGID 022,023
 		String fuelLevel;
-		String msg_id;
-		public String getMsg_id() {
-			return msg_id;
-		}
-		public void setMsg_id(String msg_id) {
-			this.msg_id = msg_id;
-		}
 		public String getFuelLevel() {
 			return fuelLevel;
 		}
@@ -3571,6 +3564,7 @@ import com.wipro.mcoreapp.implementation.AlertSubscriptionImpl;
 		//************************************************ End of Get AssetprofileDetails ****************************************************
 	
 	
+		@SuppressWarnings("unused")
 		public AssetDetailsBO getFuel(String serialNumber) {
 		    Session session = HibernateUtil.getSessionFactory().openSession();
 		    session.beginTransaction();
@@ -3580,7 +3574,7 @@ import com.wipro.mcoreapp.implementation.AlertSubscriptionImpl;
 		    Logger iLogger = InfoLoggerClass.logger;
 		    ConnectMySQL connectionObj = new ConnectMySQL();
 		    AssetDetailsBO assetDetails = new AssetDetailsBO();
-		    String query ="select JSON_UNQUOTE(json_extract(TxnData,'$.MSG_ID')) as MSG_ID,JSON_UNQUOTE(json_extract(TxnData,'$.CURRENT_FUEL_AVAILABLE_IN_TANK')) as fuel_Level from asset_monitoring_snapshot where ((json_extract(TxnData,'$.MSG_ID') = '022') or (json_extract(TxnData,'$.MSG_ID') ='023')) and Serial_Number='"+ serialNumber+"'";
+		    String query ="select JSON_UNQUOTE(json_extract(TxnData,'$.CURRENT_FUEL_AVAILABLE_IN_TANK')) as fuel_Level from asset_monitoring_snapshot where Serial_Number='"+ serialNumber+"'";
 		    iLogger.info(query);
 		    try (Connection con = connectionObj.getConnection();
 				    Statement st = con.createStatement();
@@ -3592,16 +3586,14 @@ import com.wipro.mcoreapp.implementation.AlertSubscriptionImpl;
 		                throw new CustomFault("Invalid Serial Number");
 		            }
 		                String fuelLevel = rs.getString("fuel_Level");
-		                String msg_id = rs.getString("MSG_ID");
 		                iLogger.info("FuelLevel :"+fuelLevel);
-		                iLogger.info("msg_id :"+msg_id);
-		                if(msg_id.equals("022") || msg_id.equals("023"))
+		                if(fuelLevel!=null || fuelLevel!="")
 		                {
 		                	assetDetails.setFuelLevel(fuelLevel);
 		                }
 		                else
 		                {
-		                	assetDetails.setFuelLevel("NA");
+		                	assetDetails.setFuelLevel(" ");
 		                }
 		                
 		    	}
@@ -3927,49 +3919,67 @@ import com.wipro.mcoreapp.implementation.AlertSubscriptionImpl;
 				String dealerCode = null;
 				int productId = 0;
 				String installDateStr = null;
-				String vin;
-			    String selectVinQuery ="SELECT a.serial_number, a.install_date, ac.mapping_code FROM asset a "
-						+ " INNER JOIN asset_owner_snapshot aos on a.serial_number=aos.serial_number "
-						+ " INNER JOIN account ac on ac.account_id=aos.account_id "
-						+ " WHERE aos.account_type='Dealer' and ac.status=1 and a.serial_number like '%" + serialNumber + "%'";
-			    
-			    iLogger.info("selectVinQuery:" + selectVinQuery);
-				ConnectMySQL connFactory = new ConnectMySQL();
-				try (Connection conn = connFactory.getConnection();
-						Statement st = conn.createStatement();
-						ResultSet rs = st.executeQuery(selectVinQuery)) {
+				String vin = null;
 
-					while (rs.next()) {
-						vin = rs.getString("serial_number");
-						installDate = rs.getDate("Install_Date");
-						dealerCode = rs.getString("mapping_code");
-					}
-				// Check if installDate is not null
-				if (installDate != null) {
-					 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); // Example format
-				        installDateStr = sdf.format(installDate);
-				        String updateQueryString = "UPDATE asset_service_schedule SET alert_gen_flag = 0 WHERE SerialNumber ='"+serialNumber+"'";
-				        int rowsAffected = st.executeUpdate(updateQueryString); 
-					    iLogger.info(updateQueryString);
-					 // 5.5 Add service schedule for the machine
-						String response = new InstallationDateDetailsImpl().setAssetserviceSchedule(serialNumber, installDateStr,
-								dealerCode, "", "", true);
-						if (!response.contains("SUCCESS")) {
-							iLogger.info("Failure occured in setting up Service Schedule for VIN " + serialNumber);
-							status = "FAILURE:Failure occured in setting up Service Schedule for VIN " + serialNumber;
-							return status;
-						}				   
-				} 
-				else {
-				    System.out.println("Install Date is not available.");
+				String selectVinQuery = "SELECT a.serial_number, a.install_date, ac.mapping_code, a.Product_ID FROM asset a " +
+				                         "INNER JOIN asset_owner_snapshot aos ON a.serial_number = aos.serial_number " +
+				                         "INNER JOIN account ac ON ac.account_id = aos.account_id " +
+				                         "WHERE aos.account_type = 'Dealer' AND ac.status = 1 AND a.serial_number  like '%"+serialNumber+"'";
+
+				iLogger.info("selectVinQuery: " + selectVinQuery);
+				ConnectMySQL connFactory = new ConnectMySQL();
+				Connection conn = connFactory.getConnection();
+				Statement st = conn.createStatement();
+
+				try (ResultSet rs = st.executeQuery(selectVinQuery)) {
+				    if (rs.next()) {
+				        vin = rs.getString("serial_number");
+				        installDate = rs.getDate("install_date");
+				        dealerCode = rs.getString("mapping_code");
+				        productId = rs.getInt("Product_ID");
+				        iLogger.info("productID"+productId);
+				    }
+
+				    String query = "SELECT ass.serialnumber, ss.serviceScheduleId " +
+				                   "FROM asset_service_schedule ass " +
+				                   "INNER JOIN service_schedule ss ON ass.Service_Schedule_Id = ss.serviceScheduleId " +
+				                   "INNER JOIN products p ON p.Asset_Type_ID = ss.Asset_Type_ID " +
+				                   "WHERE ass.serialnumber = '" + vin + "' AND p.Product_ID = '" + productId + "' AND ass.alert_gen_flag = 1";
+
+				    iLogger.info("query: " + query);
+				    try (ResultSet rs1 = st.executeQuery(query)) {
+				    	if (rs1.next()) {
+			                // If any data is found 
+				    		 iLogger.info("Service schedule already exists for VIN: " + vin);
+			                }
+				    	else
+				    	{
+				    		// No service schedule found
+				            if (installDate != null) {
+				                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				                installDateStr = sdf.format(installDate);
+				                String updateQueryString = "UPDATE asset_service_schedule SET alert_gen_flag = 0 WHERE SerialNumber = '" + serialNumber + "'";
+				                int rowsAffected = st.executeUpdate(updateQueryString);
+				                iLogger.info(updateQueryString);
+
+				                // Add service schedule for the machine
+				                String response = new InstallationDateDetailsImpl().setAssetserviceSchedule(serialNumber, installDateStr,
+				                        dealerCode, "", "", true);
+				                if (!response.contains("SUCCESS")) {
+				                    iLogger.info("Failure occurred in setting up Service Schedule for VIN " + serialNumber);
+				                    status = "FAILURE: Failure occurred in setting up Service Schedule for VIN " + serialNumber;
+				                }
+				            } else {
+				                iLogger.info("Install Date is not available.");
+				            }			
+				    	}
+				     }
+			            	    
+				} catch (Exception e) {
+				    e.printStackTrace();
+				    status = "FAILURE";
+				    fLogger.fatal("Exception occurred: " + e.getMessage());
 				}
-			}
-				catch (Exception e) {
-					e.printStackTrace();
-					status = "FAILURE";
-					fLogger.fatal("Exception occurred : " + e.getMessage());
-				}
-				
 				if(! (session.isOpen() ))
 				{
 					session = HibernateUtil.getSessionFactory().getCurrentSession();

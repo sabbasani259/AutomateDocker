@@ -1,5 +1,6 @@
 /*
  * CR447 : 20240108 : Dhiraj K : Column addition in offline Comm Report
+ * * CR490 : 20240903 : Sai Divya : Column addition in offline Comm Report
  */
 package remote.wise.dao;
 
@@ -57,7 +58,7 @@ public class InsertComRepoEnchIntoCVSFileDAO {
 						"Lat", "Lon", "City", "State", "device_status", "SIM_No", "Network provider", "renew_state",
 						"country", "plant", "extended_warranty", "Comm_State", "Comm_District", "Comm_City",
 						"Comm_Address", "Machine type", "NIP", "version", "BP_code" ,"Altitude in Meters"  , "Customer Contact No",
-						"Usage Category","Sale Date","Warranty Type"};//CR446.n
+						"Usage Category","Sale Date","Warranty Type","Pin Code","Tehsil"};//CR446.n
 
 				writer.writeNext(header);
 				while (loopFlag < count) {
@@ -108,6 +109,9 @@ public class InsertComRepoEnchIntoCVSFileDAO {
 						//CR475.n
 						String SaleDate;
 						String WarrantyType;
+						//CR490.n
+						String Sub_District;
+						String Pin_Code;
 						SerialNumber = rs1.getString("Serial_Number");
 						if (rs1.getString("Profile") != null) {
 							profile = rs1.getString("Profile");
@@ -344,11 +348,29 @@ public class InsertComRepoEnchIntoCVSFileDAO {
 							WarrantyType="NA";
 						}
 						//CR447.en
+						//CR490.sn
+						if(rs1.getString("Pin_Code")==null || "undefined".equals(rs1.getString("Pin_Code")))
+						{
+							Pin_Code="NA";
+						}
+						else
+						{
+							Pin_Code=rs1.getString("Pin_Code");
+						}
+						if(rs1.getString("Sub_District")==null || "undefined".equals(rs1.getString("Sub_District")))
+						{
+							Sub_District="NA";
+						}
+						else
+						{
+							Sub_District=rs1.getString("Sub_District");
+						}
+						//CR490.en
 						String[] data1 = { SerialNumber, profile, model, Zone, DealerName, Owner, tmh, version,
 								Pkt_Created_TS, Pkt_Recd_TS, Roll_Off_Date, Installed_date, Lat, Lon, City, State,
 								device_status, SIM_No, networkprovider, renew_state, country, plant, extended_warranty,
 								Comm_State, Comm_District, Comm_City, Comm_Address, machineType, NIP, mipVersion,
-								BP_code , altitude , customerContact, usageCategory,SaleDate,WarrantyType };
+								BP_code , altitude , customerContact, usageCategory,SaleDate,WarrantyType,Pin_Code,Sub_District };
 					
 						writer.writeNext(data1);
 					}

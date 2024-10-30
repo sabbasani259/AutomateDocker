@@ -36,8 +36,11 @@ public class ServiceClouserBO {
 		Connection conn = null;
 		Statement stmt = null;
 		Statement stmt1 = null;
+		Statement stmt2 = null;
 		ResultSet rs = null;
 		ResultSet rs1 = null;
+		ResultSet rs2 = null;
+		String serialNumber = null;
 		List<String> completedByChoices= new LinkedList<String>();
 		try
 		{
@@ -53,7 +56,7 @@ public class ServiceClouserBO {
 			{
 					int serviceScheduleId_Int = (Integer) rs.getObject("Service_Schedule_Id");
 					String serviceName = (String)rs.getObject("serviceName");
-					String serialNumber = (String)rs.getObject("Serial_Number");
+					 serialNumber = (String)rs.getObject("Serial_Number");
 					String hoursSchedule= String.valueOf(rs.getObject("EngineHours_Schedule"));
 					String durationSchedule= String.valueOf(rs.getObject("Duration_Schedule"));
 					
@@ -65,7 +68,20 @@ public class ServiceClouserBO {
 					serviceDetails.put("serviceSchdule", hoursSchedule+" Hours and "+durationSchedule+" Days");
 
 			}
-			
+			//20241016 : Sai Divya : CR488 : Total Machines Hours which are present in a fleet tab added in Engine Hour section.sn
+			 // If serialNumber is not null, fetch CMH value
+			iLogger.info(serialNumber);
+	        if (serialNumber != null) {
+	            String jsonQuery = "SELECT JSON_UNQUOTE(json_extract(TxnData, '$.CMH')) AS CMH FROM asset_monitoring_snapshot WHERE Serial_Number = '" + serialNumber + "'";
+	            stmt2 = conn.createStatement();
+	            rs2 = stmt2.executeQuery(jsonQuery);
+	            if (rs2.next()) {
+	                String cmhValue = rs2.getString("CMH");
+	                iLogger.info(cmhValue);
+	                serviceDetails.put("engineHrs", cmhValue);
+	            }
+	        }
+	      //20241016 : Sai Divya : CR488 : Total Machines Hours which are present in a fleet tab added in Engine Hour section.en
 			String qry="Select * from Service_Closure_Action";
 			rs1 = stmt1.executeQuery(qry);
 			while(rs1.next())
@@ -95,6 +111,12 @@ public class ServiceClouserBO {
 				} catch (SQLException e1) {
 					e1.printStackTrace();
 				}
+			if(rs2!=null)
+				try {
+					rs2.close();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
 
 			if(stmt!=null)
 				try {
@@ -106,6 +128,13 @@ public class ServiceClouserBO {
 			if(stmt1!=null)
 				try {
 					stmt1.close();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			if(stmt2!=null)
+				try {
+					stmt2.close();
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -208,8 +237,11 @@ public class ServiceClouserBO {
 					inputObject.getFileRef()+","+"" +
 					inputObject.getMessageId()+","+inputObject.getProcess()+","+inputObject.getReprocessJobCode());
 			
-		String	responseStatus= new ServiceHistoryImpl().setServiceHistoryDetails(serialNumber,accountCode,jobCardNo,DBMS_partCode,serviceDate, null,callTypeId, null);
-		iLogger.info("responseStatus for serial "+responseStatus+"...."+serialNumber);
+		//String	responseStatus= new ServiceHistoryImpl().setServiceHistoryDetails(serialNumber,accountCode,jobCardNo,DBMS_partCode,serviceDate, null,callTypeId, null);
+			//20241022 : Sai Divya : CR488 :added completedBy
+			String	responseStatus= new ServiceHistoryImpl().setServiceHistoryDetails(serialNumber,accountCode,jobCardNo,DBMS_partCode,serviceDate, null,callTypeId, null,completedBy);
+
+			iLogger.info("responseStatus for serial "+responseStatus+"...."+serialNumber);
 
 			ServiceHistoryQHandler queueObj = new ServiceHistoryQHandler();
 			

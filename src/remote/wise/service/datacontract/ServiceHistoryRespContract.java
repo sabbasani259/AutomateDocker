@@ -8,7 +8,15 @@ public class ServiceHistoryRespContract {
 	private String serviceDate;
 	//DF20180423:IM20018382 - Adding additional field jobCardDetails.
 	private String jobCardDetails;
-	
+	// CR488.sn 
+		private String completedBy;
+		// CR488.en
+		public String getCompletedBy() {
+			return completedBy;
+		}
+		public void setCompletedBy(String completedBy) {
+			this.completedBy = completedBy;
+		}
 	//DF20180423:IM20018382 - Validating additional field jobCardDetails.
 	public String getJobCardDetails() {
 		return jobCardDetails;

@@ -114,7 +114,69 @@ public class ServiceDetailsBO {
 	private String engineTypeName;
 	private String asset_group_name;
 	private String asset_type_name;
+	// CR488.sn 
+			private String completedBy;
+			private String Service_Ticket_Number;
+			private String retail_invoice;
+			private String foc_invoice;
+			private String Name_Of_Retailer;
+			private String Mobile_No_Of_Retailer;
+			// CR488.en
+			
+			@Override
+			public String toString() {
+				return "ServiceDetailsBO [completedBy=" + completedBy + ", Service_Ticket_Number=" + Service_Ticket_Number
+						+ ", retail_invoice=" + retail_invoice + ", foc_invoice=" + foc_invoice + ", Name_Of_Retailer="
+						+ Name_Of_Retailer + ", Mobile_No_Of_Retailer=" + Mobile_No_Of_Retailer + "]";
+			}
 
+			public String getCompletedBy() {
+				return completedBy;
+			}
+
+			public void setCompletedBy(String completedBy) {
+				this.completedBy = completedBy;
+			}
+
+			public String getService_Ticket_Number() {
+				return Service_Ticket_Number;
+			}
+
+			public void setService_Ticket_Number(String service_Ticket_Number) {
+				Service_Ticket_Number = service_Ticket_Number;
+			}
+
+			public String getRetail_invoice() {
+				return retail_invoice;
+			}
+
+			public void setRetail_invoice(String retail_invoice) {
+				this.retail_invoice = retail_invoice;
+			}
+
+			public String getFoc_invoice() {
+				return foc_invoice;
+			}
+
+			public void setFoc_invoice(String foc_invoice) {
+				this.foc_invoice = foc_invoice;
+			}
+
+			public String getName_Of_Retailer() {
+				return Name_Of_Retailer;
+			}
+
+			public void setName_Of_Retailer(String name_Of_Retailer) {
+				Name_Of_Retailer = name_Of_Retailer;
+			}
+
+			public String getMobile_No_Of_Retailer() {
+				return Mobile_No_Of_Retailer;
+			}
+
+			public void setMobile_No_Of_Retailer(String mobile_No_Of_Retailer) {
+				Mobile_No_Of_Retailer = mobile_No_Of_Retailer;
+			}
 	public EngineTypeEntity getEngineTypeEntity(int engineTypeId) {
 		EngineTypeEntity EngineTypeEntity = new EngineTypeEntity(engineTypeId);
 		return EngineTypeEntity;
@@ -2585,36 +2647,140 @@ public class ServiceDetailsBO {
 		return scheduledDate;
 	}
 
+//	@SuppressWarnings("rawtypes")
+//	public List<ServiceDetailsBO> getServiceHistory(String serialNumber) {
+//		List<ServiceDetailsBO> serviceHistoryList = new LinkedList<ServiceDetailsBO>();
+//
+//		Session session = HibernateUtil.getSessionFactory().openSession();
+//		session.beginTransaction();
+//
+//		try
+//		{
+//			Query q = session
+//					.createQuery("from ServiceHistoryEntity where serialNumber ='"
+//							+ serialNumber + "' Order By serviceDate desc limit 5");
+//			Iterator itr = q.list().iterator();
+//
+//			while (itr.hasNext()) {
+//				ServiceHistoryEntity historyEntity = (ServiceHistoryEntity) itr
+//						.next();
+//
+//				ServiceDetailsBO serviceDetailBO = new ServiceDetailsBO();
+//
+//				serviceDetailBO.setJobCardNumber(historyEntity
+//						.getServiceTicketNumber());
+//				serviceDetailBO.setServiceDate(historyEntity.getServiceDate());
+//				serviceDetailBO.setServiceName(historyEntity.getServiceName());
+//				serviceDetailBO.setScheduleName(historyEntity.getScheduleName());
+//				//DF20180423:IM20018382 - Fetching additional field jobCardDetails set as comments in service_history table.
+//				serviceDetailBO.setJobCardDetails(historyEntity.getComments());
+//				serviceHistoryList.add(serviceDetailBO);
+//			}
+//		}
+//
+//		//DefectId:1200 - Rajani Nagaraju -20130917 - Session was not getting closed
+//		catch (Exception e) {
+//			e.printStackTrace();
+//
+//		}
+//		finally {
+//			if (session.getTransaction().isActive())
+//				session.getTransaction().commit();
+//
+//			if (session.isOpen())
+//			{
+//				session.flush();
+//				session.close();
+//				//HibernateUtil.closeSession();
+//
+//			}
+//		}
+//		return serviceHistoryList;
+//	}
+	
 	@SuppressWarnings("rawtypes")
 	public List<ServiceDetailsBO> getServiceHistory(String serialNumber) {
 		List<ServiceDetailsBO> serviceHistoryList = new LinkedList<ServiceDetailsBO>();
-
+		Logger infoLogger = InfoLoggerClass.logger;
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		session.beginTransaction();
 
 		try
 		{
-			Query q = session
-					.createQuery("from ServiceHistoryEntity where serialNumber ='"
-							+ serialNumber + "' Order By serviceDate desc limit 5");
-			Iterator itr = q.list().iterator();
+				//Sai Divya : CR486 : 20241017 :added completedBy column.sn
+				ConnectMySQL connectionObj = new ConnectMySQL();
+//				String query = "SELECT * FROM Service_Closure_Details WHERE Service_Ticket_Number = '"
+//						+ historyEntity.getServiceTicketNumber() + "'";
+				String query="select * from service_history sh left outer join Service_Closure_Details sd on sh.serviceTicketNumber=sd.Service_Ticket_Number " + 
+						" where sh.serialNumber='"+serialNumber+"'";
+				infoLogger.info(query);
+				try (Connection con = connectionObj.getConnection();
+						Statement st = con.createStatement();
+						ResultSet rs = st.executeQuery(query)) {
 
-			while (itr.hasNext()) {
-				ServiceHistoryEntity historyEntity = (ServiceHistoryEntity) itr
-						.next();
+					// Iterate over the result set and populate ServiceDetailBO object
+					while (rs.next()) {
+						ServiceHistoryEntity historyEntity = new ServiceHistoryEntity();
+						ServiceDetailsBO serviceDetailBO = new ServiceDetailsBO();
+						 serviceDetailBO.setJobCardNumber(rs.getString("Service_Ticket_Number"));
+						 Timestamp serviceDate = rs.getTimestamp("serviceDate");
+						 historyEntity.setServiceDate(serviceDate);
+						 serviceDetailBO.setServiceDate(serviceDate);
+				            serviceDetailBO.setServiceName(rs.getString("serviceName"));
+				            serviceDetailBO.setScheduleName(rs.getString("scheduleName"));
+				            serviceDetailBO.setJobCardDetails(rs.getString("comments"));
 
-				ServiceDetailsBO serviceDetailBO = new ServiceDetailsBO();
+						infoLogger.info(rs.getString("Completed_By"));
+						// Create a new instance for each row
+						ServiceClosureDetailsBO obj = new ServiceClosureDetailsBO();
 
-				serviceDetailBO.setJobCardNumber(historyEntity
-						.getServiceTicketNumber());
-				serviceDetailBO.setServiceDate(historyEntity.getServiceDate());
-				serviceDetailBO.setServiceName(historyEntity.getServiceName());
-				serviceDetailBO.setScheduleName(historyEntity.getScheduleName());
-				//DF20180423:IM20018382 - Fetching additional field jobCardDetails set as comments in service_history table.
-				serviceDetailBO.setJobCardDetails(historyEntity.getComments());
-				serviceHistoryList.add(serviceDetailBO);
-			}
-		}
+						// Set all values from the result set into the entity object
+						obj.setService_Ticket_Number(rs.getString("Service_Ticket_Number"));
+						obj.setFoc_invoice(rs.getString("foc_invoice"));
+						obj.setRetail_invoice(rs.getString("retail_invoice"));
+						obj.setName_Of_Retailer(rs.getString("Name_Of_Retailer"));
+						obj.setMobile_No_Of_Retailer(rs.getString("Mobile_No_Of_Retailer"));
+						obj.setCompletedBy(rs.getString("Completed_By"));
+						if("dealership".equalsIgnoreCase(rs.getString("Completed_By")))
+						{
+						String completedBy = String.format("%s, FOC Invoice:%s, Retail Invoice:%s",
+							    obj.getCompletedBy(),
+							    obj.getFoc_invoice(),
+							    obj.getRetail_invoice()
+							   
+							);
+						serviceDetailBO.setCompletedBy(completedBy);
+						}
+						else if("retailer".equalsIgnoreCase(rs.getString("Completed_By")))
+						{
+						String completedBy = String.format("%s, Name of Retailer:%s, Mobile No of Retailer:%s",
+							    obj.getCompletedBy(),
+							    obj.getName_Of_Retailer(),
+							    obj.getMobile_No_Of_Retailer()
+							   
+							);
+						serviceDetailBO.setCompletedBy(completedBy);
+						}
+						else if("Service Skip".equalsIgnoreCase(rs.getString("Completed_By")))
+						{
+							String completedBy=String.format("%s",
+									obj.getCompletedBy());
+							serviceDetailBO.setCompletedBy(completedBy);
+						}
+						else
+						{
+							String completedBy=String.format("%s",
+									"NA");
+							serviceDetailBO.setCompletedBy(completedBy);
+						}
+						// Add the populated object to the list
+						serviceHistoryList.add(serviceDetailBO);
+					}
+
+				}
+				//Sai Divya : CR486 : 20241017 :added completedBy column.sn
+
+	}
 
 		//DefectId:1200 - Rajani Nagaraju -20130917 - Session was not getting closed
 		catch (Exception e) {
@@ -3942,6 +4108,629 @@ public class ServiceDetailsBO {
 
 		return status;
 	}
+	
+	
+	//20241022 : Sai Divya : CR488 :added additonal field completedBy
+		public String setServiceDetails(String serialNumber, String dealerCode, String jobCardNumber,String dbmsPartCode,  String servicedDate,String jobCardDetails, String callTypeId, String messageId,String completedBy)
+		{
+			String status ="SUCCESS-Record Processed";
+
+			//Logger fatalError = Logger.getLogger("fatalErrorLogger");
+			//Logger businessError = Logger.getLogger("businessErrorLogger");
+			int clientId = 0;
+			String engineHours = null;
+			
+			//DF20190311 - Abhishek Deshmukh - To close service in MoolDA reports.
+			String countryCode=null;
+			Logger iLogger = InfoLoggerClass.logger;
+			Logger fLogger = FatalLoggerClass.logger;
+
+			Logger bLogger = BusinessErrorLoggerClass.logger; 
+			int segmentID = 0;
+
+			iLogger.info("ServiceHistory: ServiceDetailsBO: setServiceDetails:serialNumber:"+serialNumber+" :dealerCode: "+dealerCode+ " :jobCardNumber: "+jobCardNumber+ ":dbmsPartCode: "+dbmsPartCode+ " :servicedDate: "+servicedDate+" :jobCardDetails: "+jobCardDetails+ ":callTypeId:" +callTypeId + " :messageId: "+ messageId);
+			DateFormat dateStr = new SimpleDateFormat("yyyy-MM-dd");
+			Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+
+			iLogger.info("ServiceHistory: session acquired successfully ");
+			//DF20150603 - Rajani Nagaraju - WISE going down issue - Open a new session when the getCurrentSession returns a dirty session(txns which is not yet committed exists)
+			if(session.getTransaction().isActive() && session.isDirty())
+			{
+				iLogger.info("Opening a new session");
+				session = HibernateUtil.getSessionFactory().openSession();
+			}
+			session.beginTransaction();
+			Connection prodConn1=null;
+			Statement stmnt1=null;
+			PreparedStatement preparedStmt_1=null;
+			Connection prodConnAESQ=null;
+			Statement stmntAESQ=null;
+			try
+			{
+				//Validate the serialNumber
+				/*DomainServiceImpl domainService = new DomainServiceImpl();
+				 AssetEntity assetEntity = domainService.getAssetEntity(serialNumber);*/
+
+				//DF20150608 - Rajani Nagaraju - Session Closed Exception on processing service history record
+				AssetEntity assetEntity=null;
+				
+				
+				
+				Query serialNumQ = session.createQuery(" from AssetEntity where serial_number='"+serialNumber+"'");
+				Iterator serialNumItr = serialNumQ.list().iterator();
+				while(serialNumItr.hasNext())
+				{
+					assetEntity = (AssetEntity)serialNumItr.next();
+				}
+
+				if(assetEntity==null || assetEntity.getSerial_number()==null)
+				{
+					/*if(serialNumber.trim().length() >7)
+					{
+								serialNumber = serialNumber.substring(serialNumber.length()-7 , serialNumber.length());
+					}*/
+
+
+
+					//DF20140715 - Rajani Nagaraju - Remove Preceeding zeros in Machine Number
+					serialNumber=serialNumber.replaceFirst("^0+(?!$)", "");
+					Query qryMacNo =session.createQuery("from AssetEntity a where a.machineNumber='"+serialNumber+"'");
+					Iterator itrMacNo=qryMacNo.list().iterator();
+					while(itrMacNo.hasNext())
+					{
+						assetEntity = (AssetEntity) itrMacNo.next();		
+
+						//DF20190311 - Abhishek Deshmukh - To close service in MoolDA reports.
+						countryCode = assetEntity.getCountrycode();
+						
+						//DF20140805 - Rajani Nagaraju - Updating Serial Number from Machine Number
+						serialNumber=assetEntity.getSerial_number().getSerialNumber();
+						segmentID = assetEntity.getSegmentId();
+					}
+
+				}
+
+				if(assetEntity==null || assetEntity.getSerial_number()==null)
+				{
+					AssetControlUnitEntity assetControl=null;
+					Query assetControlQ = session.createQuery(" from AssetControlUnitEntity where serialNumber like '%"+serialNumber+"%'");
+					Iterator assetControlItr = assetControlQ.list().iterator();
+					while(assetControlItr.hasNext())
+					{
+						assetControl= (AssetControlUnitEntity)assetControlItr.next();
+					}
+
+					if(assetControl==null)
+					{
+						status = "FAILURE-PIN Registration Data not received";
+						bLogger.error("EA Processing: AssetServiceDetails: "+messageId+" : PIN Registration Data not received");
+						return status;
+					}
+					else
+					{
+						status = "FAILURE-Roll off Data not received";
+						bLogger.error("EA Processing: AssetServiceDetails: "+messageId+" : Roll off Data not received");
+						return status;
+					}
+
+				}
+
+				//Validate DealerCode - Get the dealer Entity for the given dealerCode
+				Query dealerQuery = session.createQuery("from AccountEntity where status=true and accountCode='"+dealerCode+"'");
+				Iterator itr = dealerQuery.list().iterator();
+				AccountEntity dealerEntity = null;
+				while(itr.hasNext())
+				{
+					dealerEntity = (AccountEntity) itr.next();
+				}
+
+				if(dealerEntity==null)
+				{
+					bLogger.error("Dealer Master data is not received for the Dealer:"+dealerCode);
+					throw new CustomFault("Dealer Master data is not received for the Dealer:"+dealerCode);
+				}
+
+
+				//Parse the serviced date
+				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+				Timestamp vinServicedDate =null;
+				try
+				{
+					vinServicedDate = new Timestamp(dateFormat.parse(servicedDate).getTime());
+				}
+				catch(Exception e)
+				{
+					status = "FAILURE-"+e.getMessage();
+					bLogger.error("EA Processing: AssetServiceDetails: "+messageId+" : Date Parse Exception for Serviced Date"+e);
+					return status;
+				}
+
+				//Check if there are any Active Service Alert for the VIN
+				int ServiceEventTypeId = 0;
+				Properties prop = new Properties();
+				prop.load(getClass().getClassLoader().getResourceAsStream("remote/wise/resource/properties/configuration.properties"));
+				ServiceEventTypeId= Integer.parseInt(prop.getProperty("ServiceEventTypeId"));
+				//int flag =0;
+
+				//DF20150923 - Rajani Nagaraju - JCB0321,JCB0339 Service Alert Completion should close all the active service alerts for previous scehdules (if any) as well
+				//Also there was a problem in wrong serviceNames getting updated in ServiceHistory record
+				//-----------------STEP 1: Get the List of service schedules for which the active alert has to be closed
+				iLogger.info("ServiceHistory: Trying to ge the schedule id list for vin : "+serialNumber);
+				Query serviceListQ = session.createQuery("select b from AssetServiceScheduleEntity a, ServiceScheduleEntity b" +
+						" where a.serviceScheduleId=b.serviceScheduleId and a.serialNumber='"+serialNumber+"'" +
+						" order by b.engineHoursSchedule desc ");
+				Iterator serviceListItr = serviceListQ.list().iterator();
+				List<String> scheduleIdList = new LinkedList<String>();
+				String serviceName = null;
+				String scheduleName =null;
+				int assetEventId =0;
+				int eventId = 0;
+	 			String eventSeverity=null;
+	 			String eventGeneratedTime = null;
+	 			Timestamp eventClosedTime= new Timestamp(new Date().getTime());
+				//added by S Suresh to insert newly added column service schedule ID into the service history table 
+				int serviceScheduleID = 0;
+				int addRec=0;
+				while(serviceListItr.hasNext())
+				{
+					ServiceScheduleEntity serviceSch = (ServiceScheduleEntity)serviceListItr.next();
+					if((serviceSch.getDbmsPartCode().equalsIgnoreCase(dbmsPartCode))&&(String.valueOf(serviceSch.getCallTypeId()).equalsIgnoreCase(callTypeId)))
+					{
+						addRec=1;
+						//	 scheduleIdList.add(String.valueOf(serviceSch.getServiceScheduleId()));
+
+						serviceName = serviceSch.getServiceName();
+						scheduleName = serviceSch.getScheduleName();
+						serviceScheduleID = serviceSch.getServiceScheduleId();
+					}
+
+					if(addRec==1)
+						scheduleIdList.add(String.valueOf(serviceSch.getServiceScheduleId()));
+
+				}
+				iLogger.info("ServiceHistory: scheduleIdList: "+scheduleIdList);
+				if(scheduleIdList.isEmpty())
+				{
+					/* fLogger.fatal("No service schedule defined for the VIN with the given DBMS part Code and the CallTypeId");
+					 status = "FAILURE-No service schedule defined for the VIN with the given DBMS part Code and the CallTypeId";
+					 return status;*/
+					iLogger.info("ServiceHistory :No service schedule defined for the VIN with the given DBMS part Code and the CallTypeId for vin : "+serialNumber);
+					throw new CustomFault("No service schedule defined for the VIN with the given DBMS part Code and the CallTypeId");
+				}
+
+
+				//-----------------STEP 2: Close any active service alert on the machine for the schedules <= current received schedule
+				ListToStringConversion conversionObj = new  ListToStringConversion();
+				String scheduleIdListAsString = conversionObj.getStringList(scheduleIdList).toString();
+				Query alertClosureQ = session.createQuery(" from AssetEventEntity where serialNumber='"+serialNumber+"' and eventTypeId="+ServiceEventTypeId +
+						" and activeStatus=1 and serviceScheduleId in ("+scheduleIdListAsString+")");
+				Iterator alertClosureItr = alertClosureQ.list().iterator();
+				iLogger.info("ServiceHistory: Trying to close the alert in asset event: "+serialNumber);
+				while(alertClosureItr.hasNext())
+				{
+					AssetEventEntity assetEvent = (AssetEventEntity)alertClosureItr.next();
+					assetEvent.setActiveStatus(0);
+					assetEvent.setEventClosedTime(eventClosedTime);
+					
+					//DF20190311- Retreving asset event Id to close MoolDA Reports.
+					assetEventId = assetEvent.getAssetEventId();
+					eventSeverity = assetEvent.getEventSeverity();
+					eventId = assetEvent.getEventId().getEventId();
+					eventGeneratedTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(assetEvent.getEventGeneratedTime());
+					
+					//DF20190110- Updating partition key and source.
+					assetEvent.setUpdateSource("WISE");
+					if(assetEvent.getEventGeneratedTime() != null){
+						Date date = new Date();
+						date.setTime(assetEvent.getEventGeneratedTime().getTime());
+						String partitionKey = new SimpleDateFormat("yyyyMM").format(date);
+						assetEvent.setPartitionKey(Integer.parseInt(partitionKey));
+					}
+
+					//DF20160906 @Roopa fix for deleting the records from asset_event table when the service history record is received
+					//session.save(assetEvent);
+					session.update(assetEvent);
+					iLogger.info("ServiceHistory: asset event table updated successfully: "+serialNumber);
+				}
+
+				if(session!=null && session.isOpen()){
+					if(session.getTransaction().isActive())
+					{
+						session.getTransaction().commit();
+					}
+
+					if(session!=null && session.isOpen())
+					{
+						session.flush();
+						session.close();
+
+					}
+				}
+
+
+				//20160711 - @suresh new column has been added to the service history table CMH
+				//-----------------STEP 4: get the CMH when the machine got services (service alert closure)
+
+
+
+				/*String cmhQueryString = "select amd.parameterValue " +
+						"from AssetMonitoringSnapshotEntity ams,AssetMonitoringDetailEntity amd " +
+						"where ams.serialNumber = '"+serialNumber+"' and " +
+								" amd.transactionNumber = ams.latestEventTxn and " +
+								"amd.parameterId = 4 ";*/
+
+				/*String cmhQueryString = "select amd.parameterValue " +
+	                    "from AssetMonitoringHeaderEntity amh2,AssetEntity a,AssetMonitoringDetailEntity amd " +
+	                    "where a.serial_number = '"+serialNumber+"' and " +
+	                                "amh2.segmentId = a.segmentId and " +
+	                                "amh2.serialNumber = a.serial_number and " +
+	                                "amh2.transactionTime = (" +
+	                                "select max(amh.transactionTime) as transactionTime " +
+	                                "from asset_monitoring_header amh " +
+	                                "where amh.segmentId = amh2.segmentId and " +
+	                                "amh.Serial_Number = amh2.Serial_Number and amh.transactionTime like '"+servicedDate+"%' ) " +
+	                                "and amd.transactionNumber = amh.transactionNumber and " +
+	                                "amd.parameterId = 4 ";
+
+				String cmh = null;
+
+				Query cmhQuery = session.createQuery(cmhQueryString);
+				Iterator cmhIterator = cmhQuery.list().iterator();
+				while(cmhIterator.hasNext()){
+					cmh = (String) cmhIterator.next();
+				}*/
+
+				/*
+
+				Properties prop1 = new Properties();
+				Properties prop2 = new Properties();
+				int engineHoursId = 0;
+				try {
+					prop1.load(getClass().getClassLoader().getResourceAsStream("remote/wise/resource/properties/configuration.properties"));
+					IndustryBO industryBoObj = new IndustryBO();
+					clientId = industryBoObj.getClientEntity(prop1.getProperty("ClientName")).getClient_id();
+
+					prop2.load(getClass().getClassLoader().getResourceAsStream("remote/wise/resource/properties/configuration.properties"));
+
+					engineHours= prop2.getProperty("TotalEngineHours");
+					if(session == null || !session.isOpen()){
+						session = new HibernateUtil().getSessionFactory().openSession();
+						session.beginTransaction();
+					}
+					itr = session.createQuery("select max(a.parameterId), a.parameterName " +
+							" from MonitoringParameters a " +
+							" where parameterName in " +
+								"( '"
+								+ engineHours
+								+ "')"
+								+ " group by a.parameterName"
+								+ " order by a.parameterId").list().iterator();
+
+					Object[] resultObj = null;
+
+					while (itr.hasNext()) {
+						resultObj = (Object[]) itr.next();
+
+						if ( ((String)resultObj[1]).equalsIgnoreCase(engineHours) ) {
+							engineHoursId = (Integer) resultObj[0]; 
+						}
+
+					} // End of itr
+				//	engineON= prop2.getProperty("EngineON");
+				}catch(Exception e){
+						e.printStackTrace();
+					}
+				finally {
+					if(session!=null || session.isOpen())
+					session.close();
+				}
+				//using DAL Layer to get the amh from dynamic amh table 
+				 Calendar cal = Calendar.getInstance();
+				 cal.setTime(dateStr.parse(servicedDate));
+
+				 Timestamp txnTimestamp = new Timestamp(cal.getTimeInMillis());
+				List parametreIDList = new LinkedList();
+				parametreIDList.add(engineHoursId);
+				DynamicAMH_DAL dalObj = new DynamicAMH_DAL();
+				String cmh = dalObj.getLatestCMH(serialNumber, txnTimestamp,segmentID, parametreIDList);*/
+
+				//DF20160914 @Roopa Fetching CMH data from snapshot table(AMS)
+
+				String cmh=null;
+
+				String txnKey="setServiceDetailsViaExecutor";
+				
+				//DF20180508:KO369761 - Pointing to correct DAL class.
+				/*List<AmsDAO> snapshotObj=new ArrayList<AmsDAO> ();
+
+				DynamicAMS_DAL amsDaoObj=new DynamicAMS_DAL();
+
+				snapshotObj=amsDaoObj.getAMSData(txnKey, serialNumber);*/
+				
+				List<AMSDoc_DAO> snapshotObj=new ArrayList<AMSDoc_DAO> ();
+				snapshotObj=DynamicAMS_Doc_DAL.getAMSData(txnKey, serialNumber);
+				HashMap<String,String> txnDataMap=new HashMap<String, String>();
+
+//				iLogger.debug(txnKey+"::"+"AMS DAL::getAMSData Size:"+snapshotObj.size());
+
+				if(snapshotObj.size()>0){
+
+					//parameters format in AMS
+					//String currParam= LAT|LONG|Enginestatus|Machinehours|ExternalBatteryVoltage|HCT|LOP|InternalBatteryLow
+					
+					//DF20180508:KO369761 - Pointing to correct DAL class.
+					/*String parameters=snapshotObj.get(0).getParameters();
+					String [] currParamList=parameters.split("\\|", -1);
+
+					cmh = currParamList[3];*/
+					
+					txnDataMap=snapshotObj.get(0).getTxnData();
+					
+					if(txnDataMap!=null && txnDataMap.size()>0){
+						cmh = txnDataMap.get("CMH");
+					}
+				}
+
+
+				//-----------------STEP 3: Insert/Update the record for Service Completion into ServiceHistory tables
+
+				if(session == null || !session.isOpen()){
+					session = new HibernateUtil().getSessionFactory().openSession();
+					session.beginTransaction();
+				}
+				Query serviceCompletionQ = session.createQuery("from ServiceHistoryEntity where serviceTicketNumber='"+jobCardNumber+"'");
+				Iterator serviceCompletionItr = serviceCompletionQ.list().iterator();
+				ConnectMySQL connMySql=new ConnectMySQL();
+				Connection conn=null;
+				int update=0;
+				//CR488
+				String serviceTicketNumber=null;
+				while(serviceCompletionItr.hasNext())
+				{
+					update=1;
+
+					ServiceHistoryEntity serviceHistoryObj = (ServiceHistoryEntity)serviceCompletionItr.next();
+					if( ! (serviceHistoryObj.getSerialNumber().getSerial_number().getSerialNumber().equalsIgnoreCase(serialNumber)) )
+					{
+						throw new CustomFault("Same JobCardNumber Details exists for different VIN");
+					}
+					serviceHistoryObj.setDealerId(dealerEntity);
+					serviceHistoryObj.setServiceDate(vinServicedDate);
+					serviceHistoryObj.setDbmsPartCode(dbmsPartCode);
+					//DF20191220:Abhishek::added new column Extended Warranty.
+					serviceHistoryObj.setCallTypeId(callTypeId);
+					serviceHistoryObj.setServiceName(serviceName);
+					serviceHistoryObj.setScheduleName(scheduleName);
+					serviceHistoryObj.setServiceScheduleId(serviceScheduleID);
+					//DF20180423:IM20018382 - An additional field jobCardDetails.
+					serviceHistoryObj.setComments(jobCardDetails);
+					if(cmh!=null)
+						serviceHistoryObj.setCMH(cmh);
+					session.update(serviceHistoryObj);
+				}
+					iLogger.info("ServiceHisotry: Updated ServiceHistoryEntity");
+
+				if(update==0)
+				{
+					ServiceHistoryEntity newServiceRecord = new ServiceHistoryEntity();
+					newServiceRecord.setSerialNumber(assetEntity);
+					newServiceRecord.setServiceTicketNumber(jobCardNumber);
+					newServiceRecord.setDealerId(dealerEntity);
+					newServiceRecord.setServiceDate(vinServicedDate);
+					newServiceRecord.setDbmsPartCode(dbmsPartCode);
+					//DF20191220:Abhishek::added new column Extended Warranty.
+					newServiceRecord.setCallTypeId(callTypeId);
+					newServiceRecord.setServiceName(serviceName);
+					newServiceRecord.setScheduleName(scheduleName);
+					newServiceRecord.setServiceScheduleId(serviceScheduleID);
+					newServiceRecord.setCMH(cmh);
+					//DF20180423:IM20018382 - An additional field jobCardDetails.
+					newServiceRecord.setComments(jobCardDetails);
+					session.save(newServiceRecord);
+				}
+
+				//Sai Divya : CR488 :added completedBy field.sn
+				List<ServiceHistoryEntity> serviceCompletionList=serviceCompletionQ.list();
+				if(!serviceCompletionList.isEmpty())
+				{
+					ServiceHistoryEntity entity= (ServiceHistoryEntity)serviceCompletionList.get(0);
+					serviceTicketNumber=entity.getServiceTicketNumber();
+					iLogger.info("serviceTicketNumber ::"+serviceTicketNumber);
+				}
+				else
+				{
+					iLogger.info("No Records found");
+				}
+
+				PreparedStatement pstmt = null;
+				if (completedBy == null) {
+					fLogger.error("ServiceDetailsBO:setServiceCloserDetails: Mandatory parameter completedBy is null");
+					return "FAILURE";
+				}
+				// Split the completedBy field by commas
+				String[] completedByParts = completedBy.split(",");
+				// Extract values based on their position and expected content
+				String completedBy1 = (completedByParts.length > 0) ? completedByParts[0].trim() : null;
+				String retailInvoice = null;
+				String focInvoice = null;
+				String nameOfRetailer = null;
+				String mobileNoOfRetailer = null;
+
+				// Loop through the split parts to extract data by identifying prefixes
+				for (String part : completedByParts) {
+					part = part.trim();
+					if (part.startsWith("Retail Invoice:")) {
+						retailInvoice = part.replace("Retail Invoice:", "").trim();
+					} else if (part.startsWith("FOC Invoice:")) {
+						focInvoice = part.replace("FOC Invoice:", "").trim();
+					} else if (part.startsWith("Retailer Name:")) {
+						nameOfRetailer = part.replace("Retailer Name:", "").trim();
+					} else if (part.startsWith("Retailer Mobile:")) {
+						mobileNoOfRetailer = part.replace("Retailer Mobile:", "").trim();
+					}
+				}
+				// Log the extracted values
+				fLogger.info("Extracted completedBy: " + completedBy1);
+				fLogger.info("Extracted retailInvoice: " + retailInvoice);
+				fLogger.info("Extracted focInvoice: " + focInvoice);
+				fLogger.info("Extracted nameOfRetailer: " + nameOfRetailer);
+				fLogger.info("Extracted mobileNoOfRetailer: " + mobileNoOfRetailer);
+
+				String insertQuery = "INSERT INTO Service_Closure_Details (Service_Ticket_Number,Completed_By, retail_invoice, foc_invoice,Name_Of_Retailer,Mobile_No_Of_Retailer) VALUES (?, ?, ?,?,?,?)";
+				conn = connMySql.getConnection();  
+				pstmt = conn.prepareStatement(insertQuery);
+				pstmt.setString(1, serviceTicketNumber);
+				pstmt.setString(2, completedBy1);
+				pstmt.setString(3, retailInvoice);
+				pstmt.setString(4, focInvoice);
+				pstmt.setString(5, nameOfRetailer);
+				pstmt.setString(6, mobileNoOfRetailer);
+				iLogger.info(insertQuery);
+				// Execute the insert statement
+				int rowsInserted = pstmt.executeUpdate();
+				if (rowsInserted > 0) {
+					fLogger.info("CompletedBy parts successfully inserted into completed_by_table");
+				}
+				//Sai Divya : CR486 :added completedBy field.en
+				if(session.isOpen())
+					if(session.getTransaction().isActive())
+					{
+						session.getTransaction().commit();
+					}
+				String eventClosedTimeInString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(eventClosedTime);
+
+				//DF20190320:Abhishek Deshmukh:: To close the service alert in asset_event_sanpshot table.
+				String updateAESQ = "update asset_event_snapshot set AlertTxnTimestamp = JSON_SET(AlertTxnTimestamp," +
+
+	                                                                                "'$.\""+eventId+"\"', '"+eventClosedTimeInString+"'), AlertStatus = JSON_SET(AlertStatus, '$.\""+eventId+"\"','0' )," +
+
+	                                                                                "LastUpdatedTime ='"+eventClosedTimeInString+"',UpdateSource='WISE' where SerialNumber='"+serialNumber+"'";
+				iLogger.info("ServiceDetailsBO:setServiceCloserDetails:AssetEventID :"+assetEventId+" : Updating Asset_Event_Snapshot table : "+updateAESQ);
+				prodConnAESQ = connMySql.getConnection();
+				stmntAESQ = prodConnAESQ.createStatement();
+				int row = stmntAESQ.executeUpdate(updateAESQ);
+				if(row>0){
+					iLogger.info("ServiceDetailsBO:setServiceCloserDetails:AssetEventID :"+assetEventId+" : Updated Asset_Event_Snapshot table : "+updateAESQ+" : Rows affected : "+row);
+
+				}
+				else{
+					fLogger.fatal("ServiceDetailsBO:setServiceCloserDetails: Error while updating asset_event_snapshot table. AssetEventID :"+assetEventId+" : Updating Asset_Event_Snapshot table : "+updateAESQ);
+				}
+				
+				//DF20190315:Abhishek Deshmukh:: To close the service in MDA Reports.
+				String moolStatus = setServiceClouserMoolDAReports(serialNumber,assetEventId, countryCode, eventId ,eventSeverity, eventGeneratedTime, servicedDate);
+				
+				if((moolStatus.equalsIgnoreCase("FAILURE")||moolStatus.contains("FAILURE"))&&assetEventId!=0){
+					iLogger.info("ServiceDetailsBO:setServiceCloserDetails:AssetEventID :"+assetEventId+" : Inserting Record in Service_Clouser_MoolDA_Failure table ");
+					  prodConn1 = connMySql.getConnection();
+					  stmnt1 = prodConn1.createStatement();
+					  String service_Clouser="Insert into Service_Clouser_MoolDA_Failure values(?,?,?,?,?,?,?,?)";
+					  iLogger.info("MDA FleetSummaryService :: Query for inserttion in Service_Clouser_MoolDA_Failure :"+service_Clouser);
+					  preparedStmt_1 = prodConn1.prepareStatement(service_Clouser);
+					  preparedStmt_1.setString (1, Integer.toString(assetEventId));
+					  preparedStmt_1.setString (2, countryCode);
+					  preparedStmt_1.setString (3, serialNumber);
+					  preparedStmt_1.setString (4, eventSeverity);
+					  preparedStmt_1.setInt (5, eventId);
+					  preparedStmt_1.setString(6, eventGeneratedTime);
+					  preparedStmt_1.setString (7, servicedDate);
+					  preparedStmt_1.setString (8, "Dummy");
+					  preparedStmt_1.executeUpdate();
+					  iLogger.info("ServiceDetailsBO:setServiceCloserDetails:AssetEventID :"+assetEventId+": Record inserted  in table "+service_Clouser);
+					
+		           iLogger.info("ServiceDetailsBO:setServiceCloserDetails:AssetEventID "+assetEventId+"   - END");			  	
+				}
+			} 			 
+
+			catch(CustomFault e)
+			{
+
+				try
+				{
+					if(session.isOpen())
+						if(session.getTransaction().isActive())
+						{
+							session.getTransaction().rollback();
+						}
+				}
+				catch(Exception e1)
+				{
+					//DF20150603 - Rajani Nagaraju - WISE going down issue - Adding try catch against commit
+					fLogger.fatal("Exception in Rolling back the transaction:"+e1,e1);
+				}
+
+				status = "FAILURE-"+e.getFaultInfo();
+				bLogger.error("EA Processing: AssetServiceDetails: "+messageId+" : "+e.getFaultInfo());
+				
+			}
+
+			catch(Exception e)
+			{
+				try{
+					if(session.isOpen())
+						if(session.getTransaction().isActive())
+						{
+							session.getTransaction().rollback();
+						}
+				}
+				catch(Exception e1)
+				{
+					//DF20150603 - Rajani Nagaraju - WISE going down issue - Adding try catch against commit
+					fLogger.fatal("Exception in Rolling back the transaction:"+e1,e1);
+				}
+
+
+				status = "FAILURE-"+e.getMessage();
+				fLogger.fatal("EA Processing: AssetServiceDetails: "+messageId+ " Fatal Exception :"+e,e);
+			}	 
+
+			finally
+			{
+				if(session.isOpen())
+				{
+					session.flush();
+					session.close();
+				}
+				if(prodConnAESQ!=null)
+					try {
+						prodConnAESQ.close();
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
+				if(stmntAESQ!=null)
+					try {
+						stmntAESQ.close();
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
+				if(prodConn1!=null)
+					try {
+						prodConn1.close();
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
+				if(stmnt1!=null)
+					try {
+						stmnt1.close();
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
+				if(preparedStmt_1!=null)
+					try {
+						preparedStmt_1.close();
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
+			}
+			//Commenting below part since orientdb is not getting used 
+			//DF20160513 - Rajani Nagaraju - Update Service Completion details to close the Alert in OrientAppDB - TAlertTxn (Graph Model)
+			/* iLogger.info("EA Processing: ServiceCompletion: "+messageId+ ": Update Alert details in OrientAppDB");
+			 String messageString = serialNumber+"|"+dealerCode+"|"+jobCardNumber+"|"+dbmsPartCode+"|"+servicedDate;
+			String orientdbStatus = new EADataPopulationBO().ServiceCompletion(messageId, messageId, messageString);
+			iLogger.info("EA Processing: ServiceCompletion:  "+messageId+ ": Update Alert details in OrientAppDB OrientAppDB Status:"+orientdbStatus);*/
+
+			return status;
+		}
 	
 	public String setServiceDetails(String serialNumber, String dealerCode, String jobCardNumber,String dbmsPartCode, String servicedDate, String messageId){
 
@@ -5533,10 +6322,15 @@ public class ServiceDetailsBO {
 					session1 = HibernateUtil.getSessionFactory().getCurrentSession();
 					session1.beginTransaction();
 				}
+//				String outdatedVINsQuery =" SELECT ae.serialNumber,ae,DATEDIFF(NOW(),convert_tz(ae.eventGeneratedTime,'+00:00','+05:30'))as alertAge," +
+//						"ae.serviceScheduleId,ss.serviceName,ss.scheduleName,ss.dbmsPartCode, ss.callTypeId"+ //Zakir : 20200914 : Adding ss.callTypeId
+//						" FROM AssetEventEntity ae,ServiceScheduleEntity ss where ae.eventTypeId=1 and ae.activeStatus=1 and "+ 
+//						"DATEDIFF(NOW(),convert_tz(ae.eventGeneratedTime,'+00:00','+05:30'))>7 and ss.serviceScheduleId = ae.serviceScheduleId and ss.serviceName = 'Beyond Warranty' and ae.serialNumber is not null";
+				//CR488 : Sai Divya :  Auto closure of beyond warranty services needs to be change to 90 days instead of 30 days
 				String outdatedVINsQuery =" SELECT ae.serialNumber,ae,DATEDIFF(NOW(),convert_tz(ae.eventGeneratedTime,'+00:00','+05:30'))as alertAge," +
 						"ae.serviceScheduleId,ss.serviceName,ss.scheduleName,ss.dbmsPartCode, ss.callTypeId"+ //Zakir : 20200914 : Adding ss.callTypeId
 						" FROM AssetEventEntity ae,ServiceScheduleEntity ss where ae.eventTypeId=1 and ae.activeStatus=1 and "+ 
-						"DATEDIFF(NOW(),convert_tz(ae.eventGeneratedTime,'+00:00','+05:30'))>7 and ss.serviceScheduleId = ae.serviceScheduleId and ss.serviceName = 'Beyond Warranty' and ae.serialNumber is not null";
+						"DATEDIFF(NOW(),convert_tz(ae.eventGeneratedTime,'+00:00','+05:30'))>90 and ss.serviceScheduleId = ae.serviceScheduleId and ss.serviceName = 'Beyond Warranty' and ae.serialNumber is not null";
 				//outdatedVINsQuery = "select count(*) as count from asset_event";
 				Query query = session.createQuery(outdatedVINsQuery);
 				//query.setMaxResults(100);

@@ -71,7 +71,8 @@ public class ServiceHistoryDetailsService {
 		for(int i=0;i<respObj.size();i++){
 			iLogger.info(i+" ROW");
 			//DF20180423:IM20018382 - An additional field jobCardDetails.
-			iLogger.info("JobCardNumber:"+respObj.get(i).getJobCardNumber()+" , ScheduleName:"+respObj.get(i).getJobCardDetails()+" , ServiceDate:"+respObj.get(i).getServiceDate()+" , Job Card Details:"+respObj.get(i).getServiceDate()+" , ServiceName:"+respObj.get(i).getServiceName()+"");
+			//Sai Divya : CR486 : 20241017 :added completedBy
+			iLogger.info("JobCardNumber:"+respObj.get(i).getJobCardNumber()+" , ScheduleName:"+respObj.get(i).getJobCardDetails()+" ,Completed_By:"+respObj.get(i).getCompletedBy()+", ServiceDate:"+respObj.get(i).getServiceDate()+" , Job Card Details:"+respObj.get(i).getServiceDate()+" , ServiceName:"+respObj.get(i).getServiceName()+"");
 		}
 		Calendar cal1 = Calendar.getInstance();
 		SimpleDateFormat sdf1 = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SS");

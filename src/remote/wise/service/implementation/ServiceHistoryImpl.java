@@ -38,6 +38,8 @@ public class ServiceHistoryImpl {
 			respContractObj.setJobCardNumber(serviceDetailsBO.get(i).getJobCardNumber());
 			respContractObj.setScheduleName(serviceDetailsBO.get(i).getScheduleName());
 			respContractObj.setServiceDate(serviceDetailsBO.get(i).getServiceDate().toString());
+			//Sai Divya : CR486 : 20241017 : added completedBy column
+			respContractObj.setCompletedBy(serviceDetailsBO.get(i).getCompletedBy());
 			respContractObj.setServiceName(serviceDetailsBO.get(i).getServiceName());
 			//DF20180423:IM20018382 - An additional field jobCardDetails.
 			respContractObj.setJobCardDetails(serviceDetailsBO.get(i).getJobCardDetails());
@@ -172,5 +174,101 @@ public class ServiceHistoryImpl {
 		return status;
 	}
 
+	//CR488:Sai Divya-Adding the additonal field completedBy
+		public String setServiceHistoryDetails (String serialNumber, String dealerCode, String jobCardNumber,
+							String dbmsPartCode,  String servicedDate,String jobCardDetails, String callTypeId,String messageId,String completedBy)
+				{
+				Logger infoLogger = InfoLoggerClass.logger;
+				Logger fatalError = FatalLoggerClass.logger;
+				Logger businessError = BusinessErrorLoggerClass.logger;
+				//Logger businessError = Logger.getLogger("businessErrorLogger");
+				String status = "SUCCESS-Record Processed";
+				
+				ServiceDetailsBO serviceBO = new ServiceDetailsBO();
+				
+				//Check for Mandatory Parameters
+				//DF20140715 - Rajani Nagaraju - Robust Logging for EA File Processing 
+				if(serialNumber==null || serialNumber.trim()==null || serialNumber.replaceAll("\\s","").length()==0)
+				{
+				status = "FAILURE-Mandatory Parameter SerialNumber is NULL";
+				businessError.error("EA Processing: AssetServiceDetails: "+messageId+" : Mandatory Parameter SerialNumber is NULL");
+				return status;
+				}
+				
+				if(dealerCode==null || dealerCode.trim()==null || dealerCode.replaceAll("\\s","").length()==0 )
+				{
+				status = "FAILURE-Mandatory Parameter DealerCode is NULL";
+				businessError.error("EA Processing: AssetServiceDetails: "+messageId+" : Mandatory Parameter DealerCode is NULL");
+				return status;
+				}
+				
+				if(dbmsPartCode==null ||  dbmsPartCode.trim()==null ||  dbmsPartCode.replaceAll("\\s","").length()==0)
+				{
+				status = "FAILURE-Mandatory Parameter dbmsPartCode is NULL";
+				businessError.error("EA Processing: AssetServiceDetails: "+messageId+" : Mandatory Parameter dbmsPartCode is NULL");
+				return status;
+				}
+				
+				if(servicedDate==null || servicedDate.trim()==null || servicedDate.replaceAll("\\s","").length()==0)
+				{
+				status = "FAILURE-Mandatory Parameter servicedDate is NULL";
+				businessError.error("EA Processing: AssetServiceDetails: "+messageId+" : Mandatory Parameter servicedDate is NULL");
+				return status;
+				}
+				
+				if( jobCardNumber==null || jobCardNumber.trim()==null || jobCardNumber.replaceAll("\\s","").length()==0)
+				{
+				status = "FAILURE-Mandatory Parameter jobCardNumber is NULL";
+				businessError.error("EA Processing: AssetServiceDetails: "+messageId+" : Mandatory Parameter jobCardNumber is NULL");
+				return status;
+				}
+				//DF20190423:IM20018382-Null check for the additonal field jobCardDetails
+				if( jobCardDetails==null || jobCardDetails.trim()==null || jobCardDetails.replaceAll("\\s","").length()==0)
+				{
+				//status = "FAILURE-Mandatory Parameter jobCardDetails is NULL";
+				//System.out.println("Job card details is null----Inside jobcarddetails validation"); //JCB6266.so
+				infoLogger.info("Job card details is null----Inside Job card details validation");
+				/*businessError.error("EA Processing: AssetServiceDetails: "+messageId+" : Mandatory Parameter jobCardDetails is NULL");
+				return status;*/
+				}
+				
+				//DF20191107:Abhishek:: To check call type id is present or not.
+				if( callTypeId==null || callTypeId.trim()==null || callTypeId.replaceAll("\\s","").length()==0)
+				{
+				status = "FAILURE-Mandatory Parameter callTypeId  is NULL";
+				businessError.error("EA Processing: AssetServiceDetails: "+messageId+" : Mandatory Parameter callTypeId is NULL");
+				return status;
+				}
+				try
+				{
+				TenancyBO tenancyBoObj = new TenancyBO();
+				//DF20140325 - Rajani Nagaraju - Get the Corresponding LL Account Code from ECC/CRM Dealer Code from Mapping table
+				String llAccountCode = tenancyBoObj.getLLAccountCode(dealerCode);
+				infoLogger.info("llAccountCode:"+llAccountCode);
+				
+				if(llAccountCode==null)
+				{
+				fatalError.fatal("Data not found in Mapping table for the Dealer AccountCode:"+dealerCode); //JCB6266.o
+				throw new CustomFault("Data not found in Mapping table for the Dealer AccountCode:"+dealerCode);
+				}
+				else
+				{
+				dealerCode = llAccountCode;
+				}
+				
+				
+				infoLogger.info("Calling Service BO with params :: " + "serialNumber=" +serialNumber+ " dealerCode="+dealerCode+ " jobCardNumber="+jobCardNumber+
+				" dbmsPartCode="+dbmsPartCode+ " servicedDate="+servicedDate+ " jobCardDetails="+jobCardDetails + " callTypeId="+callTypeId+ " messageId="+messageId); //JCB6266.n
+				status = serviceBO.setServiceDetails(serialNumber, dealerCode, jobCardNumber, dbmsPartCode, servicedDate, jobCardDetails,callTypeId, messageId,completedBy);
+				}
+				
+				catch(CustomFault e)
+				{
+				status = "FAILURE-"+e.getFaultInfo();
+				businessError.error("EA Processing: AssetServiceDetails: "+messageId+" : "+e.getFaultInfo());
+				}
+				
+				return status;
+				}
 
 }

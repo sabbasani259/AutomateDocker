@@ -46,13 +46,324 @@ public class LLPremiumServiceImpl {
 	Logger iLogger = InfoLoggerClass.logger;
 	Logger fLogger = FatalLoggerClass.logger;
 
-	public List<HashMap<String,String>> getMachineListUnderTenancyId(String tenancyId,String vin,String platform,String model,String dealerName,String customerName,String premiumFlag , String premiumStartDate, String premiumEndDate, String installationDate , String installationEndDate , int startLimit , int endLimit , String limitFlag){		
+//	public List<HashMap<String,String>> getMachineListUnderTenancyId(String tenancyId,String vin,String platform,String model,String dealerName,String customerName,String premiumFlag , String premiumStartDate, String premiumEndDate, String installationDate , String installationEndDate , int startLimit , int endLimit , String limitFlag){		
+//		
+//		Connection con = null;
+//		Statement statement = null;
+//		ResultSet resultSet=null;
+//		List<HashMap<String, String>> mapList = new ArrayList<>();
+//		String query = "";
+//		
+//		try{
+//			
+//			if(premiumFlag.equalsIgnoreCase("1")){
+//				//Prasanna:20240820:CR484 Premium Tab and Report Changes.o
+////				query = "select aos1.serial_number,at.Asset_Type_Code,ag.Asseet_Group_Name as profile,aos1.Asset_Type_ID,a.Renewal_Date,a.Install_Date,a.PremFlag,llps1.LLPremStartDate,llps1.LLPremEndDate,croe.Dealer_Name,croe.CustomerName,croe.Customer_Mobile,at.asset_type_name as model,croe.Zone from (select serial_number,Asset_Type_ID,Asset_Group_ID from asset_owner_snapshot where account_id in (select account_id from account_tenancy where tenancy_id in ("+tenancyId+"))) as aos1" 
+////						+" inner join (select * from asset where premFlag = '"+premiumFlag+"') a ON a.serial_number = aos1.serial_number" 
+////						+" inner join (select llps.serial_number as serial_number, llps.updatedOn, max(llps.LLPremStartDate) as LLPremStartDate,max(llps.LLPremEndDate) as LLPremEndDate from LLPremiumSubs AS llps, (select serial_number, max(updatedOn) as updatedOn from LLPremiumSubs AS llps group by serial_number) as temp where llps.serial_number=temp.serial_number and llps.updatedOn = temp.updatedOn group by llps.serial_number) as llps1 ON llps1.serial_number = a.serial_number"
+////						//+" inner join (select serial_number,max(SubsEndDate) as Renewal_Date  from asset_renewal_data group by serial_number) ard ON aos1.serial_number = ard.serial_number"
+////						+" inner join (select * from asset_type where Asset_Type_Code in (select Asset_Type_Code from LLPremiumModels)) at ON aos1.Asset_Type_ID = at.Asset_Type_ID"
+////						+" inner join asset_group ag ON aos1.Asset_Group_ID = ag.Asset_Group_ID"
+////						+" left outer join  com_rep_oem_enhanced croe ON  aos1.serial_number=croe.serial_number";
+//				//Prasanna:20240820:CR484 Premium Tab and Report Changes.n
+//				query = "select aos1.serial_number,at.Asset_Type_Code,ag.Asseet_Group_Name as profile,aos1.Asset_Type_ID,a.Renewal_Date,a.Install_Date,a.PremFlag,llps1.LLPremStartDate,llps1.LLPremEndDate,llps1.LLPremPunchingDate,croe.Dealer_Name,croe.CustomerName,croe.Customer_Mobile,at.asset_type_name as model,croe.Zone from (select serial_number,Asset_Type_ID,Asset_Group_ID from asset_owner_snapshot where account_id in (select account_id from account_tenancy where tenancy_id in ("+tenancyId+"))) as aos1" 
+//						+" inner join (select * from asset where premFlag = '"+premiumFlag+"') a ON a.serial_number = aos1.serial_number" 
+//						+" inner join (select llps.serial_number as serial_number, llps.updatedOn, max(llps.LLPremStartDate) as LLPremStartDate,max(llps.LLPremEndDate) as LLPremEndDate,max(llps.LLPremPunchingDate) as LLPremPunchingDate from LLPremiumSubs AS llps, (select serial_number, max(updatedOn) as updatedOn from LLPremiumSubs AS llps group by serial_number) as temp where llps.serial_number=temp.serial_number and llps.updatedOn = temp.updatedOn group by llps.serial_number) as llps1 ON llps1.serial_number = a.serial_number"
+//						//+" inner join (select serial_number,max(SubsEndDate) as Renewal_Date  from asset_renewal_data group by serial_number) ard ON aos1.serial_number = ard.serial_number"
+//						+" inner join (select * from asset_type where Asset_Type_Code in (select Asset_Type_Code from LLPremiumModels)) at ON aos1.Asset_Type_ID = at.Asset_Type_ID"
+//						+" inner join asset_group ag ON aos1.Asset_Group_ID = ag.Asset_Group_ID"
+//						+" left outer join  com_rep_oem_enhanced croe ON  aos1.serial_number=croe.serial_number";
+//			}else{
+////				query = "select aos1.serial_number,at.Asset_Type_Code,ag.Asseet_Group_Name as profile,aos1.Asset_Type_ID,ard.Renewal_Date,a.Install_Date,a.PremFlag,croe.Dealer_Name,croe.CustomerName,croe.Customer_Mobile,at.asset_type_name as model,croe.Zone from (select serial_number,Asset_Type_ID,Asset_Group_ID from asset_owner_snapshot where account_id in (select account_id from account_tenancy where tenancy_id in ("+tenancyId+"))) as aos1" 
+////						+" inner join (select * from asset where premFlag = '"+premiumFlag+"') a ON a.serial_number = aos1.serial_number" 
+////						+" inner join (select serial_number,max(SubsEndDate) as Renewal_Date  from asset_renewal_data group by serial_number) ard ON aos1.serial_number = ard.serial_number"
+////						+" inner join (select * from asset_type where Asset_Type_Code in (select Asset_Type_Code from LLPremiumModels)) at ON aos1.Asset_Type_ID = at.Asset_Type_ID"
+////						+" inner join asset_group ag ON aos1.Asset_Group_ID = ag.Asset_Group_ID"
+////						+" left outer join  com_rep_oem_enhanced croe ON  aos1.serial_number=croe.serial_number";
+//				query = "select aos1.serial_number,at.Asset_Type_Code,ag.Asseet_Group_Name as profile,aos1.Asset_Type_ID,a.Install_Date,a.PremFlag,croe.Dealer_Name,croe.CustomerName,croe.Customer_Mobile,at.asset_type_name as model,croe.Zone,a.Renewal_Date , aos2.Ownership_Start_Date as GateOutDate from (select serial_number,Asset_Type_ID,Asset_Group_ID  from asset_owner_snapshot where account_id in (select account_id from account_tenancy where tenancy_id in ("+tenancyId+"))) as aos1 "
+//						+ "inner join (select * from asset a where a.premFlag = '"+premiumFlag+"') a ON a.serial_number = aos1.serial_number "
+//						+ " left outer  JOIN (select serial_number ,Ownership_Start_Date from asset_owner_snapshot aos where aos.account_type = 'Dealer') aos2 ON aos1.serial_number = aos2.serial_number "
+//						+ "inner join (select * from asset_type where Asset_Type_Code in (select Asset_Type_Code from LLPremiumModels)) at ON aos1.Asset_Type_ID = at.Asset_Type_ID "
+//						+ "inner join asset_group ag ON aos1.Asset_Group_ID = ag.Asset_Group_ID "
+//						+ "left outer join  com_rep_oem_enhanced croe ON  aos1.serial_number=croe.serial_number ";
+//
+//			}
+//		
+//			if((!vin.equalsIgnoreCase("null") && vin != null) || (!platform.equalsIgnoreCase("null") && platform != null) || (!model.equalsIgnoreCase("null") && model != null)
+//					|| (!dealerName.equalsIgnoreCase("null") && dealerName != null) || (!customerName.equalsIgnoreCase("null") && customerName != null)
+//					||(!premiumStartDate.equalsIgnoreCase("null") && premiumStartDate != null && premiumStartDate != "NA")
+//					||(!premiumEndDate.equalsIgnoreCase("null") && premiumEndDate != null && premiumEndDate != "NA")
+//					||(!installationDate.equalsIgnoreCase("null") && installationDate != null && installationDate != "NA")){
+//				
+//				query = "select top.* from ("+query+") as top";
+//			}
+//				
+//			Boolean filterApplied = false;			//To check whether to put 'and' keyword first or not for top query
+//			if(!vin.equalsIgnoreCase("null") && vin != null && vin.length() == 7){
+//				vin =	AssetUtil.getVinNoUsingMachineNo(vin);
+//			}
+//			if(!vin.equalsIgnoreCase("null") && vin != null ){
+//				if(filterApplied){
+//					query +=" and top.serial_number = '"+vin+"'";
+//				}else{
+//					query +=" where top.serial_number = '"+vin+"'";
+//					filterApplied = true;
+//				}
+//			}
+//				
+//			
+//			if(!platform.equalsIgnoreCase("null") && platform != null)
+//			{
+//				if(filterApplied){
+//					query += " and top.profile = '"+platform+"'";
+//				}else{
+//					query += " where top.profile = '"+platform+"'";
+//					filterApplied = true;
+//				}
+//			}
+//				
+//			
+//			if(!model.equalsIgnoreCase("null") && model != null){
+//				if(filterApplied){
+//					query += " and top.model = '"+model+"'";
+//				}else{
+//					query += " where top.model = '"+model+"'";
+//					filterApplied = true;
+//				}
+//			}
+//				
+//			
+//			if(!dealerName.equalsIgnoreCase("null") && dealerName != null )
+//			{
+//				if(dealerName.equalsIgnoreCase("NA")){
+//					if(filterApplied){
+//						query += " and top.Dealer_Name is NULL";
+//					}else{
+//						query += " where top.Dealer_Name is NULL";
+//						filterApplied = true;
+//					}
+//					
+//				}else{
+//					dealerName = dealerName.split("-")[0];
+//					if(filterApplied){
+//						query += " and top.Dealer_Name = '"+dealerName+"'";
+//					}else{
+//						query += " where top.Dealer_Name = '"+dealerName+"'";
+//						filterApplied = true;
+//					}
+//					
+//				}
+//					
+//					
+//			}
+//			
+//			if(!customerName.equalsIgnoreCase("null") && customerName != null)
+//			{
+//				if(customerName.equalsIgnoreCase("NA")){
+//					if(filterApplied){
+//						query += " and top.CustomerName is NULL";
+//					}else{
+//						query += " where top.CustomerName is NULL";
+//						filterApplied = true;
+//					}
+//				}else{
+//					if(filterApplied){
+//						query += " and top.CustomerName = '"+customerName+"'";
+//					}else{
+//						query += " where top.CustomerName = '"+customerName+"'";
+//						filterApplied = true;
+//					}
+//				}
+//					
+//			}
+//				
+//			
+////			if(!renewalDate.equalsIgnoreCase("null") && renewalDate != null && renewalDate != "NA"){
+////				if(filterApplied){
+////					query += " and top.Renewal_Date = '"+renewalDate+"'";
+////				}else{
+////					query += " where top.Renewal_Date = '"+renewalDate+"'";
+////					filterApplied = true;
+////				}
+////			}
+//			if( premiumFlag.equalsIgnoreCase("1") && !premiumStartDate.equalsIgnoreCase("null") && premiumStartDate != null && premiumStartDate != "NA"
+//					&& !premiumEndDate.equalsIgnoreCase("null") && premiumEndDate != null && premiumEndDate != "NA"){
+//				if(filterApplied){
+//					query += " and top.LLPremStartDate >= '"+premiumStartDate+"' and top.LLPremStartDate <= '"+premiumEndDate+"'";
+//				}else{
+//					query += " where top.LLPremStartDate >= '"+premiumStartDate+"' and top.LLPremStartDate <= '"+premiumEndDate+"'";
+//					filterApplied = true;
+//				}
+//			}	
+//			if(premiumFlag.equalsIgnoreCase("0") && !installationDate.equalsIgnoreCase("null") && installationDate != null && installationDate != "NA"
+//					&& !installationEndDate.equalsIgnoreCase("null") && installationEndDate != null && installationEndDate != "NA"){
+//				if(filterApplied){
+//					query += " and top.Install_Date >= '"+installationDate+"' and top.Install_Date <= '"+installationEndDate+"'";
+//				}else{
+//					query += " where top.Install_Date >= '"+installationDate+"' and top.Install_Date <= '"+installationEndDate+"'";
+//					filterApplied = true;
+//				}
+//			}
+//			
+////			if(premiumFlag.equalsIgnoreCase("0") && limitFlag.equalsIgnoreCase("true") ){
+////				query +=  " limit " +startLimit + " ," + endLimit;
+////			}
+//				
+//				startLimit = (startLimit-1) * endLimit;
+//				query +=  " limit " +startLimit + " ," + endLimit;
+//				
+//			iLogger.info("getMachineListUnderTenancyId query ..: "+query);
+//			
+//			
+//			ConnectMySQL connectionObj = new ConnectMySQL();
+//			con = connectionObj.getConnection();
+//			statement = con.createStatement();
+//			
+//			
+//			resultSet = statement.executeQuery(query);
+//			HashMap<String, String> tableMap = null;
+//			while(resultSet.next())
+//			{
+//				if(resultSet.getString("Dealer_Name") != null){
+//				tableMap = new HashMap<String,String>();
+//				tableMap.put("vin",resultSet.getString("serial_number"));
+//				tableMap.put("subscription",resultSet.getString("PremFlag"));
+//				
+//				if(premiumFlag.equalsIgnoreCase("1")){
+//				
+//					if(resultSet.getString("LLPremStartDate") != null)
+//						tableMap.put("premiumStartDate",resultSet.getString("LLPremStartDate").substring(0, 10));
+//					else
+//						tableMap.put("premiumStartDate","NA");
+//					
+//					if(resultSet.getString("LLPremEndDate") != null)
+//						tableMap.put("premiumEndDate",resultSet.getString("LLPremEndDate").substring(0, 10));
+//					else
+//						tableMap.put("premiumEndDate","NA");
+//					if(resultSet.getString("LLPremPunchingDate") != null)
+//						tableMap.put("premPunchingDate",resultSet.getString("LLPremPunchingDate").substring(0, 10));
+//					else
+//						tableMap.put("premPunchingDate","NA");
+//				}
+//				
+//				
+//				if(resultSet.getString("Dealer_Name") != null)
+//						tableMap.put("dealerName",resultSet.getString("Dealer_Name"));
+//				else
+//					tableMap.put("dealerName","NA");
+//				
+//				if(resultSet.getString("CustomerName") != null)
+//						tableMap.put("customerName",resultSet.getString("CustomerName"));
+//				else
+//					tableMap.put("customerName","NA");
+//				
+//				if(resultSet.getString("Profile") != null)
+//					tableMap.put("platform",resultSet.getString("Profile"));
+//				else
+//					tableMap.put("platform","NA");
+//				
+//				if(resultSet.getString("model") != null)
+//					tableMap.put("model",resultSet.getString("model"));
+//				else
+//					tableMap.put("model","NA");
+//				
+//				if(resultSet.getString("zone") != null)
+//					tableMap.put("zone",resultSet.getString("zone"));
+//				else
+//					tableMap.put("zone","NA");
+//				
+//				if(resultSet.getString("Customer_Mobile") != null)
+//					tableMap.put("customerMobileNumber",resultSet.getString("Customer_Mobile"));
+//				else
+//					tableMap.put("customerMobileNumber","NA");
+//				
+//				if (resultSet.getString("Install_Date") != null) {
+//						tableMap.put("installDate", resultSet.getString("Install_Date").substring(0, 10));
+//						if (premiumFlag.equalsIgnoreCase("0")) {
+//							tableMap.put("premiumPunchingDate","NA" );
+//
+//						}
+//
+//					}
+//				else{
+//					tableMap.put("installDate","NA");
+//					if (premiumFlag.equalsIgnoreCase("0")) {
+//						//Prasanna:20240820:CR484 Premium Tab and Report Changes.s 
+////						if (resultSet.getString("GateOutDate") != null)
+////							tableMap.put("premiumPunchingDate", resultSet.getString("GateOutDate").substring(0, 10));
+////						else
+//						//Prasanna:20240820:CR484 Premium Tab and Report Changes.e
+//							tableMap.put("premiumPunchingDate", "NA");
+//
+//					}
+//					
+//				}
+//					
+//				
+//				if(resultSet.getString("Renewal_Date") != null)
+//					tableMap.put("renewalDate",resultSet.getString("Renewal_Date").substring(0, 10));
+//				else
+//					tableMap.put("renewalDate","NA");
+//
+//				
+////				if (premiumFlag.equalsIgnoreCase("0")) {
+////
+////					if (resultSet.getString("GateOutDate") != null)
+////						tableMap.put("premiumPunchingDate", resultSet.getString("GateOutDate").substring(0, 10));
+////					else
+////						tableMap.put("premiumPunchingDate", "NA");
+////
+////				}
+//				
+//				mapList.add(tableMap);
+//			}
+//			
+//			iLogger.info("result map: "+mapList);
+//			}
+//		}catch(Exception ex)
+//		{
+//			
+//			ex.printStackTrace();
+//			fLogger.fatal("Exception occurred while getMachineListUnderTenancyId in LLPremiumServiceImpl: "+ex.getMessage());
+//			
+//		}finally{
+//			if(resultSet!=null)
+//				try {
+//					resultSet.close();
+//				} catch (SQLException e1) {
+//					e1.printStackTrace();
+//				}
+//
+//			if(statement!=null)
+//				try {
+//					statement.close();
+//				} catch (SQLException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				}
+//
+//			if (con != null) {
+//				try {
+//					con.close();
+//				} catch (SQLException e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		}
+//		return mapList;
+//		
+//	}
+	
+	
+public String getMachineListUnderTenancyId(String tenancyId,String vin,String platform,String model,String dealerName,String customerName,String premiumFlag , String premiumStartDate, String premiumEndDate, String installationDate , String installationEndDate , int startLimit , int endLimit , String limitFlag,boolean downflag){		
 		
 		Connection con = null;
 		Statement statement = null;
 		ResultSet resultSet=null;
 		List<HashMap<String, String>> mapList = new ArrayList<>();
 		String query = "";
+		String sourceDir = null;
+		Properties prop = new Properties();	
 		
 		try{
 			
@@ -65,9 +376,11 @@ public class LLPremiumServiceImpl {
 //						+" inner join (select * from asset_type where Asset_Type_Code in (select Asset_Type_Code from LLPremiumModels)) at ON aos1.Asset_Type_ID = at.Asset_Type_ID"
 //						+" inner join asset_group ag ON aos1.Asset_Group_ID = ag.Asset_Group_ID"
 //						+" left outer join  com_rep_oem_enhanced croe ON  aos1.serial_number=croe.serial_number";
+//			
 				//Prasanna:20240820:CR484 Premium Tab and Report Changes.n
 				query = "select aos1.serial_number,at.Asset_Type_Code,ag.Asseet_Group_Name as profile,aos1.Asset_Type_ID,a.Renewal_Date,a.Install_Date,a.PremFlag,llps1.LLPremStartDate,llps1.LLPremEndDate,llps1.LLPremPunchingDate,croe.Dealer_Name,croe.CustomerName,croe.Customer_Mobile,at.asset_type_name as model,croe.Zone from (select serial_number,Asset_Type_ID,Asset_Group_ID from asset_owner_snapshot where account_id in (select account_id from account_tenancy where tenancy_id in ("+tenancyId+"))) as aos1" 
 						+" inner join (select * from asset where premFlag = '"+premiumFlag+"') a ON a.serial_number = aos1.serial_number" 
+						//+" inner join (select llps.serial_number as serial_number, llps.updatedOn, max(llps.LLPremStartDate) as LLPremStartDate,max(llps.LLPremEndDate) as LLPremEndDate,max(llps.LLPremPunchingDate) as LLPremPunchingDate from LLPremiumSubs AS llps, (select serial_number, max(updatedOn) as updatedOn from LLPremiumSubs AS llps group by serial_number) as temp where llps.serial_number=temp.serial_number and llps.updatedOn = temp.updatedOn group by llps.serial_number) as llps1 ON llps1.serial_number = a.serial_number"
 						+" inner join (select llps.serial_number as serial_number, llps.updatedOn, max(llps.LLPremStartDate) as LLPremStartDate,max(llps.LLPremEndDate) as LLPremEndDate,max(llps.LLPremPunchingDate) as LLPremPunchingDate from LLPremiumSubs AS llps, (select serial_number, max(updatedOn) as updatedOn from LLPremiumSubs AS llps group by serial_number) as temp where llps.serial_number=temp.serial_number and llps.updatedOn = temp.updatedOn group by llps.serial_number) as llps1 ON llps1.serial_number = a.serial_number"
 						//+" inner join (select serial_number,max(SubsEndDate) as Renewal_Date  from asset_renewal_data group by serial_number) ard ON aos1.serial_number = ard.serial_number"
 						+" inner join (select * from asset_type where Asset_Type_Code in (select Asset_Type_Code from LLPremiumModels)) at ON aos1.Asset_Type_ID = at.Asset_Type_ID"
@@ -208,10 +521,14 @@ public class LLPremiumServiceImpl {
 //			if(premiumFlag.equalsIgnoreCase("0") && limitFlag.equalsIgnoreCase("true") ){
 //				query +=  " limit " +startLimit + " ," + endLimit;
 //			}
+			if(downflag)
+			{
 				
+			}
+			else {
 				startLimit = (startLimit-1) * endLimit;
 				query +=  " limit " +startLimit + " ," + endLimit;
-				
+			}
 			iLogger.info("getMachineListUnderTenancyId query ..: "+query);
 			
 			
@@ -222,109 +539,255 @@ public class LLPremiumServiceImpl {
 			
 			resultSet = statement.executeQuery(query);
 			HashMap<String, String> tableMap = null;
-			while(resultSet.next())
-			{
-				if(resultSet.getString("Dealer_Name") != null){
-				tableMap = new HashMap<String,String>();
-				tableMap.put("vin",resultSet.getString("serial_number"));
-				tableMap.put("subscription",resultSet.getString("PremFlag"));
-				
-				if(premiumFlag.equalsIgnoreCase("1")){
-				
-					if(resultSet.getString("LLPremStartDate") != null)
-						tableMap.put("premiumStartDate",resultSet.getString("LLPremStartDate").substring(0, 10));
-					else
-						tableMap.put("premiumStartDate","NA");
+
+//			if(downflag==true)
+//			{
+//				iLogger.info("inside if block...");
+//				try {
+//				prop.load(getClass().getClassLoader().getResourceAsStream("remote/wise/resource/properties/configuration.properties"));
+//				sourceDir= prop.getProperty("LLPremiumReportsPathforGetMachineList");
+//			}
+//			
+//			catch (IOException e1) {
+//				
+//				e1.printStackTrace();
+//				fLogger.fatal("issue in while getting path from configuration path"
+//						+ e1.getMessage());
+//			}
+//				
+//				
+//					File file = new File(sourceDir+"/PremiumMachine.csv");
+//					iLogger.info("path for LLPremiumReportsforBatch" + file);
+//					FileWriter outputfile = new FileWriter(file);
+//
+//					CSVWriter writer = new CSVWriter(outputfile);
+//					String[] header = { "Machine","Premium Punching Date","Premium Start Date", "Premium End Date","Profile", "Model", "Zone","Dealer", "Customer",
+//							 "Mobile Number", "Installed Date" };
+//
+//					writer.writeNext(header);
+//				
+//			
+////			File file = new File("C:\\JCBLiveLink\\LLPremiumReportsforBatch\\LLPremiumEligible.csv");
+//			
+//			
+//			while(resultSet.next())
+//			{
+//				String serialnumber=null;
+//				
+//				String Dealer_Name=null;
+//				String LLPremStartDate=null;
+//				String LLPremEndDate=null;
+//				String LLPremPunchingDate=null;
+//				String CustomerName=null;
+//				String Profile=null;
+//				String model1=null;
+//				String zone=null;
+//				String customerMobileNumber=null;
+//				String installDate=null;
+//				String renewalDate=null;
+//				
+//				if(resultSet.getString("Dealer_Name") != null){
+//					serialnumber=resultSet.getString("serial_number");
+//
+//
+//					if(premiumFlag.equalsIgnoreCase("1")){
+//
+//						if(resultSet.getString("LLPremStartDate") != null)
+//							LLPremStartDate=resultSet.getString("LLPremStartDate").substring(0, 10);
+//						else
+//							LLPremStartDate="NA";
+//
+//						if(resultSet.getString("LLPremEndDate") != null)
+//							LLPremEndDate=resultSet.getString("LLPremEndDate").substring(0, 10);
+//						else
+//							LLPremEndDate="NA";
+//
+//						if(resultSet.getString("LLPremPunchingDate") != null)
+//							LLPremPunchingDate=resultSet.getString("LLPremPunchingDate").substring(0, 10);
+//						else
+//							LLPremPunchingDate="NA";
+//					}
+//					if(resultSet.getString("Dealer_Name") != null)
+//						Dealer_Name=resultSet.getString("Dealer_Name");
+//					else
+//						Dealer_Name="NA";
+//
+//					if(resultSet.getString("CustomerName") != null)
+//						CustomerName=resultSet.getString("CustomerName");
+//					else
+//						CustomerName="NA";
+//
+//					if(resultSet.getString("Profile") != null)
+//						Profile=resultSet.getString("Profile");
+//					else
+//						Profile="NA";
+//
+//					if(resultSet.getString("model") != null)
+//						model1=resultSet.getString("model");
+//					else
+//						model1="NA";
+//
+//					if(resultSet.getString("zone") != null)
+//						zone=resultSet.getString("zone");
+//					else
+//						zone="NA";
+//
+//					if(resultSet.getString("Customer_Mobile") != null)
+//						customerMobileNumber=resultSet.getString("Customer_Mobile");
+//					else
+//						customerMobileNumber="NA";
+//
+//					if (resultSet.getString("Install_Date") != null) {
+//						installDate= resultSet.getString("Install_Date").substring(0, 10);
+//						if (premiumFlag.equalsIgnoreCase("0")) {//CR438.sn
+//							LLPremPunchingDate= "NA";
+//
+//						}//CR438.en
+//
+//					}else {
+//						installDate= "NA";
+//						if (premiumFlag.equalsIgnoreCase("0")) { //CR438.sn
+//							//Prasanna:20240820:CR484 Premium Tab and Report Changes.s 
+//							//						if (resultSet.getString("GateOutDate") != null)
+//							//							tableMap.put("premiumPunchingDate",
+//							//									resultSet.getString("GateOutDate").substring(0, 10));
+//							//						else
+//							//Prasanna:20240820:CR484 Premium Tab and Report Changes.e
+//							LLPremPunchingDate= "NA";
+//
+//						}//CR438.en
+//
+//					}
+//					if(resultSet.getString("Renewal_Date") != null)
+//						renewalDate=resultSet.getString("Renewal_Date").substring(0, 10);
+//					else
+//						renewalDate="NA";
+//				}
+//				String[] data1 = { serialnumber, LLPremPunchingDate,LLPremStartDate, LLPremEndDate,Profile, model1, zone,Dealer_Name,  CustomerName,
+//						 customerMobileNumber, installDate};
+//				 boolean isEmptyRow = true;
+//			        for (String field : data1) {
+//			            if (field != null && !field.trim().isEmpty()) {
+//			                isEmptyRow = false;
+//			                break;
+//			            }
+//			        }
+//			        if (!isEmptyRow) {
+//			            writer.writeNext(data1);
+//			        }
+//			}
+//			writer.close();
+//			}
+//			else
+//			{
+//				iLogger.info("else block...");
+				while(resultSet.next())
+				{
+					if(resultSet.getString("Dealer_Name") != null){
+					tableMap = new HashMap<String,String>();
+					tableMap.put("vin",resultSet.getString("serial_number"));
+					tableMap.put("subscription",resultSet.getString("PremFlag"));
 					
-					if(resultSet.getString("LLPremEndDate") != null)
-						tableMap.put("premiumEndDate",resultSet.getString("LLPremEndDate").substring(0, 10));
+					if(premiumFlag.equalsIgnoreCase("1")){
+					
+						if(resultSet.getString("LLPremStartDate") != null)
+							tableMap.put("premiumStartDate",resultSet.getString("LLPremStartDate").substring(0, 10));
+						else
+							tableMap.put("premiumStartDate","NA");
+						
+						if(resultSet.getString("LLPremEndDate") != null)
+							tableMap.put("premiumEndDate",resultSet.getString("LLPremEndDate").substring(0, 10));
+						else
+							tableMap.put("premiumEndDate","NA");
+						if(resultSet.getString("LLPremPunchingDate") != null)
+							tableMap.put("premPunchingDate",resultSet.getString("LLPremPunchingDate").substring(0, 10));
+						else
+							tableMap.put("premPunchingDate","NA");
+					}
+					
+					
+					if(resultSet.getString("Dealer_Name") != null)
+							tableMap.put("dealerName",resultSet.getString("Dealer_Name"));
 					else
-						tableMap.put("premiumEndDate","NA");
-					if(resultSet.getString("LLPremPunchingDate") != null)
-						tableMap.put("premPunchingDate",resultSet.getString("LLPremPunchingDate").substring(0, 10));
+						tableMap.put("dealerName","NA");
+					
+					if(resultSet.getString("CustomerName") != null)
+							tableMap.put("customerName",resultSet.getString("CustomerName"));
 					else
-						tableMap.put("premPunchingDate","NA");
-				}
-				
-				
-				if(resultSet.getString("Dealer_Name") != null)
-						tableMap.put("dealerName",resultSet.getString("Dealer_Name"));
-				else
-					tableMap.put("dealerName","NA");
-				
-				if(resultSet.getString("CustomerName") != null)
-						tableMap.put("customerName",resultSet.getString("CustomerName"));
-				else
-					tableMap.put("customerName","NA");
-				
-				if(resultSet.getString("Profile") != null)
-					tableMap.put("platform",resultSet.getString("Profile"));
-				else
-					tableMap.put("platform","NA");
-				
-				if(resultSet.getString("model") != null)
-					tableMap.put("model",resultSet.getString("model"));
-				else
-					tableMap.put("model","NA");
-				
-				if(resultSet.getString("zone") != null)
-					tableMap.put("zone",resultSet.getString("zone"));
-				else
-					tableMap.put("zone","NA");
-				
-				if(resultSet.getString("Customer_Mobile") != null)
-					tableMap.put("customerMobileNumber",resultSet.getString("Customer_Mobile"));
-				else
-					tableMap.put("customerMobileNumber","NA");
-				
-				if (resultSet.getString("Install_Date") != null) {
-						tableMap.put("installDate", resultSet.getString("Install_Date").substring(0, 10));
-						if (premiumFlag.equalsIgnoreCase("0")) {
-							tableMap.put("premiumPunchingDate","NA" );
+						tableMap.put("customerName","NA");
+					
+					if(resultSet.getString("Profile") != null)
+						tableMap.put("platform",resultSet.getString("Profile"));
+					else
+						tableMap.put("platform","NA");
+					
+					if(resultSet.getString("model") != null)
+						tableMap.put("model",resultSet.getString("model"));
+					else
+						tableMap.put("model","NA");
+					
+					if(resultSet.getString("zone") != null)
+						tableMap.put("zone",resultSet.getString("zone"));
+					else
+						tableMap.put("zone","NA");
+					
+					if(resultSet.getString("Customer_Mobile") != null)
+						tableMap.put("customerMobileNumber",resultSet.getString("Customer_Mobile"));
+					else
+						tableMap.put("customerMobileNumber","NA");
+					
+					if (resultSet.getString("Install_Date") != null) {
+							tableMap.put("installDate", resultSet.getString("Install_Date").substring(0, 10));
+							if (premiumFlag.equalsIgnoreCase("0")) {
+								tableMap.put("premiumPunchingDate","NA" );
+
+							}
 
 						}
+					else{
+						tableMap.put("installDate","NA");
+						if (premiumFlag.equalsIgnoreCase("0")) {
+							//Prasanna:20240820:CR484 Premium Tab and Report Changes.s 
+//							if (resultSet.getString("GateOutDate") != null)
+//								tableMap.put("premiumPunchingDate", resultSet.getString("GateOutDate").substring(0, 10));
+//							else
+							//Prasanna:20240820:CR484 Premium Tab and Report Changes.e
+								tableMap.put("premiumPunchingDate", "NA");
 
+						}
+						
 					}
-				else{
-					tableMap.put("installDate","NA");
-					if (premiumFlag.equalsIgnoreCase("0")) {
-						//Prasanna:20240820:CR484 Premium Tab and Report Changes.s 
+						
+					
+					if(resultSet.getString("Renewal_Date") != null)
+						tableMap.put("renewalDate",resultSet.getString("Renewal_Date").substring(0, 10));
+					else
+						tableMap.put("renewalDate","NA");
+
+					
+//					if (premiumFlag.equalsIgnoreCase("0")) {
+	//
 //						if (resultSet.getString("GateOutDate") != null)
 //							tableMap.put("premiumPunchingDate", resultSet.getString("GateOutDate").substring(0, 10));
 //						else
-						//Prasanna:20240820:CR484 Premium Tab and Report Changes.e
-							tableMap.put("premiumPunchingDate", "NA");
-
-					}
+//							tableMap.put("premiumPunchingDate", "NA");
+	//
+//					}
 					
+					mapList.add(tableMap);
 				}
-					
 				
-				if(resultSet.getString("Renewal_Date") != null)
-					tableMap.put("renewalDate",resultSet.getString("Renewal_Date").substring(0, 10));
-				else
-					tableMap.put("renewalDate","NA");
-
+				iLogger.info("result map: "+mapList);
 				
-//				if (premiumFlag.equalsIgnoreCase("0")) {
-//
-//					if (resultSet.getString("GateOutDate") != null)
-//						tableMap.put("premiumPunchingDate", resultSet.getString("GateOutDate").substring(0, 10));
-//					else
-//						tableMap.put("premiumPunchingDate", "NA");
-//
-//				}
-				
-				mapList.add(tableMap);
-			}
-			
-			iLogger.info("result map: "+mapList);
-			}
-		}catch(Exception ex)
+				}
+				return new ObjectMapper().writeValueAsString(mapList);
+		//	}
+		}
+		catch(Exception ex)
 		{
 			
 			ex.printStackTrace();
-			fLogger.fatal("Exception occurred while getMachineListUnderTenancyId in LLPremiumServiceImpl: "+ex.getMessage());
+			fLogger.fatal("Exception e " + ex.getMessage());
 			
 		}finally{
 			if(resultSet!=null)
@@ -350,9 +813,10 @@ public class LLPremiumServiceImpl {
 				}
 			}
 		}
-		return mapList;
+		return "Success";
 		
 	}
+	
 	
 	@SuppressWarnings("null")
 	public String setSubscription(HashMap<String, String> jsonData){

@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -605,4 +606,74 @@ public class LLPremiumService {
 				return response;
 			}
 			//Sai Divya:20240822:CR484 Premium Tab and Report Changes.e 
+			
+			//JCB6634 : Sai Divya : 20241126 : LLPremiumTabChanges.n
+			@SuppressWarnings("unused")
+			@GET
+			@Path("getPremiumMachinescount")
+			@Produces(MediaType.APPLICATION_JSON)
+			public String getPremiumMachinescount(
+					@QueryParam("tenancyId") String tenancyId,
+					@QueryParam("vin") String vin,
+					@QueryParam("platform") String platform,
+					@QueryParam("model") String model,
+					@QueryParam("dealerName") String dealerName,
+					@QueryParam("customerName") String customerName,
+					@QueryParam("premiumFlag") String premiumFlag,
+					@QueryParam("premiumStartDate") String premiumStartDate,
+					@QueryParam("premiumEndDate") String premiumEndDate,
+					@QueryParam("installationStartDate") String installationStartDate,
+					@QueryParam("installationEndDate") String installationEndDate,
+					@QueryParam("limitFlag") String limitFlag
+					) throws Exception {
+				System.out.println("tenancyId .." + tenancyId);
+				Logger infoLogger = InfoLoggerClass.logger;
+				Logger fLogger = FatalLoggerClass.logger;
+				
+				infoLogger.info("--------Webservice input------");
+				infoLogger.info("tenenacyId .: " + tenancyId, " vin: " + vin, " platform: "
+						+ platform + " model: " + model + " dealerName: " + dealerName
+						+ " customerName: " + customerName+" premiumFlag: "+premiumFlag
+						+ " premiumStartDate: " + premiumStartDate+" premiumEndDate: "+premiumEndDate+" installationStartDate: "+installationStartDate+ " installationEndDate: "+installationEndDate +" limitFlag: "+limitFlag);
+				CommonUtil util = new CommonUtil();
+				String isValidinput= util.inputFieldValidation(String.valueOf(tenancyId));
+				String isValidinput1 = util.inputFieldValidation(String.valueOf(vin));
+				String isValidinput2 = util.inputFieldValidation(String.valueOf(platform));
+				String isValidinput3 = util.inputFieldValidation(String.valueOf(model));
+				String isValidinput4 = util.inputFieldValidation(String.valueOf(dealerName));
+				String isValidinput5 = util.inputFieldValidation(String.valueOf(customerName));
+				String isValidinput7 = util.inputFieldValidation(String.valueOf(premiumFlag));
+				String isValidinput8 = util.inputFieldValidation(String.valueOf(premiumStartDate));
+				String isValidinput9 = util.inputFieldValidation(String.valueOf(premiumEndDate));
+				String isValidinput10 = util.inputFieldValidation(String.valueOf(installationStartDate));
+				String isValidinput11 = util.inputFieldValidation(String.valueOf(installationEndDate));
+				String isValidinput12 = util.inputFieldValidation(String.valueOf(limitFlag));
+				if(!isValidinput.equals("SUCCESS") || !isValidinput1.equals("SUCCESS")|| !isValidinput2.equals("SUCCESS")|| !isValidinput3.equals("SUCCESS")
+						|| !isValidinput4.equals("SUCCESS")|| !isValidinput5.equals("SUCCESS")|| !isValidinput7.equals("SUCCESS")
+						|| !isValidinput8.equals("SUCCESS")|| !isValidinput9.equals("SUCCESS")|| !isValidinput10.equals("SUCCESS") || !isValidinput11.equals("SUCCESS") || !isValidinput12.equals("SUCCESS")){
+					fLogger.info("Invalid input parameter");
+					throw new CustomFault(isValidinput);
+				}
+				
+				if( premiumFlag.equalsIgnoreCase("1") && !premiumStartDate.equalsIgnoreCase("null") && premiumStartDate != null && premiumStartDate != "NA"
+						&& (premiumEndDate.equalsIgnoreCase("null") || premiumEndDate == null || premiumEndDate == "NA")){ 
+					Timestamp currentTime = new Timestamp(new Date().getTime());
+					String currentTimeInString = new SimpleDateFormat("yyyy-MM-dd").format(currentTime);
+					premiumEndDate = currentTimeInString ;
+				
+				}
+				if( premiumFlag.equalsIgnoreCase("0") && !installationStartDate.equalsIgnoreCase("null") && installationStartDate != null && installationStartDate != "NA"
+						&& (installationEndDate.equalsIgnoreCase("null") || installationEndDate == null || installationEndDate == "NA")){ 
+					Timestamp currentTime = new Timestamp(new Date().getTime());
+					String currentTimeInString = new SimpleDateFormat("yyyy-MM-dd").format(currentTime);
+					installationEndDate = currentTimeInString ;
+				
+				}
+				String response = new LLPremiumServiceImpl()
+						.getMachineListCountUnderTenancyId(tenancyId, vin, platform, model,
+								dealerName, customerName, premiumFlag ,premiumStartDate,premiumEndDate, installationStartDate , installationEndDate , limitFlag);
+				infoLogger.info("result..response." + response);
+				return response;
+
+			}
 }

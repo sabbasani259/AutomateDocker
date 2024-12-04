@@ -48,6 +48,16 @@ public class GenericProfileService {
 
 		return profiles;
 	}
-
+	@GET()
+	@Produces("text/plain")
+	@Path("/getAssetProfileCodesforTenancyId")
+	public String getAssetProfileCodes(@QueryParam("loginTenancyId") String loginTenancyId) {
+		Logger iLogger = InfoLoggerClass.logger;
+		iLogger.info("input:loginTenancyId:" + loginTenancyId);
+		ProfileCodeImpl omplObj = new ProfileCodeImpl();
+		String profiles = null;
+		profiles = omplObj.getAssetProfileCodeforTenancy(loginTenancyId);
+		return profiles;
+	}
 
 }

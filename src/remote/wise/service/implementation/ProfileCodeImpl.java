@@ -692,4 +692,57 @@ public HashMap getModelCodes(String loginTenancyId,int roleId,String assetGroupC
 public static void main(String[] a){
 	new ProfileCodeImpl().convertListToString("1");
 }
+
+	public String getAssetProfileCodeforTenancy(String loginTenancyId) {
+
+		Logger fLogger = FatalLoggerClass.logger;
+		Logger iLogger = InfoLoggerClass.logger;
+
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		String result = null;
+
+		HashMap profileMap = new HashMap();
+		String roleName = null;
+
+		JSONObject jsonobj = null;
+		JSONArray jarry = new JSONArray();
+		jsonobj = new JSONObject();
+		try {
+
+			String qry = "select a.Asseet_Group_Name,b.asset_grp_code from asset_group a, asset_group_profile b where a.Asset_Group_ID=b.asset_grp_id and a.Asset_Group_ID in "
+					+ "  (select distinct(a.Asset_Group_ID) from  asset_owner_snapshot  a where a.account_id in (select at.Account_ID from account_tenancy at where at.Tenancy_ID in("
+					+ loginTenancyId + ")))";
+
+			Query query = session.createSQLQuery(qry);
+			List list = query.list();
+			Iterator iterator2 = list.iterator();
+			Object[] result1 = null;
+
+			while (iterator2.hasNext()) {
+
+				result1 = (Object[]) iterator2.next();
+				if (result1[0] != null) {
+					if (result1[1] != null) {
+						profileMap.put(result1[0].toString(), result1[1].toString());
+					}
+				}
+
+			}
+			jsonobj.putAll(profileMap);
+			jarry.add(jsonobj);
+
+			result = jarry.toString();
+
+		} catch (Exception e) {
+			fLogger.fatal("Exception :" + e);
+		} finally {
+
+			if (session.isOpen()) {
+
+				session.close();
+			}
+		}
+		return result;
+
+	}
 }

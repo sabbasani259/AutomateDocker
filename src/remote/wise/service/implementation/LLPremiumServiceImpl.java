@@ -7,6 +7,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -1956,6 +1957,108 @@ public String batchUpdateSubscription(String date){
 		}
 		return vinsList ;
 		}
+	public String getMachineListCountUnderTenancyId(String tenancyId,String vin,String platform,String model,String dealerName,String customerName,String premiumFlag , String premiumStartDate, String premiumEndDate, String installationDate , String installationEndDate , String limitFlag)
+	 {	 
+		 String baseQuery="";
+		 Map<String, Integer> profileMap = new HashMap<>();
+	        Map<String, Integer> zoneMap = new HashMap<>();
+	        Map<String, Integer> modelMap = new HashMap<>();
+	        Map<String, Integer> totalMachineCountMap = new HashMap<>();
+	        int overallTotalCount = 0;
+	        
+	        ObjectMapper mapper = new ObjectMapper();
+		 if(premiumFlag.equalsIgnoreCase("1")){
+	         baseQuery = "SELECT ag.Asseet_Group_Name AS profile, croe.zone AS zone, at.Asset_Type_Name AS model, COUNT(*) AS machine_count " +
+	                "FROM (SELECT serial_number, Asset_Type_ID, Asset_Group_ID " +
+	                "      FROM asset_owner_snapshot " +
+	                "      WHERE account_id IN (SELECT account_id FROM account_tenancy WHERE tenancy_id = '"+tenancyId+"')) aos1 " +
+	                "INNER JOIN (SELECT * FROM asset WHERE premFlag = '"+premiumFlag+"') a ON a.serial_number = aos1.serial_number " +
+	                "INNER JOIN (SELECT llps.serial_number AS serial_number, llps.updatedOn, " +
+	                "                   MAX(llps.LLPremStartDate) AS LLPremStartDate, " +
+	                "                   MAX(llps.LLPremEndDate) AS LLPremEndDate " +
+	                "            FROM LLPremiumSubs llps " +
+	                "            INNER JOIN (SELECT serial_number, MAX(updatedOn) AS updatedOn " +
+	                "                        FROM LLPremiumSubs " +
+	                "                        GROUP BY serial_number) AS temp " +
+	                "            ON llps.serial_number = temp.serial_number " +
+	                "            AND llps.updatedOn = temp.updatedOn " +
+	                "            GROUP BY llps.serial_number) llps1 ON llps1.serial_number = a.serial_number " +
+	                "INNER JOIN (SELECT * FROM asset_type WHERE Asset_Type_Code IN (SELECT Asset_Type_Code FROM LLPremiumModels)) at " +
+	                "ON aos1.Asset_Type_ID = at.Asset_Type_ID " +
+	                "INNER JOIN asset_group ag ON aos1.Asset_Group_ID = ag.Asset_Group_ID " +
+	                "LEFT OUTER JOIN com_rep_oem_enhanced croe ON aos1.serial_number = croe.serial_number " +
+	                "GROUP BY at.Asset_Type_Name, ag.Asseet_Group_Name, croe.zone";
+		 }
+		 else
+		 {
+			 baseQuery = "SELECT ag.Asseet_Group_Name AS profile, croe.zone AS zone, at.Asset_Type_Name AS model, COUNT(*) AS machine_count " +
+		                "FROM (SELECT serial_number, Asset_Type_ID, Asset_Group_ID " +
+		                "      FROM asset_owner_snapshot " +
+		                "      WHERE account_id IN (SELECT account_id FROM account_tenancy WHERE tenancy_id = '"+tenancyId+"')) aos1 " +
+		                "INNER JOIN (SELECT * FROM asset WHERE premFlag = '"+premiumFlag+"') a ON a.serial_number = aos1.serial_number " +
+		                "INNER JOIN (SELECT llps.serial_number AS serial_number, llps.updatedOn, " +
+		                "                   MAX(llps.LLPremStartDate) AS LLPremStartDate, " +
+		                "                   MAX(llps.LLPremEndDate) AS LLPremEndDate " +
+		                "            FROM LLPremiumSubs llps " +
+		                "            INNER JOIN (SELECT serial_number, MAX(updatedOn) AS updatedOn " +
+		                "                        FROM LLPremiumSubs " +
+		                "                        GROUP BY serial_number) AS temp " +
+		                "            ON llps.serial_number = temp.serial_number " +
+		                "            AND llps.updatedOn = temp.updatedOn " +
+		                "            GROUP BY llps.serial_number) llps1 ON llps1.serial_number = a.serial_number " +
+		                "INNER JOIN (SELECT * FROM asset_type WHERE Asset_Type_Code IN (SELECT Asset_Type_Code FROM LLPremiumModels)) at " +
+		                "ON aos1.Asset_Type_ID = at.Asset_Type_ID " +
+		                "INNER JOIN asset_group ag ON aos1.Asset_Group_ID = ag.Asset_Group_ID " +
+		                "LEFT OUTER JOIN com_rep_oem_enhanced croe ON aos1.serial_number = croe.serial_number " +
+		                "GROUP BY at.Asset_Type_Name, ag.Asseet_Group_Name, croe.zone";
+		 }
+	      iLogger.info("Executing query: " + baseQuery);
+	        try (Connection con = new ConnectMySQL().getConnection();
+	             PreparedStatement pstmt = con.prepareStatement(baseQuery)) {
 
+	            try (ResultSet rs = pstmt.executeQuery()) {
+	                while (rs.next()) {
+	                    String profile = rs.getString("profile");
+	                    String zone = rs.getString("zone");
+	                    String model1 = rs.getString("model");
+	                    int machineCount = rs.getInt("machine_count");
+
+	                    // Update profile map
+	                    if (profile != null) {
+	                        profileMap.put(profile, profileMap.getOrDefault(profile, 0) + machineCount);
+	                    }
+
+	                    // Update zone map
+	                    if (zone != null) {
+	                        zoneMap.put(zone, zoneMap.getOrDefault(zone, 0) + machineCount);
+	                    }
+
+	                    // Update model map
+	                    if (model1 != null) {
+	                        modelMap.put(model1, modelMap.getOrDefault(model1, 0) + machineCount);
+	                    }
+	                    overallTotalCount += machineCount;
+	                }
+	            }
+
+	        } catch (SQLException ex) {
+	            iLogger.error("SQL Exception: ", ex);
+	        }
+	        totalMachineCountMap.put("overallTotal", overallTotalCount);
+	        // Prepare result maps for JSON output
+	        Map<String, Object> result = new HashMap<>();
+	        result.put("profiles", profileMap);
+	        result.put("zones", zoneMap);
+	        result.put("models", modelMap);
+	        result.put("totalMachineCounts", totalMachineCountMap);      
+	        
+	        try {
+	            return mapper.writeValueAsString(result);
+	        } catch (Exception e) {
+	            iLogger.error("JSON Processing Exception: ", e);
+	        }
+
+	        return "{}";
+	    }
 
 }

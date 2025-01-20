@@ -1,4 +1,7 @@
 package remote.wise.service.implementation;
+/*
+ * ME100014103 : Dhiraj Kumar : 20250116 : BS4 Software Id Fix
+ */
 
 ////import org.apache.log4j.Logger;
 import java.io.BufferedReader;
@@ -304,7 +307,9 @@ private String saleDate;
                     	iLogger.info("-- MachineECU  unavailable so setting as NA --------" +MachineECUSoftwareID);
                     	 MachineECUSoftwareID="NA";
                     }
-                }else {
+                }
+                //ME100014103.so
+                /*else {
                     if(rs.getObject("MachineECUSoftwareID")!=null){
                         iLogger.info("-- Software_ID_ECU2 from asset_monitoring_snapshot-----" +rs.getObject("MachineECUSoftwareID"));
                         MachineECUSoftwareID=rs.getObject("MachineECUSoftwareID").toString();
@@ -312,7 +317,29 @@ private String saleDate;
                         MachineECUSoftwareID="NA";
                         iLogger.info(" -------- Software_ID_ECU2  unavailable so setting as NA --------" +MachineECUSoftwareID);
                     }
+                }*/
+              //ME100014103.eo
+              //ME100014103.sn
+                else {
+                	if(rs.getObject("MachineECU2")!=null) {
+                        MachineECUAddr2 =rs.getObject("MachineECU2").toString().replace("\"","");
+                        if(MachineECUAddr2.substring(0, 5).equalsIgnoreCase("21527")) {
+                            MachineECUSoftwareID = MachineECUAddr2.substring(5);
+                            iLogger.info("-- MachineECU2 from asset_monitoring_snapshot-----" +MachineECUSoftwareID);
+                            break;
+                        }
+                    }
+                	if (rs.getObject("MachineECUSoftwareID") != null) {
+                		MachineECUSoftwareID = rs.getObject("MachineECUSoftwareID").toString().replace("\"", "");
+                		break;
+                	} 
+                	if (MachineECUSoftwareID == null) {
+                		iLogger.info("-- MachineECU  unavailable so setting as NA --------" +MachineECUSoftwareID);
+                		MachineECUSoftwareID="NA";
+                		break;
+                	}
                 }
+                //ME100014103.en
             }
 
        }

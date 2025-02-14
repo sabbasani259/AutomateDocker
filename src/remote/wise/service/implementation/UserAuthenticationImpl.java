@@ -31,6 +31,7 @@ import remote.wise.businessentity.AccountEntity;
 import remote.wise.businessobject.TenancyBO;
 import remote.wise.businessobject.UserDetailsBO;
 import remote.wise.exception.CustomFault;
+import remote.wise.handler.ContactDetailsProducerThread;
 import remote.wise.log.BusinessErrorLogging.BusinessErrorLoggerClass;
 import remote.wise.log.FatalErrorLogging.FatalLoggerClass;
 import remote.wise.log.InfoLogging.InfoLoggerClass;
@@ -109,6 +110,11 @@ public class UserAuthenticationImpl
 			iLogger.info("lockTimeQuery "+lockTimeQuery);
 			String result=new CommonUtil().insertData(lockTimeQuery);
 			iLogger.info("Status of updating the lockedOutTime for the user "+login_id+" :: "+result);
+			
+			HashMap<String, String> payloadMap = new HashMap<>();
+			payloadMap.put("Contact_Id", login_id);
+			payloadMap.put("lockedOutTime", String.valueOf(timeStamp));
+			new ContactDetailsProducerThread(payloadMap, login_id+"_"+timeStamp);
 
 			//throw new CustomFault("Your Account has been locked after 5 invalid attempts. Please try again tomorrow.");
 
@@ -150,6 +156,10 @@ public class UserAuthenticationImpl
 					}
 
 					counter=new CommonUtil().getInvalidCredCounter(login_id);
+					HashMap<String, String> payloadMap = new HashMap<>();
+					payloadMap.put("Contact_Id", login_id);
+					payloadMap.put("errorLogCounter", String.valueOf(counter));
+					new ContactDetailsProducerThread(payloadMap, login_id+"_"+counter);
 
 					if(counter>5){
 						//DF20180817-MA369757 -Introducing lockedOutTime for a user for unlocking a locked account.
@@ -161,6 +171,12 @@ public class UserAuthenticationImpl
 						String result=new CommonUtil().insertData(lockTimeQuery);
 						iLogger.info("Status of updating the lockedOutTime for the user "+login_id+" :: "+result);
 						//throw new CustomFault("Your Account has been locked after 5 invalid attempts. Please try again tomorrow.");
+						
+						counter=new CommonUtil().getInvalidCredCounter(login_id);
+						HashMap<String, String> payloadMapLocked = new HashMap<>();
+						payloadMapLocked.put("Contact_Id", login_id);
+						payloadMapLocked.put("lockedOutTime", timeStamp);
+						new ContactDetailsProducerThread(payloadMapLocked, login_id+"_"+timeStamp);
 
 						//DF20180713-KO369761 - Changing the custom message for security purpose.
 						throw new CustomFault("Please enter a valid Username/Password.");
@@ -334,6 +350,10 @@ public class UserAuthenticationImpl
 						String query="update contact set errorLogCounter=0 where contact_id='"+login_id+"'";
 
 						String result=new CommonUtil().insertData(query);
+						HashMap<String, String> payloadMap = new HashMap<>();
+						payloadMap.put("Password", login_id);
+						payloadMap.put("errorLogCounter", String.valueOf(0));
+						new ContactDetailsProducerThread(payloadMap, login_id+"_"+0);
 
 						iLogger.info("Updating errorCounter if any, since valid password:: for user:: '"+login_id+"'"+result);
 					}
@@ -352,13 +372,17 @@ public class UserAuthenticationImpl
 					String query="update contact set errorLogCounter=errorLogCounter+1 where contact_id='"+login_id+"'";
 
 					String result=new CommonUtil().insertData(query);
-
+					
 					iLogger.info("Incrementing the errorCounter since invalid password for user:: '"+login_id+"'"+result);
 				}
 				catch(Exception e){
 					e.printStackTrace();
 				}
 				counter=new CommonUtil().getInvalidCredCounter(login_id);
+				HashMap<String, String> payloadMap = new HashMap<>();
+				payloadMap.put("Contact_Id", login_id);
+				payloadMap.put("errorLogCounter", String.valueOf(counter));
+				new ContactDetailsProducerThread(payloadMap, login_id+"_"+counter);
 				try {
 				if(counter>5){
 					//DF20180817-MA369757 -Introducing lockedOutTime for a user for unlocking a locked account.
@@ -368,6 +392,13 @@ public class UserAuthenticationImpl
 					String lockTimeQuery="update contact set lockedOutTime=\'"+timeStamp+"\' where contact_id=\'"+login_id+"\'";
 					iLogger.info("lockTimeQuery "+lockTimeQuery);
 					String result=new CommonUtil().insertData(lockTimeQuery);
+					
+					HashMap<String, String> payloadMapLocked = new HashMap<>();
+					payloadMapLocked.put("Contact_Id", login_id);
+					payloadMapLocked.put("lockedOutTime", timeStamp);
+					new ContactDetailsProducerThread(payloadMap, login_id+"_"+timeStamp);
+					
+					
 					iLogger.info("Status of updating the lockedOutTime for the user "+login_id+" :: "+result);
 					//throw new CustomFault("Your Account has been locked after 5 invalid attempts. Please try again tomorrow.");
 					//DF20180713-KO369761 - Changing the custom message for security purpose.

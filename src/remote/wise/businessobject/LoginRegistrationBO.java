@@ -29,6 +29,7 @@ import remote.wise.businessentity.ContactEntity;
 import remote.wise.businessentity.ContactLoginInfoEntity;
 import remote.wise.businessentity.SecretQuestionEntity;
 import remote.wise.exception.CustomFault;
+import remote.wise.handler.ContactDetailsProducerThread;
 import remote.wise.handler.EmailHandler;
 import remote.wise.handler.EmailTemplate;
 import remote.wise.handler.SmsHandler;
@@ -580,6 +581,14 @@ public class LoginRegistrationBO {
 					String updatQuery="update contact set  password=AES_ENCRYPT('"+newPassword+"',primary_moblie_number),sys_gen_password=0 where contact_id='"+loginId+"'";
 
 					String result=new CommonUtil().insertData(updatQuery);
+					// Send Details to ContactDetails kafka topic
+					HashMap<String, String> payloadMap = new HashMap<>();
+					payloadMap = new HashMap<>();
+					payloadMap.put("Contact_ID", loginId);
+					payloadMap.put("Password", newPassword);
+					payloadMap.put("sys_gen_password", "0");
+					
+					new ContactDetailsProducerThread(payloadMap, loginId+"_ResetPwd");
 
 					iLogger.info("Reset Password Service:: update encrypted password into contact table status::"+result);
 				}

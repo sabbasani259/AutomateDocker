@@ -38,7 +38,7 @@ public class KafkaConsumerListener implements ServletContextListener {
 	}
 
 	@Override
-	public void contextInitialized(ServletContextEvent event) {
+	public void contextInitialized(ServletContextEvent event) {/*
 		// TODO Auto-generated method stub
 		Logger iLogger = InfoLoggerClass.logger;
 //		iLogger.debug("SMSHandler:KafkaListener:Servlet Context Initialization - START");
@@ -113,6 +113,6 @@ public class KafkaConsumerListener implements ServletContextListener {
 		//Invoke the Listener ExtendedWarrantyQ Topic as a separate thread that runs continuously
 		iLogger.info("ExtendedWarrantyServiceHandler:KafkaListener:Initialize Listener on ExtendedWarrantyServiceQ Topic");
 		new ExtendedWarrantyQConsumer();
-	}
+	*/}
 
 }

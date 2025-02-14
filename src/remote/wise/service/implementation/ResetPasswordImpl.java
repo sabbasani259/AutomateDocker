@@ -3,12 +3,10 @@ package remote.wise.service.implementation;
 ////import org.apache.log4j.Logger;
 
 import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.logging.log4j.Logger;
-
 import remote.wise.businessobject.LoginRegistrationBO;
 import remote.wise.exception.CustomFault;
+import remote.wise.handler.ContactDetailsProducerThread;
 import remote.wise.log.BusinessErrorLogging.BusinessErrorLoggerClass;
 import remote.wise.log.InfoLogging.InfoLoggerClass;
 import remote.wise.service.datacontract.ResetPasswordReqContract;
@@ -131,6 +129,14 @@ public class ResetPasswordImpl {
     		//Update the same in password history table
     		String historyUpdateStatus =  new LoginRegistrationBO().updatePwdHistory(loginID, password);
     		iLogger.info("ResetPasswordImpl:Updated Password Hitory for loginID:"+loginID+"; Status:"+historyUpdateStatus);
+    	
+    		 //============= Send this data to kafka topic
+        	HashMap<String, String> payloadMap = new HashMap<>();
+        	payloadMap.put("Contact_ID", req.getLoginID());
+        	payloadMap.put("Password", password);
+
+        	new ContactDetailsProducerThread(payloadMap, req.getLoginID()+"_ResetPwd");
+        	//==============
     	}
     	//*************************  DF20180730 - Rajani Nagaraju - Security Audit IssueID: JCBX-061-1-14 - END
     	

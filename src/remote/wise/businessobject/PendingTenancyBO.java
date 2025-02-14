@@ -24,6 +24,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.wipro.mcoreapp.businessobject.UserPreferenceBO;
 import remote.wise.businessentity.AccountEntityPOJO;
+import remote.wise.handler.ContactDetailsProducerThread;
 import remote.wise.handler.SmsHandler;
 import remote.wise.handler.SmsTemplate;
 import remote.wise.log.FatalErrorLogging.FatalLoggerClass;
@@ -291,11 +292,29 @@ public class PendingTenancyBO
 					"1,'"+accountObj.getMobile_no()+"','"+accountObj.getCountryCode()+"','"+accountObj.getEmailId()+"'," +
 					"'"+accountObj.getTimeZone()+"','English',1,1,'"+currentDate+"')";
 
-			System.out.println("insertQuery" + insertQuery);
 			iLogger.info("insertQuery in Customercreation" + insertQuery);
 			stmt.executeUpdate(insertQuery);
 			iLogger.info("PendingTenancyBatchService:PendingTenancyBO:AccountID:"+accountObj.getAccount_id()+"; Contact Creation:SUCCESS: ContactID:"+newContactID);
 
+			// Send Details to ContactDetails kafka topic
+			HashMap<String, String> payloadMap = new HashMap<>();
+			payloadMap = new HashMap<>();
+			payloadMap.put("Contact_ID", newContactID);
+			payloadMap.put("First_Name", firstName);
+			payloadMap.put("Is_Tenancy_Admin", "1");
+			payloadMap.put("Role_ID", "7");
+			payloadMap.put("Password", password);
+			payloadMap.put("sys_gen_password", "1");
+			payloadMap.put("Primary_Moblie_Number", accountObj.getMobile_no());
+			payloadMap.put("countryCode", accountObj.getCountryCode());
+			payloadMap.put("Primary_Email_ID", accountObj.getEmailId());
+			payloadMap.put("TimeZone", accountObj.getTimeZone());
+			payloadMap.put("Language", "English");
+			payloadMap.put("Status", "1");
+			payloadMap.put("Client_ID", "1");
+			payloadMap.put("LastUpdatedTime", currentDate);
+			
+			new ContactDetailsProducerThread(payloadMap, newContactID+"_"+currentDate);
 
 			if(accountObj.getEmailId()!=null && accountObj.getEmailId().trim().length()>0)
 			{

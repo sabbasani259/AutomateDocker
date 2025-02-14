@@ -60,6 +60,7 @@ import remote.wise.businessentity.PreferenceEntity;
 import remote.wise.businessentity.RoleEntity;
 import remote.wise.businessentity.TenancyEntity;
 import remote.wise.exception.CustomFault;
+import remote.wise.handler.ContactDetailsProducerThread;
 import remote.wise.handler.EmailHandler;
 import remote.wise.handler.EmailTemplate;
 import remote.wise.handler.SmsHandler;
@@ -4013,46 +4014,62 @@ public class UserDetailsBO extends BaseBusinessObject {
 									"Problem in password decryption.");
 						}
 						else{
-						//Deepthi: Added Last Updated : 20210927
-						String updatQuery="update contact set password=AES_ENCRYPT('"+storedPwd+"','"+primaryMobileNumber+"'),First_Name='"+first_name+"',Last_Name='"+last_name+"' " +
-								",Is_Tenancy_Admin="+Is_tenancy_admin+",Role_ID="+roleEntity.getRole_id()+",Primary_Moblie_Number='"+primaryMobileNumber+"',countrycode='"+CountryCode+"'" +
-								",Primary_Email_ID='"+primaryEmailId+"',TimeZone='"+timeZone+"',Language='"+language+"',LastUpdatedTime ='"+currentDate+"' where contact_id='"+LoginId+"'";
-						
-						iLogger.info("User Creation Service:: "+updatQuery);
+						    //Deepthi: Added Last Updated : 20210927
+						    String updatQuery="update contact set password=AES_ENCRYPT('"+storedPwd+"','"+primaryMobileNumber+"'),First_Name='"+first_name+"',Last_Name='"+last_name+"' " +
+							    ",Is_Tenancy_Admin="+Is_tenancy_admin+",Role_ID="+roleEntity.getRole_id()+",Primary_Moblie_Number='"+primaryMobileNumber+"',countrycode='"+CountryCode+"'" +
+							    ",Primary_Email_ID='"+primaryEmailId+"',TimeZone='"+timeZone+"',Language='"+language+"',LastUpdatedTime ='"+currentDate+"' where contact_id='"+LoginId+"'";
 
-						try{
+						    iLogger.info("User Creation Service:: "+updatQuery);
+
+						    try{
 							String result=new CommonUtil().insertData(updatQuery);
 
 							iLogger.info("User Creation Service::"+"update contat details with encrypted password into contact table status::"+result);
 							//DF20181030 :: To capture the failure status while editing the user,logging the failure status into fatal logs.
 							if(result.equalsIgnoreCase("FAILURE") && updateFlag==1 ){
-							fLogger.info("User Creation Service:: Failed to Update the details :: updatQuery ::"+updatQuery+" :: status ::"+result);
+							    fLogger.info("User Creation Service:: Failed to Update the details :: updatQuery ::"+updatQuery+" :: status ::"+result);
+							}else{
+
+							 // Send Details to ContactDetails kafka topic
+								HashMap<String, String> payloadMap = new HashMap<>();
+								payloadMap = new HashMap<>();
+								payloadMap.put("Contact_ID", LoginId);
+								payloadMap.put("First_Name", first_name);
+								payloadMap.put("Last_Name", last_name);
+								payloadMap.put("Is_Tenancy_Admin", String.valueOf(Is_tenancy_admin));
+								payloadMap.put("Role_ID", String.valueOf(roleEntity.getRole_id()));
+								payloadMap.put("Password", storedPwd);
+								payloadMap.put("Primary_Moblie_Number", primaryMobileNumber);
+								payloadMap.put("countryCode", CountryCode);
+								payloadMap.put("Primary_Email_ID", primaryEmailId);
+								payloadMap.put("TimeZone", timeZone);
+								payloadMap.put("Language", language);
+								payloadMap.put("LastUpdatedTime", currentDate);
+								
+								new ContactDetailsProducerThread(payloadMap, LoginId+"_"+currentDate);
+				
+							    //DF20190102-KO369761-logging user edited data in Database.
+							    String newUserData = first_name+"|"+last_name+"|"+primaryMobileNumber+"|"+primaryEmailId+"|"+roleEntity.getRole_id()+"|"+CountryCode+"|"+timeZone+"|"+language+"|"+Is_tenancy_admin;
+							    String oldUserData = contact.getFirst_name()+"|"+contact.getLast_name()+"|"+contact.getPrimary_mobile_number()+"|"+contact.getPrimary_email_id()+"|"+contact.getRole().getRole_id()+"|"+contact.getCountryCode()+"|"+contact.getTimezone()+"|"+contact.getLanguage()+"|"+contact.getIs_tenancy_admin();
+
+							    Calendar c1 = Calendar.getInstance();
+							    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMM");
+							    c1.setTime(new Date());
+							    Timestamp currTime = new Timestamp(c1.getTime().getTime());
+							    String partitionKey = dateFormat.format(c1.getTime());
+
+							    String insertQ = "INSERT INTO user_details_log VALUES('"+LoginId+"','"+editedByUserId+"','"+oldUserData+"','"+newUserData+"','"+currTime+"','"+partitionKey+"')";
+							    new CommonUtil().insertData(insertQ);
 							}
-							else{
-								
-								//DF20190102-KO369761-logging user edited data in Database.
-								String newUserData = first_name+"|"+last_name+"|"+primaryMobileNumber+"|"+primaryEmailId+"|"+roleEntity.getRole_id()+"|"+CountryCode+"|"+timeZone+"|"+language+"|"+Is_tenancy_admin;
-								String oldUserData = contact.getFirst_name()+"|"+contact.getLast_name()+"|"+contact.getPrimary_mobile_number()+"|"+contact.getPrimary_email_id()+"|"+contact.getRole().getRole_id()+"|"+contact.getCountryCode()+"|"+contact.getTimezone()+"|"+contact.getLanguage()+"|"+contact.getIs_tenancy_admin();
-								
-								Calendar c1 = Calendar.getInstance();
-								SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMM");
-								c1.setTime(new Date());
-								Timestamp currTime = new Timestamp(c1.getTime().getTime());
-								String partitionKey = dateFormat.format(c1.getTime());
-								
-								String insertQ = "INSERT INTO user_details_log VALUES('"+LoginId+"','"+editedByUserId+"','"+oldUserData+"','"+newUserData+"','"+currTime+"','"+partitionKey+"')";
-								new CommonUtil().insertData(insertQ);
-							}
-						}
-						
-						catch(Exception e){
+						    }				
+						    catch(Exception e){
 							e.printStackTrace();
-						}
+						    }
 						}
 
 						//Df20170921 @Roopa AES password encryption changes END
 					}
-				/*	try
+					/*	try
 					{
 						if(session.isOpen())            	
 						{
@@ -4358,6 +4375,27 @@ public class UserDetailsBO extends BaseBusinessObject {
 						//DF20181214-KO369761-Not to map older contact to new account during customer creation.Hence exiting the process.
 						if(result.equalsIgnoreCase("FAILURE"))
 							throw new CustomFault("Exception occured.");
+						
+						 // Send Details to ContactDetails kafka topic
+						HashMap<String, String> payloadMap = new HashMap<>();
+						payloadMap = new HashMap<>();
+						payloadMap.put("Contact_ID", LoginId);
+						payloadMap.put("First_Name", first_name);
+						payloadMap.put("Last_Name", last_name);
+						payloadMap.put("Is_Tenancy_Admin", String.valueOf(Is_tenancy_admin));
+						payloadMap.put("Role_ID", String.valueOf(roleEntity.getRole_id()));
+						payloadMap.put("Password", password);
+						payloadMap.put("sys_gen_password", "1");
+						payloadMap.put("Primary_Moblie_Number", primaryMobileNumber);
+						payloadMap.put("countryCode", CountryCode);
+						payloadMap.put("Primary_Email_ID", primaryEmailId);
+						payloadMap.put("TimeZone", timeZone);
+						payloadMap.put("Language", language);
+						payloadMap.put("Status", "1");
+						payloadMap.put("Client_ID", String.valueOf(ce.getClient_id()));
+						payloadMap.put("LastUpdatedTime", currentDate);
+						
+						new ContactDetailsProducerThread(payloadMap, LoginId+"_"+currentDate);
 					}
 					catch(Exception e){
 						e.printStackTrace();

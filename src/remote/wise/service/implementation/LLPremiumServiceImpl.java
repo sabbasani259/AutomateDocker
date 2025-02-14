@@ -403,20 +403,20 @@ public String getMachineListUnderTenancyId(String tenancyId,String vin,String pl
 
 			}
 		
-			if((!vin.equalsIgnoreCase("null") && vin != null) || (!platform.equalsIgnoreCase("null") && platform != null) || (!model.equalsIgnoreCase("null") && model != null)
-					|| (!dealerName.equalsIgnoreCase("null") && dealerName != null) || (!customerName.equalsIgnoreCase("null") && customerName != null)
-					||(!premiumStartDate.equalsIgnoreCase("null") && premiumStartDate != null && premiumStartDate != "NA")
-					||(!premiumEndDate.equalsIgnoreCase("null") && premiumEndDate != null && premiumEndDate != "NA")
-					||(!installationDate.equalsIgnoreCase("null") && installationDate != null && installationDate != "NA")){
+			if((vin != null && !vin.equalsIgnoreCase("null") ) || (platform != null && !platform.equalsIgnoreCase("null") ) || (model != null && !model.equalsIgnoreCase("null") )
+					|| ( dealerName != null && !dealerName.equalsIgnoreCase("null") ) || (customerName != null && !customerName.equalsIgnoreCase("null") )
+					||(premiumStartDate != null && !premiumStartDate.equalsIgnoreCase("null") &&  premiumStartDate != "NA")
+					||(premiumEndDate != null && !premiumEndDate.equalsIgnoreCase("null") && premiumEndDate != "NA")
+					||(installationDate != null && !installationDate.equalsIgnoreCase("null") &&  installationDate != "NA")){
 				
 				query = "select top.* from ("+query+") as top";
 			}
 				
 			Boolean filterApplied = false;			//To check whether to put 'and' keyword first or not for top query
-			if(!vin.equalsIgnoreCase("null") && vin != null && vin.length() == 7){
+			if(vin != null && !vin.equalsIgnoreCase("null") && vin.length() == 7){
 				vin =	AssetUtil.getVinNoUsingMachineNo(vin);
 			}
-			if(!vin.equalsIgnoreCase("null") && vin != null ){
+			if(vin != null && !vin.equalsIgnoreCase("null") ){
 				if(filterApplied){
 					query +=" and top.serial_number = '"+vin+"'";
 				}else{
@@ -426,7 +426,7 @@ public String getMachineListUnderTenancyId(String tenancyId,String vin,String pl
 			}
 				
 			
-			if(!platform.equalsIgnoreCase("null") && platform != null)
+			if( platform != null && !platform.equalsIgnoreCase("null") )
 			{
 				if(filterApplied){
 					query += " and top.profile = '"+platform+"'";
@@ -437,7 +437,7 @@ public String getMachineListUnderTenancyId(String tenancyId,String vin,String pl
 			}
 				
 			
-			if(!model.equalsIgnoreCase("null") && model != null){
+			if(model != null && !model.equalsIgnoreCase("null") ){
 				if(filterApplied){
 					query += " and top.model = '"+model+"'";
 				}else{
@@ -447,7 +447,7 @@ public String getMachineListUnderTenancyId(String tenancyId,String vin,String pl
 			}
 				
 			
-			if(!dealerName.equalsIgnoreCase("null") && dealerName != null )
+			if(dealerName != null && !dealerName.equalsIgnoreCase("null")  )
 			{
 				if(dealerName.equalsIgnoreCase("NA")){
 					if(filterApplied){
@@ -471,7 +471,7 @@ public String getMachineListUnderTenancyId(String tenancyId,String vin,String pl
 					
 			}
 			
-			if(!customerName.equalsIgnoreCase("null") && customerName != null)
+			if(customerName != null && !customerName.equalsIgnoreCase("null") )
 			{
 				if(customerName.equalsIgnoreCase("NA")){
 					if(filterApplied){
@@ -500,8 +500,8 @@ public String getMachineListUnderTenancyId(String tenancyId,String vin,String pl
 //					filterApplied = true;
 //				}
 //			}
-			if( premiumFlag.equalsIgnoreCase("1") && !premiumStartDate.equalsIgnoreCase("null") && premiumStartDate != null && premiumStartDate != "NA"
-					&& !premiumEndDate.equalsIgnoreCase("null") && premiumEndDate != null && premiumEndDate != "NA"){
+			if( premiumFlag.equalsIgnoreCase("1") && premiumStartDate != null && !premiumStartDate.equalsIgnoreCase("null") && premiumStartDate != "NA"
+				&& premiumEndDate != null &&  !premiumEndDate.equalsIgnoreCase("null") &&  premiumEndDate != "NA"){
 				if(filterApplied){
 					query += " and top.LLPremStartDate >= '"+premiumStartDate+"' and top.LLPremStartDate <= '"+premiumEndDate+"'";
 				}else{
@@ -509,8 +509,8 @@ public String getMachineListUnderTenancyId(String tenancyId,String vin,String pl
 					filterApplied = true;
 				}
 			}	
-			if(premiumFlag.equalsIgnoreCase("0") && !installationDate.equalsIgnoreCase("null") && installationDate != null && installationDate != "NA"
-					&& !installationEndDate.equalsIgnoreCase("null") && installationEndDate != null && installationEndDate != "NA"){
+			if(premiumFlag.equalsIgnoreCase("0") && installationDate != null && !installationDate.equalsIgnoreCase("null") && installationDate != "NA"
+					&& installationEndDate != null && !installationEndDate.equalsIgnoreCase("null") && installationEndDate != "NA"){
 				if(filterApplied){
 					query += " and top.Install_Date >= '"+installationDate+"' and top.Install_Date <= '"+installationEndDate+"'";
 				}else{
@@ -522,14 +522,14 @@ public String getMachineListUnderTenancyId(String tenancyId,String vin,String pl
 //			if(premiumFlag.equalsIgnoreCase("0") && limitFlag.equalsIgnoreCase("true") ){
 //				query +=  " limit " +startLimit + " ," + endLimit;
 //			}
-			if(downflag)
+/*			if(downflag)
 			{
 				
 			}
 			else {
 				startLimit = (startLimit-1) * endLimit;
 				query +=  " limit " +startLimit + " ," + endLimit;
-			}
+			}*/
 			iLogger.info("getMachineListUnderTenancyId query ..: "+query);
 			
 			
@@ -700,7 +700,7 @@ public String getMachineListUnderTenancyId(String tenancyId,String vin,String pl
 							tableMap.put("premiumEndDate",resultSet.getString("LLPremEndDate").substring(0, 10));
 						else
 							tableMap.put("premiumEndDate","NA");
-						if(resultSet.getString("LLPremPunchingDate") != null)
+						if(resultSet.getString("LLPremPunchingDate") != null && ! resultSet.getString("LLPremPunchingDate").trim().isEmpty())
 							tableMap.put("premPunchingDate",resultSet.getString("LLPremPunchingDate").substring(0, 10));
 						else
 							tableMap.put("premPunchingDate","NA");

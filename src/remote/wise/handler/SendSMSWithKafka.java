@@ -115,7 +115,7 @@ public class SendSMSWithKafka implements Callable
 				}
 
 				// HttpHost targetHost = new HttpHost("alerts.kapsystem.com");
-				HttpHost targetHost = new HttpHost("unicel.in");
+				HttpHost targetHost = new HttpHost("api.instaalerts.zone");
 				for(int i=0; i<mobileNum.size(); i++)
 				{
 					int responseCode=3333;
@@ -354,7 +354,7 @@ public class SendSMSWithKafka implements Callable
 				transactionTimeInIST=sdf.format(cal.getTime());
 			}
 			
-			HttpHost targetHost = new HttpHost("unicel.in");
+			HttpHost targetHost = new HttpHost("api.instaalerts.zone");
 			for(int i=0; i<mobileNum.size(); i++)
 			{
 				int responseCode=3333;

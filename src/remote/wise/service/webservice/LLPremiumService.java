@@ -160,15 +160,15 @@ public class LLPremiumService {
 					throw new CustomFault(isValidinput);
 				}
 				
-				if( premiumFlag.equalsIgnoreCase("1") && !premiumStartDate.equalsIgnoreCase("null") && premiumStartDate != null && premiumStartDate != "NA"
-						&& (premiumEndDate.equalsIgnoreCase("null") || premiumEndDate == null || premiumEndDate == "NA")){ 
+				if( premiumStartDate != null && premiumFlag.equalsIgnoreCase("1") && !premiumStartDate.equalsIgnoreCase("null")  && premiumStartDate != "NA"
+						&& ( premiumEndDate == null || premiumEndDate.equalsIgnoreCase("null") || premiumEndDate == "NA")){ 
 					Timestamp currentTime = new Timestamp(new Date().getTime());
 					String currentTimeInString = new SimpleDateFormat("yyyy-MM-dd").format(currentTime);
 					premiumEndDate = currentTimeInString ;
 				
 				}
-				if( premiumFlag.equalsIgnoreCase("0") && !installationStartDate.equalsIgnoreCase("null") && installationStartDate != null && installationStartDate != "NA"
-						&& (installationEndDate.equalsIgnoreCase("null") || installationEndDate == null || installationEndDate == "NA")){ 
+				if( premiumFlag.equalsIgnoreCase("0") && installationStartDate != null && !installationStartDate.equalsIgnoreCase("null") && installationStartDate != "NA"
+						&& (installationEndDate == null || installationEndDate.equalsIgnoreCase("null") || installationEndDate == "NA")){ 
 					Timestamp currentTime = new Timestamp(new Date().getTime());
 					String currentTimeInString = new SimpleDateFormat("yyyy-MM-dd").format(currentTime);
 					installationEndDate = currentTimeInString ;

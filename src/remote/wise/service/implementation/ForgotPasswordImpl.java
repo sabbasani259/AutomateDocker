@@ -5,10 +5,12 @@ package remote.wise.service.implementation;
 
 import java.sql.Connection;
 import java.sql.Statement;
+import java.util.HashMap;
 import org.apache.logging.log4j.Logger;
 
 import remote.wise.businessobject.LoginRegistrationBO;
 import remote.wise.exception.CustomFault;
+import remote.wise.handler.ContactDetailsProducerThread;
 import remote.wise.log.BusinessErrorLogging.BusinessErrorLoggerClass;
 import remote.wise.log.FatalErrorLogging.FatalLoggerClass;
 import remote.wise.log.InfoLogging.InfoLoggerClass;
@@ -105,6 +107,14 @@ public class ForgotPasswordImpl {
     	    response.setPassword(impl.getPassword());
     	    response.setMessage(impl.getMessage());
     	    response.setPrimaryEmailID(impl.getPrimaryEmailID());
+    	    
+    	    
+    	    HashMap<String, String> payloadMap = new HashMap<>();
+    	    payloadMap.put("Contact_ID", request.getLoginId());
+    	    payloadMap.put("reset_pass_count", String.valueOf(count));
+    	    payloadMap.put("Password", impl.getPassword());
+
+    	    new ContactDetailsProducerThread(payloadMap, request.getLoginId()+"_ForgotPwd");
     	}
     	
     	//DF20180731 - KO369761 - Deleting existing token ids for the user.

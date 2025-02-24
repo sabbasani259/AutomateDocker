@@ -337,7 +337,7 @@ public class LoginRegistrationBO {
 				    	//String updatQuery="update contact set  password=AES_ENCRYPT('"+password+"',primary_moblie_number),sys_gen_password=1 where contact_id='"+loginId+"'";//JCB6622.o
 				    	//JCB6622.n
 					String updatQuery="update contact set  password=AES_ENCRYPT('"+password+"',primary_moblie_number),"
-						+ " sys_gen_password=1"
+						+ " sys_gen_password=1,"
 						+ " reset_pass_count=" + forgotPassCount
 						+ " where contact_id='"+loginId+"'";
 

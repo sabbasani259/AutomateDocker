@@ -351,7 +351,7 @@ public class UserAuthenticationImpl
 
 						String result=new CommonUtil().insertData(query);
 						HashMap<String, String> payloadMap = new HashMap<>();
-						payloadMap.put("Password", login_id);
+						payloadMap.put("Contact_Id", login_id);
 						payloadMap.put("errorLogCounter", String.valueOf(0));
 						new ContactDetailsProducerThread(payloadMap, login_id+"_"+0);
 

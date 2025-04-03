@@ -1,5 +1,5 @@
 package remote.wise.handler;
-
+//LLOPS-94 :20250403 : Sai Divya : password from configuration file
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -11,6 +11,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
@@ -90,6 +91,22 @@ public class SendSMS implements Runnable
 			    	 System.out.println("In SMS Body Content"+smsBodyContent);
 			    	 try
 			    	 {
+			    		//LLOPS-94 : password from configuration file.sn
+			    		 String sourceUname = null;
+	                     	String sourcePass = null;
+	         				Properties prop = new Properties();
+	         				try {
+	         					prop.load(getClass().getClassLoader().getResourceAsStream("remote/wise/resource/properties/configuration.properties"));
+	         					sourceUname= prop.getProperty("SMSUserName");
+	         					sourcePass= prop.getProperty("SMSPassWord");
+	         				} catch (IOException e1) {
+	         					// TODO Auto-generated catch block
+	         					e1.printStackTrace();
+	         					fLogger.fatal("issue in while getting path from configuration path"
+	         							+ e1.getMessage());
+	         				}
+	         				//LLOPS-94 : password from configuration file.en
+	         				iLogger.info("sourceUname: "+sourceUname+"sourcePass: "+sourcePass);
 			    		 httpclient = new DefaultHttpClient();
 	            	
 			    		 smsBodyContent = smsBodyContent.replaceAll("&", "AND");
@@ -104,7 +121,9 @@ public class SendSMS implements Runnable
 			    		 //Deepthi: 20220127: Remove the vp =30 as the Reset SMS was not being sent to the customers. This is coming as a recommendation from the Gateway provider. 
 			    		//JCB6554-Sai Divya:20240226:change of Unicel URL http://www.unicel.in/SendSMS/sendmsg.php to https://api.instaalerts.zone/SendSMS/sendmsg.php
 			    		 //MEID100012615-Sai Divya:20240805:Unicel password change String String urlString = "https://api.instaalerts.zone/SendSMS/sendmsg.php?uname=jcbwt&pass=a$1Tj~5O&dest="+mobileNum.get(i)+"&msg="+smsBodyContent+"&prty=1&vp=30";
-			    		 String urlString = "https://api.instaalerts.zone/SendSMS/sendmsg.php?uname=jcbwt&pass=Wipro@2024&dest="+mobileNum.get(i)+"&msg="+smsBodyContent+"&prty=1&vp=30";
+			    		 //String urlString = "https://api.instaalerts.zone/SendSMS/sendmsg.php?uname=jcbwt&pass=Wipro@2024&dest="+mobileNum.get(i)+"&msg="+smsBodyContent+"&prty=1&vp=30";//LLOPS-94.o
+			    		 String urlString = "https://api.instaalerts.zone/SendSMS/sendmsg.php?uname="+sourceUname+"&pass="+sourcePass+""+mobileNum.get(i)+"&msg="+smsBodyContent+"&prty=1&vp=30";//LLOPS-94.n
+			    		 iLogger.info("urlString"+urlString);
 			    		 urlString = urlString.replaceAll("%", "%25");
 			    		 urlString = urlString.replaceAll("\\s", "%20");
 			    		 urlString = urlString.replaceAll("#", "%23");

@@ -1,21 +1,26 @@
 package remote.wise.service.implementation;
-
+//LLOPS-94 :20250403 : Sai Divya : password from configuration file
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.Properties;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
 import remote.wise.businessentity.SmsTemplateEntity;
+import remote.wise.log.FatalErrorLogging.FatalLoggerClass;
+import remote.wise.log.InfoLogging.InfoLoggerClass;
 import remote.wise.util.HibernateUtil;
 
 
@@ -25,7 +30,8 @@ public class languageTranslatorImpl {
 
                	public String SendlanguageTranslatorSMS(String mobilenumber, String smsBody) {
                                 // TODO Auto-generated method stub
-
+               		Logger fLogger = FatalLoggerClass.logger;
+               		Logger iLogger = InfoLoggerClass.logger;
                                 DefaultHttpClient httpclient = new DefaultHttpClient();
                                 String msgBody =null;
                                 Session session = HibernateUtil.getSessionFactory().getCurrentSession();
@@ -46,12 +52,29 @@ public class languageTranslatorImpl {
                                                 System.out.println("msgBody to Hindi Conversion:"+msgBody);
                                                 if(mobilenumber!=null)
                                                 {
+                                                	//LLOPS-94 : password from configuration file.sn
+                                                	String sourceUname = null;
+                                                	String sourcePass = null;
+                                    				Properties prop = new Properties();
+                                    				try {
+                                    					prop.load(getClass().getClassLoader().getResourceAsStream("remote/wise/resource/properties/configuration.properties"));
+                                    					sourceUname= prop.getProperty("SMSUserName");
+                                    					sourcePass= prop.getProperty("SMSPassWord");
+                                    				} catch (IOException e1) {
+                                    					// TODO Auto-generated catch block
+                                    					e1.printStackTrace();
+                                    					fLogger.fatal("issue in while getting path from configuration path"
+                                    							+ e1.getMessage());
+                                    				}
+                                    				//LLOPS-94 : password from configuration file.en
+                                                         
                                                                 System.out.println("Send SMS using Unicell");                   
                                                                 httpclient = new DefaultHttpClient();
                                                                 //httpclient.getCredentialsProvider().setCredentials( new  AuthScope("proxy4.wipro.com", 8080), new UsernamePasswordCredentials("sunayak", "Ruby#12345"));
                                                                //JCB6554-Sai Divya:20240724:change of Unicel URL String String urlString = "http://www.unicel.in/SendSMS/sendmsg.php?uname=WiproDe&pass=d8y(u~d$&dest="+mobilenumber+"&msg="+msgBody+"&prty=1&vp=30";
                                                                 //MEID100012615-Sai Divya:20240805:Unicel password change String String urlString = "http://api.instaalerts.zone/SendSMS/sendmsg.php?uname=WiproDe&pass=d8y(u~d$&dest="+mobilenumber+"&msg="+msgBody+"&prty=1&vp=30";
-                                                                String urlString = "http://api.instaalerts.zone/SendSMS/sendmsg.php?uname=jcbwt&pass=Wipro@2024&dest="+mobilenumber+"&msg="+msgBody+"&prty=1&vp=30";
+                                                              //  String urlString = "http://api.instaalerts.zone/SendSMS/sendmsg.php?uname=jcbwt&pass=Wipro@2024&dest="+mobilenumber+"&msg="+msgBody+"&prty=1&vp=30";//LLOPS-94.o
+                                                                String urlString = "http://api.instaalerts.zone/SendSMS/sendmsg.php?uname="+sourceUname+"&pass="+sourcePass+""+mobilenumber+"&msg="+msgBody+"&prty=1&vp=30";//LLOPS-94.n
                                                                 urlString = urlString.replaceAll("%", "%25");
                                                                 urlString = urlString.replaceAll("\\s", "%20");
                                                                 urlString = urlString.replaceAll("#", "%23");

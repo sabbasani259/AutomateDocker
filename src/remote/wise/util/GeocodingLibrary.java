@@ -13,6 +13,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Properties;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -773,10 +774,26 @@ public class GeocodingLibrary {
 		String output, out ="";
 
 		try {
+			//LLOPS-94 : password from configuration file.sn
+			String sourceDir = null;
+			Properties prop = new Properties();
+			try {
+				prop.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("remote/wise/resource/properties/configuration.properties"));
+				sourceDir= prop.getProperty("MMIKey");
+				
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+				fLogger.fatal("issue in while getting path from configuration path"
+						+ e1.getMessage());
+			}
+			//LLOPS-94 : password from configuration file.en
+			iLogger.info("sourceDir"+sourceDir);
 			// Leela 	
 			//	url = new URL("https://apis.mapmyindia.com/advancedmaps/v1/abcc5a513059e4737bd9a37a7fe616d4/rev_geocode?lng="+latlong.split(",")[1]+"&lat="+latlong.split(",")[0]);
 			//URL url = new URL("https://apis.mappls.com/advancedmaps/v1/abcc5a513059e4737bd9a37a7fe616d4/rev_geocode?lat="+lattitude+"&lng="+longitude+"&identifier="+"JCB1234");
-			URL url = new URL("https://apis.mappls.com/advancedmaps/v1/d165e34a786426176ab5d2ab8ac80175/rev_geocode?lat="+lattitude+"&lng="+longitude);
+			//URL url = new URL("https://apis.mappls.com/advancedmaps/v1/d165e34a786426176ab5d2ab8ac80175/rev_geocode?lat="+lattitude+"&lng="+longitude);//LLOPS-94.o
+			URL url = new URL("https://apis.mappls.com/advancedmaps/v1/"+sourceDir+"/rev_geocode?lat="+lattitude+"&lng="+longitude);//LLOPS-94.n
 
 			System.setProperty("http.keepAlive", "false");
 			conn = (HttpURLConnection) url.openConnection();

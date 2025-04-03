@@ -1,4 +1,5 @@
 //CR337 : 20220721 : Dhiraj K : Property file read.
+//LLOPS-94 :20250403 : Sai Divya : password from configuration file
 package remote.wise.businessobject;
 
 
@@ -12,6 +13,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
 import java.util.*;
 import javax.mail.*;
 import javax.mail.internet.*;
@@ -31,18 +33,35 @@ public class SMSTrigger {
 //		 httpclient.getCredentialsProvider().setCredentials( new  AuthScope("proxy1.wipro.com", 8080), new UsernamePasswordCredentials("", "Tauro@"));
 		//WiseLogger infoLogger = WiseLogger.getLogger("HAJSendSMSService:","info");
 		Logger iLogger = InfoLoggerClass.logger;
-
+		Logger fLogger = FatalLoggerClass.logger;
 	//	HttpHost targetHost = new HttpHost("alerts.kapsystem.com");
 		 HttpHost targetHost = new HttpHost("unicel.in");
 		int responseCode = 3333;
 		try {
+			//LLOPS-94 : password from configuration file.sn
+			String sourceUname = null;
+        	String sourcePass = null;
+			Properties prop = new Properties();
+			try {
+				prop.load(getClass().getClassLoader().getResourceAsStream("remote/wise/resource/properties/configuration.properties"));
+				sourceUname= prop.getProperty("SMSUserName");
+				sourcePass= prop.getProperty("SMSPassWord");
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+				fLogger.fatal("issue in while getting path from configuration path"
+						+ e1.getMessage());
+			}
+			//LLOPS-94 : password from configuration file.en
+			iLogger.info("sourceUname: "+sourceUname+"sourcePass: "+sourcePass);
 			httpclient = new DefaultHttpClient();
 			/*String urlString = "http://alerts.kapsystem.com/api/web2sms.php?workingkey=9500x1h68760787862az&to="
 					+ phoneNumber + "&sender=JCBLLI&message=" + otpMessageBody;*/
 			//DefectId:20150513 @Suprava GateWay changed to unicell
 			//JCB6554-Sai Divya:20240724:change of Unicel URL String urlString = "http://www.unicel.in/SendSMS/sendmsg.php?uname=jcbwt&pass=a$1Tj~5O&dest="+phoneNumber+"&msg="+otpMessageBody+"&prty=1&vp=30";	
 			//MEID100012615-Sai Divya:20240805:Unicel password change String urlString = "http://api.instaalerts.zone/SendSMS/sendmsg.php?uname=jcbwt&pass=a$1Tj~5O&dest="+phoneNumber+"&msg="+otpMessageBody+"&prty=1&vp=30";	
-			String urlString = "http://api.instaalerts.zone/SendSMS/sendmsg.php?uname=jcbwt&pass=Wipro@2024&dest="+phoneNumber+"&msg="+otpMessageBody+"&prty=1&vp=30";		
+			//String urlString = "http://api.instaalerts.zone/SendSMS/sendmsg.php?uname=jcbwt&pass=Wipro@2024&dest="+phoneNumber+"&msg="+otpMessageBody+"&prty=1&vp=30";//LLOPS-94.o		
+			String urlString = "http://api.instaalerts.zone/SendSMS/sendmsg.php?uname="+sourceUname+"&pass="+sourcePass+""+phoneNumber+"&msg="+otpMessageBody+"&prty=1&vp=30";//LLOPS-94.n
 			urlString = urlString.replaceAll("%", "%25");
 			urlString = urlString.replaceAll("\\s", "%20");
 			urlString = urlString.replaceAll("#", "%23");

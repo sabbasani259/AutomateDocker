@@ -9,8 +9,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 import org.apache.logging.log4j.Logger;
 import remote.wise.log.FatalErrorLogging.FatalLoggerClass;
 import remote.wise.log.InfoLogging.InfoLoggerClass;
@@ -159,7 +162,7 @@ public class DealerDataAndSMSNotificationsImpl {
 		Logger iLogger = InfoLoggerClass.logger;
 		Logger fLogger = FatalLoggerClass.logger;
 		String query = "SELECT COUNT(*) AS dealerCount FROM Notification_Dealers WHERE DealerCode = '" + dealerCode
-				+ "'";
+				+ "'  and status=1 ";
 		ConnectMySQL connFactory = new ConnectMySQL();
 		Connection connection = null;
 		ResultSet rs = null;
@@ -194,11 +197,12 @@ public class DealerDataAndSMSNotificationsImpl {
 	}
 
 	@SuppressWarnings({ "unused" })
-	public String createSubscriberDetails(String dealerCode, Map<String, Object> subscriberDetails) {
+	public String createSubscriberDetails(String dealerCode, Map<String, Object> subscriberDetails,String userID) {
 		String response = "FAILURE";
 		Logger fLogger = FatalLoggerClass.logger;
 		Logger iLogger = InfoLoggerClass.logger;
 		ConnectMySQL connMySql = new ConnectMySQL();
+		iLogger.info("userID"+userID);
 
 		try (Connection prodConnection = connMySql.getConnection()) {
 			// Get the dealer type from the input
@@ -206,8 +210,8 @@ public class DealerDataAndSMSNotificationsImpl {
 			int dealerTypeId = getDealerTypeId(prodConnection, dealerType);
 
 			// Insert or update details for each communication mode
-			insertOrUpdateDealerDetails(prodConnection, dealerCode, "SMS", subscriberDetails, dealerTypeId);
-			insertOrUpdateDealerDetails(prodConnection, dealerCode, "Email", subscriberDetails, dealerTypeId);
+			insertOrUpdateDealerDetails(prodConnection, dealerCode, "SMS", subscriberDetails, dealerTypeId,userID);
+			insertOrUpdateDealerDetails(prodConnection, dealerCode, "Email", subscriberDetails, dealerTypeId,userID);
 
 			response = "SUCCESS";
 		} catch (SQLException e) {
@@ -220,17 +224,27 @@ public class DealerDataAndSMSNotificationsImpl {
 	}
 
 	private void insertOrUpdateDealerDetails(Connection connection, String dealerCode, String commMode,
-			Map<String, Object> dealerDetails, int dealerTypeId) throws SQLException {
+			Map<String, Object> dealerDetails, int dealerTypeId,String userID) throws SQLException {
 		Logger iLogger = InfoLoggerClass.logger;
 		// Check if Subscriber1, Subscriber2, and Subscriber3 are unique
 		String subscriber1 = (String) dealerDetails.get(commMode.equals("SMS") ? "s1_sms" : "s1_email");
 		String subscriber2 = (String) dealerDetails.get(commMode.equals("SMS") ? "s2_sms" : "s2_email");
 		String subscriber3 = (String) dealerDetails.get(commMode.equals("SMS") ? "s3_sms" : "s3_email");
 
-		// Check if subscriber1 is "NONE" and throw an exception if it is
-		if ("NONE".equals(subscriber1)) {
-			throw new SQLException("Subscriber1 values should not be NONE for " + commMode + ".");
-		}
+		 String subscriber1_sms = (String) dealerDetails.get("s1_sms");
+		 String subscriber1_email = (String) dealerDetails.get("s1_email");
+
+		// Get the country code for the user ID
+	    String countryCode = getCountryCodeForUser(connection, userID);
+	    if ("+91".equals(countryCode) || "India".equalsIgnoreCase(countryCode)) {
+	        if (subscriber1_sms == null || subscriber1_sms.isEmpty() || subscriber1_email == null || subscriber1_email.isEmpty()) {
+	            throw new SQLException("Subscriber1 email and SMS are mandatory for users in India.");
+	        }
+	    } else {
+	        if (subscriber1_email == null || subscriber1_email.isEmpty()) {
+	            throw new SQLException("Subscriber1 email is mandatory.");
+	        }
+	    }
 
 		// Set subscribers to null if they are "NONE"
 		subscriber1 = "NONE".equals(subscriber1) ? null : subscriber1;
@@ -282,7 +296,20 @@ public class DealerDataAndSMSNotificationsImpl {
 			}
 		}
 	}
-
+	private String getCountryCodeForUser(Connection connection, String userID) throws SQLException {
+	    String countryCode = null;
+		Logger iLogger = InfoLoggerClass.logger;
+	    String query = "SELECT countrycode FROM contact WHERE Contact_ID = '"+userID+"'";
+	    iLogger.info("query :"+query);
+	    try (PreparedStatement stmt = connection.prepareStatement(query)) {
+	        try (ResultSet rs = stmt.executeQuery()) {
+	            if (rs.next()) {
+	                countryCode = rs.getString("countrycode");
+	            }
+	        }
+	    }
+	    return countryCode;
+	}
 	private int getDealerTypeId(Connection connection, String dealerType) throws SQLException {
 		Logger iLogger = InfoLoggerClass.logger;
 		String query = "SELECT dealer_type_id FROM notification_dealer_types WHERE dealer_type_name = ?";
@@ -307,6 +334,7 @@ public class DealerDataAndSMSNotificationsImpl {
 		Logger fLogger = FatalLoggerClass.logger;
 		ResultSet resultSet = null;
 		Statement statement = null;
+		 Set<String> presentDealerTypes = new HashSet<>();
 		try {
 			connection = connFactory.getConnection();
 			if (connection == null) {
@@ -373,6 +401,31 @@ public class DealerDataAndSMSNotificationsImpl {
 					
 				}
 			}
+			 // Ensure all dealer types are present
+	        if (!presentDealerTypes.contains("LLChampion")) {
+	            Map<String, String> noneDetails = new HashMap<>();
+	            noneDetails.put("sms", "NONE" + "|" + "NONE" + "|" + "NONE");
+	            noneDetails.put("email", "NONE" + "|" + "NONE" + "|" + "NONE");
+	            llChampion.put("S1", noneDetails);
+	            llChampion.put("S2", noneDetails);
+	            llChampion.put("S3", noneDetails);
+	        }
+	        if (!presentDealerTypes.contains("ServiceNotification")) {
+	            Map<String, String> noneDetails = new HashMap<>();
+	            noneDetails.put("sms", "NONE" + "|" + "NONE" + "|" + "NONE");
+	            noneDetails.put("email", "NONE" + "|" + "NONE" + "|" + "NONE");
+	            serviceNotification.put("S1", noneDetails);
+	            serviceNotification.put("S2", noneDetails);
+	            serviceNotification.put("S3", noneDetails);
+	        }
+	        if (!presentDealerTypes.contains("PartNotification")) {
+	            Map<String, String> noneDetails = new HashMap<>();
+	            noneDetails.put("sms", "NONE" + "|" + "NONE" + "|" + "NONE");
+	            noneDetails.put("email", "NONE" + "|" + "NONE" + "|" + "NONE");
+	            partNotification.put("S1", noneDetails);
+	            partNotification.put("S2", noneDetails);
+	            partNotification.put("S3", noneDetails);
+	        }
 			notifications.put("LLChampion", llChampion);
 			notifications.put("ServiceNotification", serviceNotification);
 			notifications.put("PartNotification", partNotification);
@@ -388,21 +441,63 @@ public class DealerDataAndSMSNotificationsImpl {
 
 	}
 
-	public boolean deleteDealerByCode(String dealerCode, String NotificationDEalerID) {
+	public boolean deleteDealerByCode(String dealerCode, String NotificationDealerID) {
 		Logger iLogger = InfoLoggerClass.logger;
-		// query to update the Status to 0 where DealerCode matches
-		String query = "UPDATE Notification_Dealers SET Status = 0 WHERE DealerCode = '" + dealerCode
-				+ "' and NotificationDealerID='" + NotificationDEalerID + "'";
-
-		iLogger.info("Executing SQL query: " + query);
 		ConnectMySQL connMySql = new ConnectMySQL();
 		boolean isDeleted = false;
 
+		String checkQuery = "SELECT COUNT(*) FROM DealerSubscriberDetails WHERE Subscriber1 = ? OR Subscriber2 = ? OR Subscriber3 = ?";
+		String updateQuery = "UPDATE Notification_Dealers SET Status = 0 WHERE DealerCode = ? AND NotificationDealerID = ?";
+
 		try (Connection prodConnection = connMySql.getConnection();
-				PreparedStatement preparedStatement = prodConnection.prepareStatement(query)) {
-			int rowsAffected = preparedStatement.executeUpdate();
+				PreparedStatement checkStmt = prodConnection.prepareStatement(checkQuery);
+				PreparedStatement updateStmt = prodConnection.prepareStatement(updateQuery)) {
+
+			// Check if NotificationDealerID is present in Subscriber1, Subscriber2, or
+			// Subscriber3
+			checkStmt.setString(1, NotificationDealerID);
+			checkStmt.setString(2, NotificationDealerID);
+			checkStmt.setString(3, NotificationDealerID);
+
+			try (ResultSet rs = checkStmt.executeQuery()) {
+				if (rs.next() && rs.getInt(1) > 0) {
+					// NotificationDealerID is present in DealerSubscriberDetails
+					iLogger.info(
+							"NotificationDealerID is present in DealerSubscriberDetails. Please remove it from there first.");
+					return false;
+				}
+			}
+
+			// Update the status to 0 if NotificationDealerID is not present in
+			// DealerSubscriberDetails
+			updateStmt.setString(1, dealerCode);
+			updateStmt.setString(2, NotificationDealerID);
+			int rowsAffected = updateStmt.executeUpdate();
 			if (rowsAffected > 0) {
-				// updated the status to 0
+				isDeleted = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return isDeleted;
+	}
+
+	public boolean deletePrincipleDealerByCode(String dealerCode, String PrincipleDealerID) {
+		Logger iLogger = InfoLoggerClass.logger;
+		ConnectMySQL connMySql = new ConnectMySQL();
+		boolean isDeleted = false;
+
+		String updateQuery = "UPDATE Principal_Dealers SET Status = 0 WHERE DealerCode = ? AND PrincipalDealerID = ?";
+		iLogger.info("updateQuery" + updateQuery);
+		try (Connection prodConnection = connMySql.getConnection();
+				PreparedStatement updateStmt = prodConnection.prepareStatement(updateQuery)) {
+			// Update the status to 0 if NotificationDealerID is not present in
+			// DealerSubscriberDetails
+			updateStmt.setString(1, dealerCode);
+			updateStmt.setString(2, PrincipleDealerID);
+			int rowsAffected = updateStmt.executeUpdate();
+			if (rowsAffected > 0) {
 				isDeleted = true;
 			}
 		} catch (SQLException e) {

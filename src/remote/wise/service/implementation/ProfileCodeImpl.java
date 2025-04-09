@@ -745,4 +745,464 @@ public static void main(String[] a){
 		return result;
 
 	}
+	
+	public HashMap getBSVModelCodes(String loginTenancyId, int roleId, String assetGroupCodes,String isBSV) {
+
+		Logger fLogger = FatalLoggerClass.logger;
+		Logger iLogger = InfoLoggerClass.logger;
+
+		Session session = HibernateUtil.getSessionFactory().openSession();
+
+		HashMap modelMap = new HashMap<String, String>();
+
+		try {
+
+			String roleName = null;
+			Object[] result1 = null;
+
+			JSONObject jsonobj = null;
+			JSONArray jarry = new JSONArray();
+			jsonobj = new JSONObject();
+			Query queryRoleName = session
+					.createSQLQuery("select Role_Name from role where role_id=" + "'" + roleId + "'");
+			Iterator iterator = queryRoleName.list().iterator();
+			while (iterator.hasNext()) {
+				roleName = (String) iterator.next();
+			}
+			String assetGroupCodesInString = "";
+			if (assetGroupCodes != null && !assetGroupCodes.equals("")) {
+				assetGroupCodesInString = convertListToString(assetGroupCodes).toString();
+			}
+			if (isBSV.equals("1")) {
+			if (roleName != null
+					&& (roleName.equalsIgnoreCase("Customer") || roleName.equalsIgnoreCase("Customer Fleet Manager"))) {
+				String qry2 = null;
+				if (assetGroupCodesInString == "") {
+					qry2 = "select  distinct(at.asset_type_group_name), agp.asset_grp_code from asset_type at, asset_group_profile agp where at.asset_group_id=agp.asset_grp_id and at.asset_type_id in "
+							+ "(select distinct(p.Asset_Type_ID) from products p, asset  a where a.product_id=p.Product_ID and  a.Primary_Owner_ID in (select at.Account_ID from account_tenancy at where at.Tenancy_ID in ("
+							+ loginTenancyId + "))) and at.BSV_Check=1";
+				} else {
+					qry2 = "select  distinct(at.asset_type_group_name), agp.asset_grp_code from asset_type at, asset_group_profile agp where agp.asset_grp_code in ("
+							+ assetGroupCodesInString
+							+ ") and agp.asset_grp_id=at.asset_group_id and at.asset_type_id in "
+							+ "(select distinct(p.Asset_Type_ID) from products p, asset  a where a.product_id=p.Product_ID and  a.Primary_Owner_ID in (select at.Account_ID from account_tenancy at where at.Tenancy_ID in ("
+							+ loginTenancyId + "))) and at.BSV_Check=1";
+				}
+				iLogger.info("loginTenancyId:" + loginTenancyId + "-roleId:" + roleId + "-assetGroupCodes:"
+						+ assetGroupCodes + "-query:" + qry2);
+
+				Query query2 = session.createSQLQuery(qry2);
+				Iterator iterator2 = query2.list().iterator();
+				while (iterator2.hasNext()) {
+
+					result1 = (Object[]) iterator2.next();
+					if (result1[1] != null) {
+						if (result1[0] != null) {
+							String qry3 = "select at.Asset_Type_Code from asset_type at where at.asset_type_group_name="
+									+ "'" + result1[0] + "'";
+							Query query3 = session.createSQLQuery(qry3);
+							Iterator iterator3 = query3.list().iterator();
+							List<String> ll = new ArrayList<>();
+							while (iterator3.hasNext()) {
+
+								ll.add((String) iterator3.next());
+							}
+
+							if (modelMap.containsKey(result1[1])) {
+								HashMap map = (HashMap) modelMap.get(result1[1]);
+								map.put(result1[0], ll);
+								modelMap.put(result1[1], map);
+							} else {
+								HashMap map = new HashMap();
+								map.put(result1[0], ll);
+								modelMap.put(result1[1], map);
+							}
+						}
+					}
+				}
+
+			} else {
+				String qry4 = null;
+				if (assetGroupCodesInString == "") {
+					qry4 = "select  distinct(at.asset_type_group_name), agp.asset_grp_code from asset_type at, asset_group_profile agp where at.asset_group_id=agp.asset_grp_id and at.BSV_Check=1";
+				} else {
+					qry4 = "select  distinct(at.asset_type_group_name), agp.asset_grp_code from asset_type at, asset_group_profile agp where at.asset_group_id=agp.asset_grp_id and agp.asset_grp_code in ("
+							+ assetGroupCodesInString + ") and at.BSV_Check=1";
+				}
+				iLogger.info("loginTenancyId:" + loginTenancyId + "-roleId:" + roleId + "-assetGroupCodes:"
+						+ assetGroupCodes + "-query:" + qry4);
+
+				Query query4 = session.createSQLQuery(qry4);
+				Iterator iterator4 = query4.list().iterator();
+				while (iterator4.hasNext()) {
+
+					result1 = (Object[]) iterator4.next();
+					if (result1[1] != null) {
+						if (result1[0] != null) {
+							String qry5 = "select at.Asset_Type_Code from asset_type at where at.asset_type_group_name="
+									+ "'" + result1[0] + "'";
+							Query query5 = session.createSQLQuery(qry5);
+							// query2.setString(0, result1[1]);
+							System.out.println("query5  " + query5);
+							Iterator iterator5 = query5.list().iterator();
+							List<String> ll = new ArrayList<>();
+							while (iterator5.hasNext()) {
+
+								ll.add((String) iterator5.next());
+							}
+
+							if (modelMap.containsKey(result1[1])) {
+								HashMap map = (HashMap) modelMap.get(result1[1]);
+								map.put(result1[0], ll);
+								modelMap.put(result1[1], map);
+							} else {
+								HashMap map = new HashMap();
+								map.put(result1[0], ll);
+								modelMap.put(result1[1], map);
+							}
+						}
+					}
+				}
+
+			}
+			}
+			else
+			{
+				if (roleName != null
+						&& (roleName.equalsIgnoreCase("Customer") || roleName.equalsIgnoreCase("Customer Fleet Manager"))) {
+					String qry2 = null;
+					if (assetGroupCodesInString == "") {
+						qry2 = "select  distinct(at.asset_type_group_name), agp.asset_grp_code from asset_type at, asset_group_profile agp where at.asset_group_id=agp.asset_grp_id and at.asset_type_id in "
+								+ "(select distinct(p.Asset_Type_ID) from products p, asset  a where a.product_id=p.Product_ID and  a.Primary_Owner_ID in (select at.Account_ID from account_tenancy at where at.Tenancy_ID in ("
+								+ loginTenancyId + "))) and  (at.BSV_Check != 1 OR at.BSV_Check IS NULL) ";
+					} else {
+						qry2 = "select  distinct(at.asset_type_group_name), agp.asset_grp_code from asset_type at, asset_group_profile agp where agp.asset_grp_code in ("
+								+ assetGroupCodesInString
+								+ ") and agp.asset_grp_id=at.asset_group_id and at.asset_type_id in "
+								+ "(select distinct(p.Asset_Type_ID) from products p, asset  a where a.product_id=p.Product_ID and  a.Primary_Owner_ID in (select at.Account_ID from account_tenancy at where at.Tenancy_ID in ("
+								+ loginTenancyId + "))) and  (at.BSV_Check != 1 OR at.BSV_Check IS NULL)";
+					}
+					iLogger.info("loginTenancyId:" + loginTenancyId + "-roleId:" + roleId + "-assetGroupCodes:"
+							+ assetGroupCodes + "-query:" + qry2);
+
+					Query query2 = session.createSQLQuery(qry2);
+					Iterator iterator2 = query2.list().iterator();
+					while (iterator2.hasNext()) {
+
+						result1 = (Object[]) iterator2.next();
+						if (result1[1] != null) {
+							if (result1[0] != null) {
+								String qry3 = "select at.Asset_Type_Code from asset_type at where at.asset_type_group_name="
+										+ "'" + result1[0] + "'";
+								Query query3 = session.createSQLQuery(qry3);
+								Iterator iterator3 = query3.list().iterator();
+								List<String> ll = new ArrayList<>();
+								while (iterator3.hasNext()) {
+
+									ll.add((String) iterator3.next());
+								}
+
+								if (modelMap.containsKey(result1[1])) {
+									HashMap map = (HashMap) modelMap.get(result1[1]);
+									map.put(result1[0], ll);
+									modelMap.put(result1[1], map);
+								} else {
+									HashMap map = new HashMap();
+									map.put(result1[0], ll);
+									modelMap.put(result1[1], map);
+								}
+							}
+						}
+					}
+
+				} else {
+					String qry4 = null;
+					if (assetGroupCodesInString == "") {
+						qry4 = "select  distinct(at.asset_type_group_name), agp.asset_grp_code from asset_type at, asset_group_profile agp where at.asset_group_id=agp.asset_grp_id and  (at.BSV_Check != 1 OR at.BSV_Check IS NULL)";
+					} else {
+						qry4 = "select  distinct(at.asset_type_group_name), agp.asset_grp_code from asset_type at, asset_group_profile agp where at.asset_group_id=agp.asset_grp_id and agp.asset_grp_code in ("
+								+ assetGroupCodesInString + ") and  (at.BSV_Check != 1 OR at.BSV_Check IS NULL)";
+					}
+					iLogger.info("loginTenancyId:" + loginTenancyId + "-roleId:" + roleId + "-assetGroupCodes:"
+							+ assetGroupCodes + "-query:" + qry4);
+
+					Query query4 = session.createSQLQuery(qry4);
+					Iterator iterator4 = query4.list().iterator();
+					while (iterator4.hasNext()) {
+
+						result1 = (Object[]) iterator4.next();
+						if (result1[1] != null) {
+							if (result1[0] != null) {
+								String qry5 = "select at.Asset_Type_Code from asset_type at where at.asset_type_group_name="
+										+ "'" + result1[0] + "'";
+								Query query5 = session.createSQLQuery(qry5);
+								// query2.setString(0, result1[1]);
+								System.out.println("query5  " + query5);
+								Iterator iterator5 = query5.list().iterator();
+								List<String> ll = new ArrayList<>();
+								while (iterator5.hasNext()) {
+
+									ll.add((String) iterator5.next());
+								}
+
+								if (modelMap.containsKey(result1[1])) {
+									HashMap map = (HashMap) modelMap.get(result1[1]);
+									map.put(result1[0], ll);
+									modelMap.put(result1[1], map);
+								} else {
+									HashMap map = new HashMap();
+									map.put(result1[0], ll);
+									modelMap.put(result1[1], map);
+								}
+							}
+						}
+					}
+
+				}
+			}
+		} catch (Exception e) {
+			fLogger.fatal("Exception :" + e);
+		} finally {
+
+			if (session.isOpen()) {
+
+				session.close();
+			}
+
+		}
+
+		return modelMap;
+	}
+	
+	public HashMap getBSVModels(String loginTenancyId, int roleId, String assetGroupIds,String isBSV) {
+
+		Logger fLogger = FatalLoggerClass.logger;
+		Logger iLogger = InfoLoggerClass.logger;
+
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		String result = null;
+
+		HashMap modelMap = new HashMap<String, String>();
+
+		try {
+
+			String roleName = null;
+			String accId = null;
+			Object[] result1 = null;
+
+			JSONObject jsonobj = null;
+			JSONArray jarry = new JSONArray();
+			jsonobj = new JSONObject();
+			Query queryRoleName = session
+					.createSQLQuery("select Role_Name from role where role_id=" + "'" + roleId + "'");
+			Iterator iterator = queryRoleName.list().iterator();
+			while (iterator.hasNext()) {
+				roleName = (String) iterator.next();
+			}
+			String assetGroupidsInString = "";
+			if (assetGroupIds != null && !assetGroupIds.equals("")) {
+				assetGroupidsInString = convertListToString(assetGroupIds).toString();
+			}
+			if (isBSV.equals("1")) {
+			if (roleName != null
+					&& (roleName.equalsIgnoreCase("Customer") || roleName.equalsIgnoreCase("Customer Fleet Manager"))) {
+				
+				String qry2 = null;
+				if (assetGroupidsInString == "") {
+					qry2 = "select  distinct(at.asset_type_group_name),at.asset_group_id from asset_type at where at.asset_type_id in "
+							+ "(select distinct(p.Asset_Type_ID) from products p, asset  a where a.product_id=p.Product_ID and  a.Primary_Owner_ID in (select at.Account_ID from account_tenancy at where at.Tenancy_ID in ("
+							+ loginTenancyId + "))) and at.BSV_Check=1";
+				} else {
+					qry2 = "select  distinct(at.asset_type_group_name),at.asset_group_id from asset_type at where at.asset_group_id in ("
+							+ assetGroupidsInString + ") and at.asset_type_id in "
+							+ "(select distinct(p.Asset_Type_ID) from products p, asset  a where a.product_id=p.Product_ID and  a.Primary_Owner_ID in (select at.Account_ID from account_tenancy at where at.Tenancy_ID in ("
+							+ loginTenancyId + "))) and at.BSV_Check=1";
+				}
+				iLogger.info("loginTenancyId:" + loginTenancyId + "-roleId:" + roleId + "-assetGroupIds:"
+						+ assetGroupIds + "-query:" + qry2);
+
+				Query query2 = session.createSQLQuery(qry2);
+				Iterator iterator2 = query2.list().iterator();
+				while (iterator2.hasNext()) {
+
+					result1 = (Object[]) iterator2.next();
+					if (result1[1] != null) {
+						if (result1[0] != null) {
+							System.out.println("result1[1] " + result1[1]);
+							String qry3 = "select at.Asset_Type_Code from asset_type at where at.asset_type_group_name="
+									+ "'" + result1[0] + "'";
+							Query query3 = session.createSQLQuery(qry3);
+							// query2.setString(0, result1[1]);
+							System.out.println("query3  " + query3);
+							Iterator iterator3 = query3.list().iterator();
+							List<String> ll = new ArrayList<>();
+							while (iterator3.hasNext()) {
+
+								ll.add((String) iterator3.next());
+							}
+
+							if (modelMap.containsKey(result1[1])) {
+								HashMap map = (HashMap) modelMap.get(result1[1]);
+								map.put(result1[0], ll);
+								modelMap.put(result1[1], map);
+							} else {
+								HashMap map = new HashMap();
+								map.put(result1[0], ll);
+								modelMap.put(result1[1], map);
+							}
+						}
+					}
+				}
+
+			} else {
+				String qry4 = null;
+				if (assetGroupidsInString == "") {
+					qry4 = "select  distinct(at.asset_type_group_name), at.asset_group_id from asset_type at where at.BSV_Check=1";
+				} else {
+					qry4 = "select  distinct(at.asset_type_group_name), at.asset_group_id from asset_type at where at.asset_group_id in ("
+							+ assetGroupidsInString + ") and at.BSV_Check=1";
+				}
+				iLogger.info("loginTenancyId:" + loginTenancyId + "-roleId:" + roleId + "-assetGroupIds:"
+						+ assetGroupIds + "-query:" + qry4);
+
+				Query query4 = session.createSQLQuery(qry4);
+				Iterator iterator4 = query4.list().iterator();
+				while (iterator4.hasNext()) {
+
+					result1 = (Object[]) iterator4.next();
+					if (result1[1] != null) {
+						if (result1[0] != null) {
+							String qry5 = "select at.Asset_Type_Code from asset_type at where at.asset_type_group_name="
+									+ "'" + result1[0] + "'";
+							Query query5 = session.createSQLQuery(qry5);
+							// query2.setString(0, result1[1]);
+							System.out.println("query5  " + query5);
+							Iterator iterator5 = query5.list().iterator();
+							List<String> ll = new ArrayList<>();
+							while (iterator5.hasNext()) {
+
+								ll.add((String) iterator5.next());
+							}
+
+							if (modelMap.containsKey(result1[1])) {
+								HashMap map = (HashMap) modelMap.get(result1[1]);
+								map.put(result1[0], ll);
+								modelMap.put(result1[1], map);
+							} else {
+								HashMap map = new HashMap();
+								map.put(result1[0], ll);
+								modelMap.put(result1[1], map);
+							}
+						}
+					}
+				}
+			}
+			}
+			else {
+				if (roleName != null
+						&& (roleName.equalsIgnoreCase("Customer") || roleName.equalsIgnoreCase("Customer Fleet Manager"))) {
+					String qry2 = null;
+					if (assetGroupidsInString == "") {
+						qry2 = "select  distinct(at.asset_type_group_name),at.asset_group_id from asset_type at where at.asset_type_id in "
+								+ "(select distinct(p.Asset_Type_ID) from products p, asset  a where a.product_id=p.Product_ID and  a.Primary_Owner_ID in (select at.Account_ID from account_tenancy at where at.Tenancy_ID in ("
+								+ loginTenancyId + "))) and  (at.BSV_Check != 1 OR at.BSV_Check IS NULL) ";
+					} else {
+						qry2 = "select  distinct(at.asset_type_group_name),at.asset_group_id from asset_type at where at.asset_group_id in ("
+								+ assetGroupidsInString + ") and at.asset_type_id in "
+								+ "(select distinct(p.Asset_Type_ID) from products p, asset  a where a.product_id=p.Product_ID and  a.Primary_Owner_ID in (select at.Account_ID from account_tenancy at where at.Tenancy_ID in ("
+								+ loginTenancyId + "))) and  (at.BSV_Check != 1 OR at.BSV_Check IS NULL)";
+					}
+					iLogger.info("loginTenancyId:" + loginTenancyId + "-roleId:" + roleId + "-assetGroupIds:"
+							+ assetGroupIds + "-query:" + qry2);
+
+					Query query2 = session.createSQLQuery(qry2);
+					Iterator iterator2 = query2.list().iterator();
+					while (iterator2.hasNext()) {
+
+						result1 = (Object[]) iterator2.next();
+						if (result1[1] != null) {
+							if (result1[0] != null) {
+								System.out.println("result1[1] " + result1[1]);
+								String qry3 = "select at.Asset_Type_Code from asset_type at where at.asset_type_group_name="
+										+ "'" + result1[0] + "'";
+								Query query3 = session.createSQLQuery(qry3);
+								// query2.setString(0, result1[1]);
+								System.out.println("query3  " + query3);
+								Iterator iterator3 = query3.list().iterator();
+								List<String> ll = new ArrayList<>();
+								while (iterator3.hasNext()) {
+
+									ll.add((String) iterator3.next());
+								}
+
+								if (modelMap.containsKey(result1[1])) {
+									HashMap map = (HashMap) modelMap.get(result1[1]);
+									map.put(result1[0], ll);
+									modelMap.put(result1[1], map);
+								} else {
+									HashMap map = new HashMap();
+									map.put(result1[0], ll);
+									modelMap.put(result1[1], map);
+								}
+							}
+						}
+					}
+
+				} else {
+					String qry4 = null;
+					if (assetGroupidsInString == "") {
+						qry4 = "select  distinct(at.asset_type_group_name), at.asset_group_id from asset_type at where (at.BSV_Check != 1 OR at.BSV_Check IS NULL) ";
+					} else {
+						qry4 = "select  distinct(at.asset_type_group_name), at.asset_group_id from asset_type at where at.asset_group_id in ("
+								+ assetGroupidsInString + ") and  (at.BSV_Check != 1 OR at.BSV_Check IS NULL)";
+					}
+					iLogger.info("loginTenancyId:" + loginTenancyId + "-roleId:" + roleId + "-assetGroupIds:"
+							+ assetGroupIds + "-query:" + qry4);
+
+					Query query4 = session.createSQLQuery(qry4);
+					Iterator iterator4 = query4.list().iterator();
+					while (iterator4.hasNext()) {
+
+						result1 = (Object[]) iterator4.next();
+						if (result1[1] != null) {
+							if (result1[0] != null) {
+								String qry5 = "select at.Asset_Type_Code from asset_type at where at.asset_type_group_name="
+										+ "'" + result1[0] + "'";
+								Query query5 = session.createSQLQuery(qry5);
+								// query2.setString(0, result1[1]);
+								System.out.println("query5  " + query5);
+								Iterator iterator5 = query5.list().iterator();
+								List<String> ll = new ArrayList<>();
+								while (iterator5.hasNext()) {
+
+									ll.add((String) iterator5.next());
+								}
+
+								if (modelMap.containsKey(result1[1])) {
+									HashMap map = (HashMap) modelMap.get(result1[1]);
+									map.put(result1[0], ll);
+									modelMap.put(result1[1], map);
+								} else {
+									HashMap map = new HashMap();
+									map.put(result1[0], ll);
+									modelMap.put(result1[1], map);
+								}
+							}
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			fLogger.fatal("Exception :" + e);
+		} finally {
+
+			if (session.isOpen()) {
+
+				session.close();
+			}
+
+		}
+
+		return modelMap;
+	}
 }

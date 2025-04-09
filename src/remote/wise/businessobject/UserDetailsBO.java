@@ -3454,6 +3454,19 @@ public class UserDetailsBO extends BaseBusinessObject {
 									" and tb.parentId in (:list) group by a.contact_id ";
 							
 						}
+						//Sai Divya :20250409 :SearchBYEmailId in UserTab.n
+						if(user_Id.split("\\|")[0].equalsIgnoreCase("email")){
+							contactQuery = " select a.contact_id, a.first_name, a.last_name, a.is_tenancy_admin, b.role_id, b.role_name," +
+									" a.primary_mobile_number, a.primary_email_id, a.countryCode, a.language,a.timezone , " +
+									" CAST(GROUP_CONCAT(cust.group_id) As string ) as groupId, CAST(GROUP_CONCAT(cust.group_name) As string ) as groupName," +
+									" CAST(GROUP_CONCAT(cust.active_status) As string ) as activeStatus,d.tenancy_id " +
+									" from GroupUserMapping e RIGHT OUTER JOIN e.group_id cust " +
+									" RIGHT OUTER JOIN e.contact_id a, RoleEntity b, AccountContactMapping c, AccountTenancyMapping d ,TenancyEntity ten, TenancyBridgeEntity tb  " +
+									" where a.role = b.role_id and a.contact_id=c.contact_id and c.account_id= d.account_id and d.tenancy_id=ten.tenancy_id and ten.tenancy_id=tb.childId " +
+									" and a.active_status=1 and a.primary_email_id like \'%"+user_Id.split("\\|")[1]+"%\' and a.client_id='"+clientEntity.getClient_id()+"'" +
+									" and tb.parentId in (:list) group by a.contact_id ";
+							
+						}
 					}
 					else
 					{
@@ -3527,6 +3540,22 @@ public class UserDetailsBO extends BaseBusinessObject {
 						
 						
 					}
+					//Sai Divya :20250409 :SearchBYEmailId in UserTab.n
+						if (user_Id.split("\\|")[0].equalsIgnoreCase("email")) {
+							contactQuery = " select a.contact_id, a.first_name, a.last_name, a.is_tenancy_admin, b.role_id, b.role_name,"
+									+ " a.primary_mobile_number, a.primary_email_id, a.countryCode, a.language,a.timezone , "
+									+ " CAST(GROUP_CONCAT(cust.group_id) As string ) as groupId, CAST(GROUP_CONCAT(cust.group_name) As string ) as groupName "
+									+ " CAST(GROUP_CONCAT(cust.active_status) As string ) as activeStatus,d.tenancy_id "
+									+ " from GroupUserMapping e RIGHT OUTER JOIN e.group_id cust "
+									+ " RIGHT OUTER JOIN e.contact_id a, RoleEntity b, AccountContactMapping c, AccountTenancyMapping d, TenancyEntity ten, TenancyBridgeEntity tb "
+									+ " where a.role = b.role_id and a.contact_id=c.contact_id and c.account_id= d.account_id and d.tenancy_id=ten.tenancy_id and ten.tenancy_id=tb.childId  "
+									+ " and a.active_status=1 and a.primary_email_id like \'%"
+									+ user_Id.split("\\|")[1] + "%\' and a.client_id='" + clientEntity.getClient_id()
+									+ "'" + " and cust.group_id =" + AssetGroupId
+									+ " and tb.parentId in (:list) group by a.contact_id ";
+
+						}
+					
 					}
 					else{
 					contactQuery = " select a.contact_id, a.first_name, a.last_name, a.is_tenancy_admin, b.role_id, b.role_name," +
@@ -6566,12 +6595,23 @@ public class UserDetailsBO extends BaseBusinessObject {
 					// and then add.
 					if (zoneDealerCodeMap.containsKey(parentCode)) {
 						dealerCodeMap = zoneDealerCodeMap.get(parentCode);
-						if (dealerCodeMap == null) {
+						//Sai Divya : 20250409 : niti231894- is not able to download Reports
+						if(dealerAccountCode==null || dealerAccountCode.isEmpty())
+						{
+					        iLogger.error("dealerAccountCode is null or empty. Skipping insertion.");
+					        continue;
+						}
+						if(dealerAccountName==null || dealerAccountName.isEmpty())
+						{
+							iLogger.error("dealerAccountName is null or empty. Skipping insertion.");
+							continue;
+						}
+						if (dealerCodeMap == null || dealerCodeMap.isEmpty()) {
 							dealerCodeMap = new TreeMap<String, String>();
 						}
 						dealerCodeMap.put(dealerAccountCode, dealerAccountName);
 						zoneDealerCodeMap.remove(parentCode);
-
+						
 					} else {
 						// zone id (parent)does not exist in map. create key for
 						// parent

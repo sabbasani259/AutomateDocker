@@ -152,7 +152,7 @@ public class SendSMSWithKafka implements Callable
 						//JCB6554-Sai Divya:20240226:change of Unicel URL http://www.unicel.in/SendSMS/sendmsg.php to https://api.instaalerts.zone/SendSMS/sendmsg.php
 						//MEID100012615-Sai Divya:20240805:Unicel password change String String String urlString = "https://api.instaalerts.zone/SendSMS/sendmsg.php?uname=jcbwt&pass=a$1Tj~5O&dest="+mobileNum.get(i)+"&msg="+smsBodyContent+"&prty=1";
 						//String urlString = "https://api.instaalerts.zone/SendSMS/sendmsg.php?uname=jcbwt&pass=Wipro@2024&dest="+mobileNum.get(i)+"&msg="+smsBodyContent+"&prty=1";//LLOPS-94.o
-						String urlString = "https://api.instaalerts.zone/SendSMS/sendmsg.php?uname="+sourceUname+"&pass="+sourcePass+""+mobileNum.get(i)+"&msg="+smsBodyContent+"&prty=1";//LLOPS-94.n
+						String urlString = "https://api.instaalerts.zone/SendSMS/sendmsg.php?uname="+sourceUname+"&pass="+sourcePass+"&dest="+mobileNum.get(i)+"&msg="+smsBodyContent+"&prty=1";//LLOPS-94.n
 						iLogger.info("urlString"+urlString);
 						urlString = urlString.replaceAll("%", "%25");
 						urlString = urlString.replaceAll("\\s", "%20");
@@ -408,7 +408,7 @@ public class SendSMSWithKafka implements Callable
 					//JCB6554-Sai Divya:20240724:change of Unicel URL String String urlString = "http://www.unicel.in/SendSMS/sendmsg.php?uname=jcbwt&pass=a$1Tj~5O&dest="+mobileNum.get(i)+"&msg="+smsBodyContent+"&prty=1";
 					//MEID100012615-Sai Divya:20240805:Unicel password change String String String urlString="https://api.instaalerts.zone/SendSMS/sendmsg.php?uname=jcbwt&pass=a$1Tj~5O&dest="+mobileNum.get(i)+"&msg="+smsBodyContent+"&prty=1";
 					//String urlString="https://api.instaalerts.zone/SendSMS/sendmsg.php?uname=jcbwt&pass=Wipro@2024&dest="+mobileNum.get(i)+"&msg="+smsBodyContent+"&prty=1";//LLOPS-94.o
-					String urlString="https://api.instaalerts.zone/SendSMS/sendmsg.php?uname="+sourceUname+"&pass="+sourcePass+""+mobileNum.get(i)+"&msg="+smsBodyContent+"&prty=1";//LLOPS-94.n
+					String urlString="https://api.instaalerts.zone/SendSMS/sendmsg.php?uname="+sourceUname+"&pass="+sourcePass+"&dest="+mobileNum.get(i)+"&msg="+smsBodyContent+"&prty=1";//LLOPS-94.n
 					urlString = urlString.replaceAll("%", "%25");
 					urlString = urlString.replaceAll("\\s", "%20");
 					urlString = urlString.replaceAll("#", "%23");

@@ -436,7 +436,7 @@ public class RestApplication extends Application
 		singletons.add(new OfflineAlertSeverityReportRESTServiceCsv());//ME100011411.n
 		singletons.add(new ForgotPasswordExtendedService());//JCB6622.n
 		singletons.add(new RemoteDiagnosticsRestService());//CR517
-		singletons.add(new DealerDataAndSMSNotificationsRestService());//CR498
+		singletons.add(new DealerDataAndSMSNotificationsRestService());//CR498.n
 		
 	}
 

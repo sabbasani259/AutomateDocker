@@ -52,4 +52,45 @@ public class GenericModelCodeService {
 
 		return modelMap;
 	}
+	
+	//CR519 :20250403: Sai Divya : DTC Changes Phase 2.sn
+	@GET()
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/getBSVModels")
+	public HashMap getBSVModels(@QueryParam("loginTenancyId") String loginTenancyId,
+			@QueryParam("roleId") Integer roleId, @QueryParam("assetGroupIds") String assetGroupIds,
+			@QueryParam("isBSV") String isBSV) {
+		Logger iLogger = InfoLoggerClass.logger;
+		iLogger.info(
+				"input:loginTenancyId:" + loginTenancyId + "-roleId:" + roleId + "-assetGroupIds:" + assetGroupIds);
+		ProfileCodeImpl omplObj = new ProfileCodeImpl();
+		String assetTypes = null;
+		HashMap modelMap = null;
+		ModelCodeResponseContract respObj = null;
+		if (roleId > 0 && roleId != null) {
+			modelMap = omplObj.getBSVModels(loginTenancyId, roleId, assetGroupIds, isBSV);
+		}
+
+		return modelMap;
+	}
+	
+	@GET()
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/getBSVModelCodes")
+	public HashMap getBSVModelCodes(@QueryParam("loginTenancyId") String loginTenancyId,
+			@QueryParam("roleId") Integer roleId, @QueryParam("assetGroupCodes") String assetGroupCodes,@QueryParam("isBSV") String isBSV) {
+		Logger iLogger = InfoLoggerClass.logger;
+		iLogger.info(
+				"input:loginTenancyId:" + loginTenancyId + "-roleId:" + roleId + "-assetGroupCodes:" + assetGroupCodes);
+		ProfileCodeImpl omplObj = new ProfileCodeImpl();
+		String assetTypes = null;
+		HashMap modelMap = null;
+		ModelCodeResponseContract respObj = null;
+		if (roleId > 0 && roleId != null) {
+			modelMap = omplObj.getBSVModelCodes(loginTenancyId, roleId, assetGroupCodes,isBSV);
+		}
+
+		return modelMap;
+	}
+	//CR519 :20250403: Sai Divya : DTC Changes Phase 2.en
 }

@@ -26,6 +26,7 @@ import remote.wise.exception.CustomFault;
 import remote.wise.log.FatalErrorLogging.FatalLoggerClass;
 import remote.wise.log.InfoLogging.InfoLoggerClass;
 import remote.wise.service.datacontract.GensetCurrentDataResponseContract;
+import remote.wise.service.datacontract.GensetDefFillLevelResponseContract;
 import remote.wise.service.datacontract.GensetDummyLoadBankDataContract;
 import remote.wise.service.datacontract.GensetTrendChartDataContract;
 import remote.wise.util.CommonUtil;
@@ -33,6 +34,7 @@ import remote.wise.util.ConnectMySQL;
 import remote.wise.util.DateUtil;
 
 //CR424 : 20231127 : prasad : Genset CPCB4+ for Stage V machines 
+//LL98: 04172025: Prapoorna: DefLevel value for Genset Machines
 public class GensetServiceImpl {
 
 
@@ -167,6 +169,63 @@ public class GensetServiceImpl {
 		}
 		return responseString;
 	}
+	
+	public String getDefFillLevel(String vin) {
+	    Logger iLogger = InfoLoggerClass.logger;
+	    Logger fLogger = FatalLoggerClass.logger;
+
+	    boolean flag = true;
+	    String responseString = "FAILURE";
+	    GensetDefFillLevelResponseContract response = new GensetDefFillLevelResponseContract();
+	    // Get serial number if machine number provided as input and not deactivated
+	    vin = new CommonUtil().getVin(vin);
+	    if (vin == null) {
+	        fLogger.fatal("GensetServiceImpl: getCurrentTab: Provided in either deactivated or invalid: " + vin);
+	    } else {
+	        ConnectMySQL factory = new ConnectMySQL();
+	        String selectQuery = "select serial_number, REPLACE(txndata->'$.DEF_Level', '\"', '') as Def_Level ,"
+					+ "convert_tz(Transaction_Timestamp_Log,'+00:00','+05:30') as txnTS "
+	        		+ "from asset_monitoring_snapshot where serial_number='" + vin + "'";
+	        iLogger.info("query :" + selectQuery);
+	        try (Connection conn = factory.getConnection();
+	             Statement statement = conn.createStatement();
+	             ResultSet rs = statement.executeQuery(selectQuery)) {
+	            while (rs.next()) {
+	                String serialNumber = rs.getString("serial_number");
+	                if (serialNumber == null) {
+						break;
+					}
+	                String txnTimestampPT = null;
+					if (rs.getString("txnTS") != null)
+						txnTimestampPT = rs.getString("txnTS").split("\\.")[0];
+					else
+						txnTimestampPT = "NA";
+					double defFillLevel = Double.parseDouble(rs.getString("Def_Level"));
+					if(defFillLevel>0) {
+						response.setDef_Level(String.valueOf((int) Math.round(defFillLevel)));
+						response.setStatus("#00cc00");
+						response.setTxnTimestampPT(txnTimestampPT);
+						flag=false;
+					}
+					if(flag) {
+						response.setDef_Level("NA");
+						response.setStatus("NA");
+						response.setTxnTimestampPT("NA");
+					}
+	                responseString = new ObjectMapper().writeValueAsString(response);
+	                iLogger.info("GensetServiceImpl: getDefLevelData:" + responseString);
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	            fLogger.fatal("GensetServiceImpl: getDefLevelData: SQLException occurred:" + e.getMessage());
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            fLogger.fatal("GensetServiceImpl: getDefLevelData: Exception occurred:" + e.getMessage());
+	        }
+	    }
+	    return responseString;
+	}
+
 
 	public String getTrendsChartData(String vin, String date) throws CustomFault {
 

@@ -15,6 +15,7 @@ import remote.wise.service.implementation.GensetServiceImpl;
 import remote.wise.util.CommonUtil;
 
 //CR424 : 20231127 : prasad : Genset CPCB4+ for Stage V machines 
+//LL98: 04172025: Prapoorna: DefLevel value for Genset Machines
 @Path("/GensetService")
 public class GensetService {
 
@@ -49,7 +50,39 @@ public class GensetService {
 				.info("Webservice Output :" + response + ": Time taken:" + (endTimeMillis - startTimeMillis) + "ms~~");
 		return response;
 	}
+//LL98.sn
+	@GET
+	@Path("getDefFillLevel")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getDefFillLevel(@QueryParam(value = "vin") String vin) {
+		Logger infoLogger = InfoLoggerClass.logger;
+		Logger fatalLogger = FatalLoggerClass.logger;
+		long startTimeMillis = System.currentTimeMillis();
+		infoLogger.info("Webservice Input : VIN :" + vin);
+		String response = "FAILURE";
+		try {
+			CommonUtil util = new CommonUtil();
+			String isValidinput = null;
+			isValidinput = util.inputFieldValidation(vin);
+			if (!isValidinput.equals("SUCCESS")) {
+				throw new CustomFault("Invalid Serial Number");
+			}
+			GensetServiceImpl impl = new GensetServiceImpl();
+			response = impl.getDefFillLevel(vin);
+		}catch (CustomFault e) {
+		    fatalLogger.fatal("Exception occurred:" + e.getFaultInfo());
+		    return e.getFaultInfo();
+		}
+		catch (Exception e) {
+			fatalLogger.fatal("Exception occurred:" + e.getMessage());
+		}
 
+		long endTimeMillis = System.currentTimeMillis();
+		infoLogger
+				.info("Webservice Output :" + response + ": Time taken:" + (endTimeMillis - startTimeMillis) + "ms~~");
+		return response;
+	}
+//LL98.en
 	
 	
 	@GET

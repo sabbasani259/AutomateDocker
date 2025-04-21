@@ -3454,7 +3454,7 @@ public class UserDetailsBO extends BaseBusinessObject {
 									" and tb.parentId in (:list) group by a.contact_id ";
 							
 						}
-						//Sai Divya :20250409 :SearchBYEmailId in UserTab.n
+						//LL21 :Sai Divya :20250409 :SearchBYEmailId in UserTab.n
 						if(user_Id.split("\\|")[0].equalsIgnoreCase("email")){
 							contactQuery = " select a.contact_id, a.first_name, a.last_name, a.is_tenancy_admin, b.role_id, b.role_name," +
 									" a.primary_mobile_number, a.primary_email_id, a.countryCode, a.language,a.timezone , " +
@@ -3540,7 +3540,7 @@ public class UserDetailsBO extends BaseBusinessObject {
 						
 						
 					}
-					//Sai Divya :20250409 :SearchBYEmailId in UserTab.n
+					//LL21 :Sai Divya :20250409 :SearchBYEmailId in UserTab.n
 						if (user_Id.split("\\|")[0].equalsIgnoreCase("email")) {
 							contactQuery = " select a.contact_id, a.first_name, a.last_name, a.is_tenancy_admin, b.role_id, b.role_name,"
 									+ " a.primary_mobile_number, a.primary_email_id, a.countryCode, a.language,a.timezone , "

@@ -6,13 +6,16 @@ import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.logging.log4j.Logger;
 
+import remote.wise.exception.CustomFault;
 import remote.wise.log.FatalErrorLogging.FatalLoggerClass;
 import remote.wise.log.InfoLogging.InfoLoggerClass;
 import remote.wise.service.implementation.UnmergeBpCodeImpl;
+import remote.wise.util.CommonUtil;
 
 @Path("/UnmergeBpCodeRESTService")
 public class UnmergeBpCodeRESTService {
@@ -25,15 +28,36 @@ public class UnmergeBpCodeRESTService {
 		String response = null;     
 		String responseMsg = null;
 		List<String> accountCodeList=null;
+		String userID=null;
 		for(int i=0;i<reqObj.size();i++){
 			if(reqObj.get("accountCodeList")!=null){
 				accountCodeList=(List<String>) reqObj.get("accountCodeList");
 			}}	
 		if(accountCodeList!=null && !accountCodeList.isEmpty()){
 		try{
+				// LL-147 : Sai Divya : Traceability for BP code un-merging.sn
+				String loginID = (String) reqObj.get("loginID");
+				infoLogger.info("Received LoginID" + loginID);
+				if (loginID != null) {
+
+					infoLogger.info("Initial login ID: " + loginID);
+					userID = new CommonUtil().getUserId(loginID);
+
+					if (userID == null) {
+						throw new CustomFault("Invalid Login ID: " + loginID);
+					} else {
+						// Set the login ID to the retrieved user ID
+
+						infoLogger.info("Updated login ID with user ID: " + loginID);
+					}
+
+				} else {
+					infoLogger.info("Login ID is null.");
+				}
+				// LL-147 : Sai Divya : Traceability for BP code un-merging.en
 			infoLogger.info("Webservice input : "+accountCodeList);
 			UnmergeBpCodeImpl implObj = new UnmergeBpCodeImpl();
-			response = implObj.updateMappingCode(accountCodeList);
+			response = implObj.updateMappingCode(accountCodeList,userID);
 			infoLogger.info("Webservice Output: " + response);
 		}catch(Exception e){
 			fLogger.error("Exception:"+e.getMessage());

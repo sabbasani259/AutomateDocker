@@ -6,7 +6,7 @@ import remote.wise.dao.UnmergeBpCodeDAO;
 
 public class UnmergeBpCodeImpl {
 
-	public String updateMappingCode(List<String> accountCodeList) {
+	public String updateMappingCode(List<String> accountCodeList,String userID) {
 		UnmergeBpCodeDAO daoObj = new UnmergeBpCodeDAO();
 		String response = null;
 		if(accountCodeList!=null && !accountCodeList.isEmpty()){
@@ -15,7 +15,7 @@ public class UnmergeBpCodeImpl {
 			
 		boolean isFound=daoObj.searchAccountCode(accountCode);
 		if(isFound)
-	    daoObj.updateMappingCodeForCorrespondingAccountCode(accountCode);
+	    daoObj.updateMappingCodeForCorrespondingAccountCode(accountCode,userID);
 		else{
 				if(response==null)
 					response=accountCode;

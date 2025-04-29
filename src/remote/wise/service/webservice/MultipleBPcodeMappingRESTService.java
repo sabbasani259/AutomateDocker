@@ -410,16 +410,37 @@ public class MultipleBPcodeMappingRESTService {
 			Logger infoLogger = InfoLoggerClass.logger;
 			Logger fLogger = FatalLoggerClass.logger;
 			String response = null;
+			String userID=null;
 			List<String> vinNumberList = null;
 			for (int i = 0; i < reqObj.size(); i++) {
 				if (reqObj.get("VIN") != null) {
 					vinNumberList = (List<String>) reqObj.get("VIN");
 				}
 			}
+		// LL-147 : Sai Divya : Traceability for BP code un-merging .sn
+		String loginID = (String) reqObj.get("loginID");
+		infoLogger.info("Received LoginID" + loginID);
+		if (loginID != null) {
+
+			infoLogger.info("Initial login ID: " + loginID);
+			userID = new CommonUtil().getUserId(loginID);
+
+			if (userID == null) {
+				throw new CustomFault("Invalid Login ID: " + loginID);
+			} else {
+				// Set the login ID to the retrieved user ID
+
+				infoLogger.info("Updated login ID with user ID: " + loginID);
+			}
+
+		} else {
+			infoLogger.info("Login ID is null.");
+		}
+		// LL-147 : Sai Divya : Traceability for BP code un-merging .en
 			if (vinNumberList != null && !vinNumberList.isEmpty()) {
 				try {
 					infoLogger.info("Webservice input : " + vinNumberList);
-					response = new MultipleBPcodeMappingImpl().updateMappingCodeByVin(vinNumberList);
+					response = new MultipleBPcodeMappingImpl().updateMappingCodeByVin(vinNumberList,userID);
 					infoLogger.info("Webservice Output: " + response);
 				} catch (Exception e) {
 					fLogger.error("Exception:" + e.getMessage());

@@ -783,82 +783,112 @@ public class MultipleBPcodeMappingImpl {
 	}
 	
 	// Shajesh : 2021-01-14 : BP Code unmerge at VIN level
-	public String updateMappingCodeByVin(List<String> vinNumberList) {
-			Logger fLogger = FatalLoggerClass.logger;
-			Logger iLogger = InfoLoggerClass.logger;
-			String response = "FAILURE";
-			ResultSet rs = null;
-			String accountDetailQuery = null;
-			String updateQueryForMappingCodes = null;
-			String updateQueryForMappingCodeinTenancy=null;//JCB417.n
-			Connection connection = null;
-			Statement statement = null;
-			List<String> accountIdsList;
-			List<Integer> tenancyIdList;//JCB417.n
-			List<String> account_codes = new ArrayList<String>();//JCB417.n
-			List<String> mapping_codes= new ArrayList<String>();
-			String acc_code  = null;
-			String map_code = null;
-			if (vinNumberList != null && !vinNumberList.isEmpty()) {
-				try {
-					accountIdsList = searchAccountIdByVin(vinNumberList);
-					iLogger.info("List of account ID associated with the VIN -----> :: " + accountIdsList);
-					ConnectMySQL connFactory = new ConnectMySQL();
-					connection = connFactory.getConnection();
-					statement = connection.createStatement();
-					if (accountIdsList.size() == 0) {
-							iLogger.info("There is no AccountID associated with this VIN");
-							throw new CustomFault(
-									"Provide a valid VIN ! There is no AccountID associated with this VIN ");
+	public String updateMappingCodeByVin(List<String> vinNumberList, String userID) {
+	    Logger fLogger = FatalLoggerClass.logger;
+	    Logger iLogger = InfoLoggerClass.logger;
+	    String response = "FAILURE";
+	    ResultSet rs = null;
+	    String accountDetailQuery = null;
+	    String updateQueryForMappingCodes = null;
+	    String updateQueryForMappingCodeinTenancy = null;
+	    Connection connection = null;
+	    Statement statement = null;
+	    List<String> accountIdsList;
+	    List<Integer> tenancyIdList;
+	    List<String> account_codes = new ArrayList<String>();
+	    List<String> mapping_codes = new ArrayList<String>();
+	    String acc_code = null;
+	    String map_code = null;
+	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-						}else {
-							ListToStringConversion conversion = new ListToStringConversion();
-							String accountIdAsString = conversion.getStringList(accountIdsList).toString();	
-							tenancyIdList = new CommonUtil().getTenancyIdListByAcountIds(accountIdAsString);//JCB417.n
-							accountDetailQuery = "Select * from account where account_id in("+ accountIdAsString + ")";
-								iLogger.info("Fetching account deatils for corresponding account ID -----> :: " + accountDetailQuery);
-								rs = statement.executeQuery(accountDetailQuery);
-								while (rs.next()) {	
-									 acc_code = rs.getString("Account_Code");
-									 account_codes.add(acc_code) ;
-									 map_code = rs.getString("mapping_code");								
-									 mapping_codes.add(map_code);
-								}
-								String account_code = conversion.getStringList(account_codes).toString();
-								String mapping_code = conversion.getStringList(mapping_codes).toString();
-								String accountId = conversion.getStringList(accountIdsList).toString();
-								String tenancyId = conversion.getIntegerListString(tenancyIdList).toString();//JCB417.n
-								
-								iLogger.info("accountId  ----> :: "+accountId);
-								iLogger.info("account_code related to the corresponding account_id ----> :: "+account_code);
-								iLogger.info("mapping_code related to the corresponding account_id ----> :: "+mapping_code);
-									if (account_code.equals(mapping_code)) {
-											iLogger.info(":: There is no data for De-Merging :: -> Accound Code and Mapping Code are same ");
-											return "There is no data for De-Merging";
-									} else {																
-											updateQueryForMappingCodes = "update account set mapping_code= account_code  where account_code in ("+account_code+") AND Account_ID in ("+ accountId + ")";
-											iLogger.info("updateQueryForMappingCodes with account code if they are different :: "+ updateQueryForMappingCodes);		
-											PreparedStatement statement1 = connection.prepareStatement(updateQueryForMappingCodes);									
-											statement1.executeUpdate(updateQueryForMappingCodes);	
-											//JCB417.sn
-											updateQueryForMappingCodeinTenancy="update tenancy set mapping_code= tenancy_code where tenancy_code in ("+account_code+") AND tenancy_id in ("+ tenancyId+")";;
-											  iLogger.info("updateQueryForMappingCodeinTenancy with account code if they are different :: "+ updateQueryForMappingCodeinTenancy);	
-											  PreparedStatement statement2 = connection.prepareStatement(updateQueryForMappingCodeinTenancy);
-											  statement2.executeUpdate(updateQueryForMappingCodeinTenancy);
-											//JCB417.en
-											iLogger.info("Update Mapping_code with Account_Code : De-Merged Successfully");
-											return "SUCCESS";									
-											}								
-								}						
+	    Date currDate = new Date();
+	    String currentTS = sdf.format(currDate);
 
-				} catch (Exception e) {
-					fLogger.fatal("updateMappingCodeForCorrespondingVIN::issue while updating DB : Provide a valid VIN ! There is no AccountID associated with this VIN  "
-							+ e.getMessage());
-				}
-			}
+	    if (vinNumberList != null && !vinNumberList.isEmpty()) {
+	        try {
+	            accountIdsList = searchAccountIdByVin(vinNumberList);
+	            iLogger.info("List of account ID associated with the VIN -----> :: " + accountIdsList);
+	            ConnectMySQL connFactory = new ConnectMySQL();
+	            connection = connFactory.getConnection();
+	            statement = connection.createStatement();
+	            if (accountIdsList.size() == 0) {
+	                iLogger.info("There is no AccountID associated with this VIN");
+	                throw new CustomFault("Provide a valid VIN! There is no AccountID associated with this VIN");
+	            } else {
+	                ListToStringConversion conversion = new ListToStringConversion();
+	                String accountIdAsString = conversion.getStringList(accountIdsList).toString();
+	                tenancyIdList = new CommonUtil().getTenancyIdListByAcountIds(accountIdAsString);
+	                accountDetailQuery = "Select * from account where account_id in(" + accountIdAsString + ")";
+	                iLogger.info("Fetching account details for corresponding account ID -----> :: " + accountDetailQuery);
+	                rs = statement.executeQuery(accountDetailQuery);
+	                while (rs.next()) {
+	                    acc_code = rs.getString("Account_Code");
+	                    account_codes.add(acc_code);
+	                    map_code = rs.getString("mapping_code");
+	                    mapping_codes.add(map_code);
+	                }
+	                String account_code = conversion.getStringList(account_codes).toString();
+	                String mapping_code = conversion.getStringList(mapping_codes).toString();
+	                String accountId = conversion.getStringList(accountIdsList).toString();
+	                String tenancyId = conversion.getIntegerListString(tenancyIdList).toString();
 
-			return response;
-		}
+	                iLogger.info("accountId ----> :: " + accountId);
+	                iLogger.info("account_code related to the corresponding account_id ----> :: " + account_code);
+	                iLogger.info("mapping_code related to the corresponding account_id ----> :: " + mapping_code);
+	                if (account_code.equals(mapping_code)) {
+	                    iLogger.info(":: There is no data for De-Merging :: -> Account Code and Mapping Code are same ");
+	                    response = "There is no data for De-Merging";
+	                } else {
+	                    updateQueryForMappingCodes = "update account set mapping_code= account_code where account_code in (" + account_code + ") AND Account_ID in (" + accountId + ")";
+	                    iLogger.info("updateQueryForMappingCodes with account code if they are different :: " + updateQueryForMappingCodes);
+	                    PreparedStatement statement1 = connection.prepareStatement(updateQueryForMappingCodes);
+	                    statement1.executeUpdate(updateQueryForMappingCodes);
+
+	                    updateQueryForMappingCodeinTenancy = "update tenancy set mapping_code= tenancy_code where tenancy_code in (" + account_code + ") AND tenancy_id in (" + tenancyId + ")";
+	                    iLogger.info("updateQueryForMappingCodeinTenancy with account code if they are different :: " + updateQueryForMappingCodeinTenancy);
+	                    PreparedStatement statement2 = connection.prepareStatement(updateQueryForMappingCodeinTenancy);
+	                    statement2.executeUpdate(updateQueryForMappingCodeinTenancy);
+
+	                    iLogger.info("Update Mapping_code with Account_Code : De-Merged Successfully");
+	                    response = "SUCCESS";
+	                }
+	            }
+	           // LL-147 : Sai Divya : Traceability for BP code un-merging .sn
+	            iLogger.info("mapping_codes" +mapping_codes.size());
+	            iLogger.info("account_codes" +account_codes.size());
+	            // STEP 3::Update the Logging table only if response is SUCCESS
+	            if ("SUCCESS".equals(response)) {
+	                String preparedInsertQuery = "INSERT INTO account_code_unmerge_log_data (Account_Code, Mapping_Code, Updated_On, Updated_By) VALUES (?, ?, ?, ?)";
+	                iLogger.info("preparedInsertQuery: " + preparedInsertQuery);
+	                try (PreparedStatement pst = connection.prepareStatement(preparedInsertQuery)) {
+	                    for (int i = 0; i < mapping_codes.size(); i++) {
+	                        pst.setString(1, account_codes.get(i));
+	                        pst.setString(2, mapping_codes.get(i));
+	                        pst.setString(3, currentTS);
+	                        pst.setString(4, userID);
+	                        pst.addBatch();
+	                    }
+	                    pst.executeBatch();
+	                    iLogger.info("Data inserted into account_code_unmerge_log_data successfully.");
+	                } catch (SQLException e) {
+	                    fLogger.fatal("Error while inserting data into account_code_unmerge_log_data: " + e.getMessage());
+	                }
+	            }//LL-147 : Sai Divya : Traceability for BP code un-merging .en
+	        } catch (Exception e) {
+	            fLogger.fatal("updateMappingCodeForCorrespondingVIN::issue while updating DB: Provide a valid VIN! There is no AccountID associated with this VIN " + e.getMessage());
+	        } finally {
+	            try {
+	                if (rs != null) rs.close();
+	                if (statement != null) statement.close();
+	                if (connection != null) connection.close();
+	            } catch (SQLException e) {
+	                fLogger.fatal("Error while closing resources: " + e.getMessage());
+	            }
+	        }
+	    }
+
+	    return response;
+	}
 
 		private List<String> searchAccountIdByVin(List<String> vinNumbers)
 				throws CustomFault {

@@ -55,13 +55,19 @@ public class RemoteDiagnosticsRestService {
 			if (userCredentials.get("roleName").equals("Dealer")
 					|| userCredentials.get("roleName").equals("Dealer Admin")) {
 				userType = "Dealer";
-			} else if (userCredentials.get("roleName").equals("Super Admin")
-					|| userCredentials.get("roleName").equals("JCB Account")) {
+			} 
+			//LL-157 : Sai Divya : Remote Diagnostic Functionality - Multi Role Access .o
+//			else if (userCredentials.get("roleName").equals("Super Admin")
+//					|| userCredentials.get("roleName").equals("JCB Account")) {
+//				userType = "Admin";
+//			}
+			//LL-157 : Sai Divya : Remote Diagnostic Functionality - Multi Role Access .n
+		else if (userCredentials.get("roleName").equals("Super Admin")
+					|| userCredentials.get("roleName").equals("JCB Account") || userCredentials.get("roleName").equals("JCB HO") || userCredentials.get("roleName").equals("JCB RO")) {
 				userType = "Admin";
 			} else {
 				userType = "";
 				iLogger.info("userType is not allowed" + userCredentials.get("roleName"));
-				;
 			}
 			iLogger.info("userType :" + userType);
 			String encryptedUserName = RemoteDiagnosticsDAO.encrypt(username, secretKey);

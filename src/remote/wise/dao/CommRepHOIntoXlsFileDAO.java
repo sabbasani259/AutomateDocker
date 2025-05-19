@@ -49,7 +49,7 @@ public class CommRepHOIntoXlsFileDAO {
 
 				}
 
-				File file = new File("/user1/JCBLiveLink/COMMReportHO/CommReportHO.csv");
+				File file = new File("/user/JCBLiveLink/COMMReport/CommReportHO.csv");
 				//File file = new File("D://CommReport.csv");
 				FileWriter outputfile = new FileWriter(file);
 

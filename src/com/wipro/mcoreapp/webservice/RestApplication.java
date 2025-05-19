@@ -437,6 +437,7 @@ public class RestApplication extends Application
 		singletons.add(new ForgotPasswordExtendedService());//JCB6622.n
 		singletons.add(new RemoteDiagnosticsRestService());//CR517
 		singletons.add(new DealerDataAndSMSNotificationsRestService());//CR498.n
+		singletons.add(new CommRepHOIntoXlsFile());//Prasanna:20250519:HO comm report
 		
 	}
 

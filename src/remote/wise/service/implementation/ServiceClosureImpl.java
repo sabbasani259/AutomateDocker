@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 
 import remote.wise.log.BusinessErrorLogging.BusinessErrorLoggerClass;
 import remote.wise.log.FatalErrorLogging.FatalLoggerClass;
+import remote.wise.log.InfoLogging.InfoLoggerClass;
 import remote.wise.businessobject.ServiceClouserBO;
 import remote.wise.businessobject.ServiceDetailsBO;
 
@@ -31,6 +32,7 @@ public class ServiceClosureImpl {
 		String output;
 		Logger fLogger = FatalLoggerClass.logger;
 		Logger bLogger= BusinessErrorLoggerClass.logger;
+		Logger iLogger = InfoLoggerClass.logger;
 		
 		if(inputObj.get("assetEventId")==null)
 		{
@@ -62,11 +64,12 @@ public class ServiceClosureImpl {
 		
 		//output = new ServiceDetailsBO().setServiceCloserDetails( inputObj);
     	output = new ServiceClouserBO().setServiceCloserDetails(inputObj);
+    	iLogger.info("output"+output);
 
 		if(output==null || output.equalsIgnoreCase("FAILURE")||output.contains("FAILURE"))
 		{
 			fLogger.fatal("ServiceClosureImpl:setServiceCloserDetails Class:Status:FAILURE");
-			return "FAILURE";
+			return output;
 		}
 		
 		

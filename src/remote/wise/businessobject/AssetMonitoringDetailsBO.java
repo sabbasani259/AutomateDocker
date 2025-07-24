@@ -1862,14 +1862,14 @@ public class AssetMonitoringDetailsBO {
 			{
 				asset = (AssetEntity)assetItr.next();
 			}
-			iLogger.info("AssetMonitoringDetailsBO :: getAssetEventLog()-----> assetQ " + assetQ);
+//			iLogger.info("AssetMonitoringDetailsBO :: getAssetEventLog()-----> assetQ " + assetQ);
 			//DF20170130 @Roopa for Role based alert implementation, added paramId column in business_event table to match alert code and get the parameter key list from the monitoring prameters table. 
 			// Shajesh : 2021-02-17 : Node Traverse issue in Hibernate call, So convert to native SQL call
 			//Query monQ = session.createQuery(" from MonitoringParameters where RecordType='Event' ");
 			/*Query monQ = session.createQuery("SELECT a from MonitoringParameters a, EventEntity b where a.parameterId=b.parameterID and b.eventCode in ("+alertCodeListAsString+") and a.RecordType='Event' ");*/
 			Query monQ = session.createSQLQuery("SELECT * FROM monitoring_parameters a, business_event b WHERE a.Parameter_ID = b.Parameter_ID AND b.Alert_Code IN (" + alertCodeListAsString + ") AND a.Record_Type = 'Event'");
 		    ((SQLQuery)monQ).addEntity(MonitoringParameters.class);
-		    iLogger.info("AssetMonitoringDetailsBO :: getAssetEventLog()-----> monQ " + monQ);
+//		    iLogger.info("AssetMonitoringDetailsBO :: getAssetEventLog()-----> monQ " + monQ);
 			Iterator monItr = monQ.list().iterator();
 			while(monItr.hasNext())
 			{
@@ -2002,7 +2002,7 @@ public class AssetMonitoringDetailsBO {
 				 startTAssetMonTable =endTAssetMonTable; //Df20170102 @Roopa if strat table is not available than picking the data only from emd table.
 			 }
 			
-			
+
 			 if(startTAssetMonTable.equals(endTAssetMonTable)){
 				 
 				 TAssetMonQuery=" select t.Transaction_Timestamp, t.TxnData, t.Message_ID, t.Events"
@@ -2060,9 +2060,8 @@ public class AssetMonitoringDetailsBO {
 			 }
 		
 		//end
-		
-		
-		   Thread thread1 = new Thread() {
+
+			 Thread thread1 = new Thread() {
 
 
 			public void run() {
@@ -2127,7 +2126,7 @@ public class AssetMonitoringDetailsBO {
 			//DF20190802:Abhishek::changed location to EventclosedLocation
 		
 		//DF20200116:Abhishek: fetcing location from location if EventClosedLocation is null.
-				String closedAlertsQuery = " select ifnull(a.EventClosedLocation,location) as Location,a.Event_ID, a.Active_Status, a.Event_Severity, a.Event_Closed_Time as Event_Generated_Time, a.Event_Type_ID, a.Asset_Event_ID, b.Event_Name, m.DTC_code, m.Error_Code"
+				String closedAlertsQuery = " select ifnull(a.EventClosedLocation,location) as Location,a.Event_ID,a.UpdateSource, a.Active_Status, a.Event_Severity, a.Event_Closed_Time as Event_Generated_Time, a.Event_Type_ID, a.Asset_Event_ID, b.Event_Name, m.DTC_code, m.Error_Code"
 						+ " from asset_event a, business_event b left outer join monitoring_parameters m on  b.Parameter_ID = m.Parameter_ID"
 						+ " where a.Serial_Number='" + SerialNumber + "'"
 						+ " and a.Event_Closed_Time >= '"+ stringISTtoGMTConversion(period + " 00:00:00.0") +"' and a.Event_Closed_Time <= '"+ stringISTtoGMTConversion(period + " 23:59:59.0") +"' "
@@ -2148,8 +2147,8 @@ public class AssetMonitoringDetailsBO {
 					fLogger.fatal("AssetEventLogService::getAssetEventLog::Exception::"+e.getMessage());
 				}
 		
-				iLogger.info("AssetEventLogService Final openAlertQuery :: "+openAlertQuery);
-				iLogger.info("AssetEventLogService Final closedAlertsQuery :: "+closedAlertsQuery);
+//				iLogger.info("AssetEventLogService Final openAlertQuery :: "+openAlertQuery);
+//				iLogger.info("AssetEventLogService Final closedAlertsQuery :: "+closedAlertsQuery);
 		
 		FinalAlertsList.addAll(activeAlertsList);
 		FinalAlertsList.addAll(closedAlertsList);
@@ -2179,14 +2178,23 @@ public class AssetMonitoringDetailsBO {
 				
 //					System.out.println("FinalAlertsList.size():"+FinalAlertsList.size());
 					if(implListFromAMHAMD.get(i).getEventGeneratedTime().equalsIgnoreCase(FinalAlertsList.get(j).getEventGeneratedTime())){
-						
+						//Sai Divya : 20250724 : Engine Off status missing in event map.sn
+						if ((implListFromAMHAMD.get(i).getParamName()
+								.equalsIgnoreCase(FinalAlertsList.get(j).getParamName()))
+								&& implListFromAMHAMD.get(i).getParameterValue()
+										.equalsIgnoreCase(FinalAlertsList.get(j).getParameterValue()) && 
+										implListFromAMHAMD.get(i).getEventGeneratedTime().equalsIgnoreCase(FinalAlertsList.get(j).getEventGeneratedTime())) {
+							System.out.print("Check1 :" + FinalAlertsList.get(j));
+							FinalAlertsList.remove(j);
+						}
+						//Sai Divya : 20250724 : Engine Off status missing in event map.en
 						implListFromAMHAMD.get(i).setParamName(FinalAlertsList.get(j).getParamName());
 						implListFromAMHAMD.get(i).setParameterValue(FinalAlertsList.get(j).getParameterValue());
 						implListFromAMHAMD.get(i).setAlertSeverity(FinalAlertsList.get(j).getAlertSeverity());
 						//implListFromAMHAMD.get(i).setDtcCode(FinalAlertsList.get(j).getDtcCode());
 						
 						
-						FinalAlertsList.remove(j);
+						//FinalAlertsList.remove(j);
 					}
 					//DF20210524 Avinash Xavier A Events Map :Delete the alert that is not in asset event from the list instead of showing as engine on
 					else {

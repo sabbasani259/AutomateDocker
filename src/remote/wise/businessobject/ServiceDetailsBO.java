@@ -4297,8 +4297,100 @@ public class ServiceDetailsBO {
 					iLogger.info("ServiceHistory :No service schedule defined for the VIN with the given DBMS part Code and the CallTypeId for vin : "+serialNumber);
 					throw new CustomFault("No service schedule defined for the VIN with the given DBMS part Code and the CallTypeId");
 				}
+				//100016267 : Sai Divya : 20250724 :  Service alert ICON color is not getting changed post-closing the Beyond Warranty Service.sn
+				String cmh=null;
+
+				String txnKey="setServiceDetailsViaExecutor";
+				
+				//DF20180508:KO369761 - Pointing to correct DAL class.
+				/*List<AmsDAO> snapshotObj=new ArrayList<AmsDAO> ();
+
+				DynamicAMS_DAL amsDaoObj=new DynamicAMS_DAL();
+
+				snapshotObj=amsDaoObj.getAMSData(txnKey, serialNumber);*/
+				
+				List<AMSDoc_DAO> snapshotObj=new ArrayList<AMSDoc_DAO> ();
+				snapshotObj=DynamicAMS_Doc_DAL.getAMSData(txnKey, serialNumber);
+				HashMap<String,String> txnDataMap=new HashMap<String, String>();
+
+//				iLogger.debug(txnKey+"::"+"AMS DAL::getAMSData Size:"+snapshotObj.size());
+
+				if(snapshotObj.size()>0){
+
+					//parameters format in AMS
+					//String currParam= LAT|LONG|Enginestatus|Machinehours|ExternalBatteryVoltage|HCT|LOP|InternalBatteryLow
+					
+					//DF20180508:KO369761 - Pointing to correct DAL class.
+					/*String parameters=snapshotObj.get(0).getParameters();
+					String [] currParamList=parameters.split("\\|", -1);
+
+					cmh = currParamList[3];*/
+					
+					txnDataMap=snapshotObj.get(0).getTxnData();
+					
+					if(txnDataMap!=null && txnDataMap.size()>0){
+						cmh = txnDataMap.get("CMH");
+					}
+				}
 
 
+				//-----------------STEP 3: Insert/Update the record for Service Completion into ServiceHistory tables
+
+				if(session == null || !session.isOpen()){
+					session = new HibernateUtil().getSessionFactory().openSession();
+					session.beginTransaction();
+				}
+				Query serviceCompletionQ = session.createQuery("from ServiceHistoryEntity where serviceTicketNumber='"+jobCardNumber+"'");
+				Iterator serviceCompletionItr = serviceCompletionQ.list().iterator();
+				ConnectMySQL connMySql=new ConnectMySQL();
+				Connection conn=null;
+				int update=0;
+				//CR488
+				String serviceTicketNumber=null;
+				while(serviceCompletionItr.hasNext())
+				{
+					update=1;
+
+					ServiceHistoryEntity serviceHistoryObj = (ServiceHistoryEntity)serviceCompletionItr.next();
+					if( ! (serviceHistoryObj.getSerialNumber().getSerial_number().getSerialNumber().equalsIgnoreCase(serialNumber)) )
+					{
+						throw new CustomFault("Same JobCardNumber Details already exists ");
+					}
+					serviceHistoryObj.setDealerId(dealerEntity);
+					serviceHistoryObj.setServiceDate(vinServicedDate);
+					serviceHistoryObj.setDbmsPartCode(dbmsPartCode);
+					//DF20191220:Abhishek::added new column Extended Warranty.
+					serviceHistoryObj.setCallTypeId(callTypeId);
+					serviceHistoryObj.setServiceName(serviceName);
+					serviceHistoryObj.setScheduleName(scheduleName);
+					serviceHistoryObj.setServiceScheduleId(serviceScheduleID);
+					//DF20180423:IM20018382 - An additional field jobCardDetails.
+					serviceHistoryObj.setComments(jobCardDetails);
+					if(cmh!=null)
+						serviceHistoryObj.setCMH(cmh);
+					session.update(serviceHistoryObj);
+				}
+					iLogger.info("ServiceHisotry: Updated ServiceHistoryEntity");
+
+				if(update==0)
+				{
+					ServiceHistoryEntity newServiceRecord = new ServiceHistoryEntity();
+					newServiceRecord.setSerialNumber(assetEntity);
+					newServiceRecord.setServiceTicketNumber(jobCardNumber);
+					newServiceRecord.setDealerId(dealerEntity);
+					newServiceRecord.setServiceDate(vinServicedDate);
+					newServiceRecord.setDbmsPartCode(dbmsPartCode);
+					//DF20191220:Abhishek::added new column Extended Warranty.
+					newServiceRecord.setCallTypeId(callTypeId);
+					newServiceRecord.setServiceName(serviceName);
+					newServiceRecord.setScheduleName(scheduleName);
+					newServiceRecord.setServiceScheduleId(serviceScheduleID);
+					newServiceRecord.setCMH(cmh);
+					//DF20180423:IM20018382 - An additional field jobCardDetails.
+					newServiceRecord.setComments(jobCardDetails);
+					session.save(newServiceRecord);
+				}
+				//100016267 : Sai Divya : 20250724 :  Service alert ICON color is not getting changed post-closing the Beyond Warranty Service.en
 				//-----------------STEP 2: Close any active service alert on the machine for the schedules <= current received schedule
 				ListToStringConversion conversionObj = new  ListToStringConversion();
 				String scheduleIdListAsString = conversionObj.getStringList(scheduleIdList).toString();
@@ -4333,19 +4425,19 @@ public class ServiceDetailsBO {
 					iLogger.info("ServiceHistory: asset event table updated successfully: "+serialNumber);
 				}
 
-				if(session!=null && session.isOpen()){
-					if(session.getTransaction().isActive())
-					{
-						session.getTransaction().commit();
-					}
-
-					if(session!=null && session.isOpen())
-					{
-						session.flush();
-						session.close();
-
-					}
-				}
+//				if(session!=null && session.isOpen()){
+//					if(session.getTransaction().isActive())
+//					{
+//						session.getTransaction().commit();
+//					}
+//
+//					if(session!=null && session.isOpen())
+//					{
+//						session.flush();
+//						session.close();
+//
+//					}
+//				}
 
 
 				//20160711 - @suresh new column has been added to the service history table CMH
@@ -4436,98 +4528,98 @@ public class ServiceDetailsBO {
 
 				//DF20160914 @Roopa Fetching CMH data from snapshot table(AMS)
 
-				String cmh=null;
-
-				String txnKey="setServiceDetailsViaExecutor";
-				
-				//DF20180508:KO369761 - Pointing to correct DAL class.
-				/*List<AmsDAO> snapshotObj=new ArrayList<AmsDAO> ();
-
-				DynamicAMS_DAL amsDaoObj=new DynamicAMS_DAL();
-
-				snapshotObj=amsDaoObj.getAMSData(txnKey, serialNumber);*/
-				
-				List<AMSDoc_DAO> snapshotObj=new ArrayList<AMSDoc_DAO> ();
-				snapshotObj=DynamicAMS_Doc_DAL.getAMSData(txnKey, serialNumber);
-				HashMap<String,String> txnDataMap=new HashMap<String, String>();
-
-//				iLogger.debug(txnKey+"::"+"AMS DAL::getAMSData Size:"+snapshotObj.size());
-
-				if(snapshotObj.size()>0){
-
-					//parameters format in AMS
-					//String currParam= LAT|LONG|Enginestatus|Machinehours|ExternalBatteryVoltage|HCT|LOP|InternalBatteryLow
-					
-					//DF20180508:KO369761 - Pointing to correct DAL class.
-					/*String parameters=snapshotObj.get(0).getParameters();
-					String [] currParamList=parameters.split("\\|", -1);
-
-					cmh = currParamList[3];*/
-					
-					txnDataMap=snapshotObj.get(0).getTxnData();
-					
-					if(txnDataMap!=null && txnDataMap.size()>0){
-						cmh = txnDataMap.get("CMH");
-					}
-				}
-
-
-				//-----------------STEP 3: Insert/Update the record for Service Completion into ServiceHistory tables
-
-				if(session == null || !session.isOpen()){
-					session = new HibernateUtil().getSessionFactory().openSession();
-					session.beginTransaction();
-				}
-				Query serviceCompletionQ = session.createQuery("from ServiceHistoryEntity where serviceTicketNumber='"+jobCardNumber+"'");
-				Iterator serviceCompletionItr = serviceCompletionQ.list().iterator();
-				ConnectMySQL connMySql=new ConnectMySQL();
-				Connection conn=null;
-				int update=0;
-				//CR488
-				String serviceTicketNumber=null;
-				while(serviceCompletionItr.hasNext())
-				{
-					update=1;
-
-					ServiceHistoryEntity serviceHistoryObj = (ServiceHistoryEntity)serviceCompletionItr.next();
-					if( ! (serviceHistoryObj.getSerialNumber().getSerial_number().getSerialNumber().equalsIgnoreCase(serialNumber)) )
-					{
-						throw new CustomFault("Same JobCardNumber Details exists for different VIN");
-					}
-					serviceHistoryObj.setDealerId(dealerEntity);
-					serviceHistoryObj.setServiceDate(vinServicedDate);
-					serviceHistoryObj.setDbmsPartCode(dbmsPartCode);
-					//DF20191220:Abhishek::added new column Extended Warranty.
-					serviceHistoryObj.setCallTypeId(callTypeId);
-					serviceHistoryObj.setServiceName(serviceName);
-					serviceHistoryObj.setScheduleName(scheduleName);
-					serviceHistoryObj.setServiceScheduleId(serviceScheduleID);
-					//DF20180423:IM20018382 - An additional field jobCardDetails.
-					serviceHistoryObj.setComments(jobCardDetails);
-					if(cmh!=null)
-						serviceHistoryObj.setCMH(cmh);
-					session.update(serviceHistoryObj);
-				}
-					iLogger.info("ServiceHisotry: Updated ServiceHistoryEntity");
-
-				if(update==0)
-				{
-					ServiceHistoryEntity newServiceRecord = new ServiceHistoryEntity();
-					newServiceRecord.setSerialNumber(assetEntity);
-					newServiceRecord.setServiceTicketNumber(jobCardNumber);
-					newServiceRecord.setDealerId(dealerEntity);
-					newServiceRecord.setServiceDate(vinServicedDate);
-					newServiceRecord.setDbmsPartCode(dbmsPartCode);
-					//DF20191220:Abhishek::added new column Extended Warranty.
-					newServiceRecord.setCallTypeId(callTypeId);
-					newServiceRecord.setServiceName(serviceName);
-					newServiceRecord.setScheduleName(scheduleName);
-					newServiceRecord.setServiceScheduleId(serviceScheduleID);
-					newServiceRecord.setCMH(cmh);
-					//DF20180423:IM20018382 - An additional field jobCardDetails.
-					newServiceRecord.setComments(jobCardDetails);
-					session.save(newServiceRecord);
-				}
+//				String cmh=null;
+//
+//				String txnKey="setServiceDetailsViaExecutor";
+//				
+//				//DF20180508:KO369761 - Pointing to correct DAL class.
+//				/*List<AmsDAO> snapshotObj=new ArrayList<AmsDAO> ();
+//
+//				DynamicAMS_DAL amsDaoObj=new DynamicAMS_DAL();
+//
+//				snapshotObj=amsDaoObj.getAMSData(txnKey, serialNumber);*/
+//				
+//				List<AMSDoc_DAO> snapshotObj=new ArrayList<AMSDoc_DAO> ();
+//				snapshotObj=DynamicAMS_Doc_DAL.getAMSData(txnKey, serialNumber);
+//				HashMap<String,String> txnDataMap=new HashMap<String, String>();
+//
+////				iLogger.debug(txnKey+"::"+"AMS DAL::getAMSData Size:"+snapshotObj.size());
+//
+//				if(snapshotObj.size()>0){
+//
+//					//parameters format in AMS
+//					//String currParam= LAT|LONG|Enginestatus|Machinehours|ExternalBatteryVoltage|HCT|LOP|InternalBatteryLow
+//					
+//					//DF20180508:KO369761 - Pointing to correct DAL class.
+//					/*String parameters=snapshotObj.get(0).getParameters();
+//					String [] currParamList=parameters.split("\\|", -1);
+//
+//					cmh = currParamList[3];*/
+//					
+//					txnDataMap=snapshotObj.get(0).getTxnData();
+//					
+//					if(txnDataMap!=null && txnDataMap.size()>0){
+//						cmh = txnDataMap.get("CMH");
+//					}
+//				}
+//
+//
+//				//-----------------STEP 3: Insert/Update the record for Service Completion into ServiceHistory tables
+//
+//				if(session == null || !session.isOpen()){
+//					session = new HibernateUtil().getSessionFactory().openSession();
+//					session.beginTransaction();
+//				}
+//				Query serviceCompletionQ = session.createQuery("from ServiceHistoryEntity where serviceTicketNumber='"+jobCardNumber+"'");
+//				Iterator serviceCompletionItr = serviceCompletionQ.list().iterator();
+//				ConnectMySQL connMySql=new ConnectMySQL();
+//				Connection conn=null;
+//				int update=0;
+//				//CR488
+//				String serviceTicketNumber=null;
+//				while(serviceCompletionItr.hasNext())
+//				{
+//					update=1;
+//
+//					ServiceHistoryEntity serviceHistoryObj = (ServiceHistoryEntity)serviceCompletionItr.next();
+//					if( ! (serviceHistoryObj.getSerialNumber().getSerial_number().getSerialNumber().equalsIgnoreCase(serialNumber)) )
+//					{
+//						throw new CustomFault("Same JobCardNumber Details exists for different VIN");
+//					}
+//					serviceHistoryObj.setDealerId(dealerEntity);
+//					serviceHistoryObj.setServiceDate(vinServicedDate);
+//					serviceHistoryObj.setDbmsPartCode(dbmsPartCode);
+//					//DF20191220:Abhishek::added new column Extended Warranty.
+//					serviceHistoryObj.setCallTypeId(callTypeId);
+//					serviceHistoryObj.setServiceName(serviceName);
+//					serviceHistoryObj.setScheduleName(scheduleName);
+//					serviceHistoryObj.setServiceScheduleId(serviceScheduleID);
+//					//DF20180423:IM20018382 - An additional field jobCardDetails.
+//					serviceHistoryObj.setComments(jobCardDetails);
+//					if(cmh!=null)
+//						serviceHistoryObj.setCMH(cmh);
+//					session.update(serviceHistoryObj);
+//				}
+//					iLogger.info("ServiceHisotry: Updated ServiceHistoryEntity");
+//
+//				if(update==0)
+//				{
+//					ServiceHistoryEntity newServiceRecord = new ServiceHistoryEntity();
+//					newServiceRecord.setSerialNumber(assetEntity);
+//					newServiceRecord.setServiceTicketNumber(jobCardNumber);
+//					newServiceRecord.setDealerId(dealerEntity);
+//					newServiceRecord.setServiceDate(vinServicedDate);
+//					newServiceRecord.setDbmsPartCode(dbmsPartCode);
+//					//DF20191220:Abhishek::added new column Extended Warranty.
+//					newServiceRecord.setCallTypeId(callTypeId);
+//					newServiceRecord.setServiceName(serviceName);
+//					newServiceRecord.setScheduleName(scheduleName);
+//					newServiceRecord.setServiceScheduleId(serviceScheduleID);
+//					newServiceRecord.setCMH(cmh);
+//					//DF20180423:IM20018382 - An additional field jobCardDetails.
+//					newServiceRecord.setComments(jobCardDetails);
+//					session.save(newServiceRecord);
+//				}
 
 				//Sai Divya : CR488 :added completedBy field.sn
 				List<ServiceHistoryEntity> serviceCompletionList=serviceCompletionQ.list();
@@ -4575,9 +4667,9 @@ public class ServiceDetailsBO {
 				fLogger.info("Extracted focInvoice: " + focInvoice);
 				fLogger.info("Extracted nameOfRetailer: " + nameOfRetailer);
 				fLogger.info("Extracted mobileNoOfRetailer: " + mobileNoOfRetailer);
-
+			
 				String insertQuery = "INSERT INTO Service_Closure_Details (Service_Ticket_Number,Completed_By, retail_invoice, foc_invoice,Name_Of_Retailer,Mobile_No_Of_Retailer) VALUES (?, ?, ?,?,?,?)";
-				conn = connMySql.getConnection();  
+				conn = connMySql.getConnection();
 				pstmt = conn.prepareStatement(insertQuery);
 				pstmt.setString(1, serviceTicketNumber);
 				pstmt.setString(2, completedBy1);
@@ -4590,7 +4682,8 @@ public class ServiceDetailsBO {
 				int rowsInserted = pstmt.executeUpdate();
 				if (rowsInserted > 0) {
 					fLogger.info("CompletedBy parts successfully inserted into completed_by_table");
-				}
+				
+			} 
 				//Sai Divya : CR486 :added completedBy field.en
 				if(session.isOpen())
 					if(session.getTransaction().isActive())

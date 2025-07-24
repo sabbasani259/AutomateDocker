@@ -185,7 +185,9 @@ public class ServiceClouserBO {
 		Statement stmt=null;
 		ResultSet rs=null;
 		String data="";
+		String	responseStatus=null;
 		try
+		
 		{
 			conn = connMySql.getConnection();
 			stmt = conn.createStatement();
@@ -239,14 +241,15 @@ public class ServiceClouserBO {
 			
 		//String	responseStatus= new ServiceHistoryImpl().setServiceHistoryDetails(serialNumber,accountCode,jobCardNo,DBMS_partCode,serviceDate, null,callTypeId, null);
 			//20241022 : Sai Divya : CR488 :added completedBy
-			String	responseStatus= new ServiceHistoryImpl().setServiceHistoryDetails(serialNumber,accountCode,jobCardNo,DBMS_partCode,serviceDate, null,callTypeId, null,completedBy);
+			responseStatus= new ServiceHistoryImpl().setServiceHistoryDetails(serialNumber,accountCode,jobCardNo,DBMS_partCode,serviceDate, null,callTypeId, null,completedBy);
 
 			iLogger.info("responseStatus for serial "+responseStatus+"...."+serialNumber);
-
+			if(responseStatus.contains("SUCCESS")) {
 			ServiceHistoryQHandler queueObj = new ServiceHistoryQHandler();
 			
 			output = queueObj.handleServiceHistoryDetailsToKafkaQueue("ServiceHistoryQueue",inputObject);
-			
+			iLogger.info("output for serial "+output+"...."+serialNumber);
+
 			if(output.equalsIgnoreCase("FAILURE")||output.contains("FAILURE")){
 				data = serialNumber+"|"+accountCode+"|"+jobCardNo+"|"+DBMS_partCode+"|"+callTypeId+"|"+serviceDate+"|"+"ServiceHistory"+"|"+"RServiceHistory\r";
 				 
@@ -255,9 +258,16 @@ public class ServiceClouserBO {
 				out.write(data.getBytes());
 				out.close();
 				output="SUCCESS-WITH KAFKA ERROR";
+				iLogger.info("output for serial "+output+"...."+serialNumber);
+
 			}
 			else if(output.equalsIgnoreCase("SUCCESS")){
 				iLogger.info("Service Clouser History- Input to the Q: Success Data: "+data);
+				iLogger.info("output for serial "+output+"...."+serialNumber);
+			}
+			}
+			else {
+				return responseStatus;
 			}
 			
 		}
@@ -311,7 +321,7 @@ public class ServiceClouserBO {
 			
 		
 		}	
-		return output;
+		return responseStatus;
 	}
 	//****************************************** END of Set Service Closure Details for a machine ********************************************************
 

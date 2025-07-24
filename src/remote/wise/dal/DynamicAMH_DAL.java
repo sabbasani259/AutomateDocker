@@ -929,7 +929,7 @@ public class DynamicAMH_DAL implements AMH{
 
 				GmtLtTimeConversion convertedTime = new GmtLtTimeConversion();
 				String convertedTimestamp=null;
-				iLogger.info("TAssetMon Query:::::::>" + query);
+//				iLogger.info("TAssetMon Query:::::::>" + query);
 				if(query!=null){
 					rs = statement.executeQuery(query);
 					while(rs.next()){
@@ -1086,9 +1086,19 @@ public class DynamicAMH_DAL implements AMH{
 
 									//Df20170525 @Roopa assigning yellow severity to unknown dtc codes.
 
-									implObj.setParamName((Events1Map.get("Unknown_ErrorCode").split("_")[0])+"-Unknown Error"+"#"+txnDataMap.get("CMH")); //Unknown_ErrorCode_dtccode
-									implObj.setParameterValue(Events1Map.get("Unknown_ErrorCode").split("_")[1]); //dtc status 0/1
-									implObj.setAlertSeverity("YELLOW");
+//									implObj.setParamName((Events1Map.get("Unknown_ErrorCode").split("_")[0])+"-Unknown Error"+"#"+txnDataMap.get("CMH")); //Unknown_ErrorCode_dtccode
+//									implObj.setParameterValue(Events1Map.get("Unknown_ErrorCode").split("_")[1]); //dtc status 0/1
+//									implObj.setAlertSeverity("YELLOW");
+									if (Events1Map.get("Unknown_ErrorCode").split("_")[0].equals("99999999")){
+										implObj.setParamName("DTC refreshed");
+										implObj.setParameterValue(Events1Map.get("Unknown_ErrorCode").split("_")[1]); 
+										implObj.setAlertSeverity("GREEN");
+									}
+									else{
+										implObj.setParamName((Events1Map.get("Unknown_ErrorCode").split("_")[0])+"-Unknown Error"+"#"+txnDataMap.get("CMH")); //Unknown_ErrorCode_dtccode
+										implObj.setParameterValue(Events1Map.get("Unknown_ErrorCode").split("_")[1]); //dtc status 0/1
+										implObj.setAlertSeverity("YELLOW");
+									}
 
 								}
 								else if(entry.getKey().equals("EVT_IGN")) //DF20170704 @Roopa not considering ignition event for eventmap

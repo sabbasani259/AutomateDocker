@@ -291,7 +291,7 @@ public class GensetServiceImpl {
 					+ " convert_tz(Transaction_Timestamp,'+00:00','+05:30') as txnTS "
 					+ " FROM "+ startTAssetMonTable
 					+ " WHERE serial_number ='"+vin+"' AND Transaction_Timestamp >= '" + startTS +"' AND Transaction_Timestamp <='"+ endTS+"'"
-					+ " AND JSON_EXTRACT(TxnData,'$.MSG_ID') = '041' ORDER BY Transaction_timestamp ";
+					+ " AND JSON_UNQUOTE(JSON_EXTRACT(TxnData, '$.MSG_ID')) in ('041','080') and  JSON_UNQUOTE(json_extract(TxnData,'$.Apparent_Power')) is not null ORDER BY Transaction_timestamp ";
 		} else {
 			startTAssetMonQuery = "select serial_number, JSON_UNQUOTE(json_extract(TxnData,'$.Apparent_Power')) as ApparentPower,"
 					+ " JSON_UNQUOTE(JSON_EXTRACT(TxnData,'$.Real_Power')) as RealPower,"
@@ -302,7 +302,7 @@ public class GensetServiceImpl {
 					+ " convert_tz(Transaction_Timestamp,'+00:00','+05:30') as txnTS"
 					+ " FROM "+ startTAssetMonTable
 					+ " WHERE serial_number ='"+vin+"' AND Transaction_Timestamp >= '" + startTS +"' AND Transaction_Timestamp <='"+ endTS+"'"
-					+ " AND JSON_EXTRACT(TxnData,'$.MSG_ID') = '041' ORDER BY Transaction_timestamp ";
+					+ " AND JSON_UNQUOTE(JSON_EXTRACT(TxnData, '$.MSG_ID')) in ('041','080') and JSON_UNQUOTE(json_extract(TxnData,'$.Apparent_Power')) is not null ORDER BY Transaction_timestamp ";
 			endTAssetMonQuery = "select serial_number, JSON_UNQUOTE(json_extract(TxnData,'$.Apparent_Power')) as ApparentPower,"
 					+ " JSON_UNQUOTE(JSON_EXTRACT(TxnData,'$.Real_Power')) as RealPower,"
 					+ " JSON_UNQUOTE(JSON_EXTRACT(TxnData,'$.Reacive_Power')) as ReactivePower,"
@@ -312,7 +312,7 @@ public class GensetServiceImpl {
 					+ " convert_tz(Transaction_Timestamp,'+00:00','+05:30') as txnTS"
 					+ " FROM "+ endTAssetMonTable
 					+ " WHERE serial_number ='"+vin+"' AND Transaction_Timestamp >= '" + startTS +"' AND Transaction_Timestamp <='"+ endTS+"'"
-					+ " AND JSON_EXTRACT(TxnData,'$.MSG_ID') = '041' ORDER BY Transaction_timestamp ";
+					+ " AND JSON_UNQUOTE(JSON_EXTRACT(TxnData, '$.MSG_ID')) in ('041','080')  and JSON_UNQUOTE(json_extract(TxnData,'$.Apparent_Power')) is not null ORDER BY Transaction_timestamp ";
 		}
 
 		iLogger.info("getGensetPower TAssetMonQuery : "+TAssetMonQuery);

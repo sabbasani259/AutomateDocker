@@ -94,14 +94,27 @@ public class DynamicAssetEvent_DAL {
 					}
 					else
 						implObj.setParamName(rs.getString("Event_Name"));
-
+					
 					if(alertState.equalsIgnoreCase("open"))
 						implObj.setParameterValue("1");
 					else
 						implObj.setParameterValue(String.valueOf(rs.getInt("Active_Status")));
+					
 					implObj.setAlertSeverity(rs.getString("Event_Severity"));
 					//implObj.setDtcCode(rs.getInt("DTC_code"));
-					
+					if(alertState.equalsIgnoreCase("close") && rs.getString("UpdateSource").equalsIgnoreCase("reset"))
+					{
+						iLogger.info("UpdatedSource:"+rs.getString("UpdateSource"));
+						String temp=implObj.getParamName();
+
+					    // Trim  ".0" from the timestamp
+					    String cleanedTimestamp = convertedTimestamp;
+					    if (convertedTimestamp != null && convertedTimestamp.endsWith(".0")) {
+					        cleanedTimestamp = convertedTimestamp.substring(0, convertedTimestamp.length() - 2);
+					    }
+
+						implObj.setParamName(temp+"- refreshed on "+cleanedTimestamp);
+					}
 					
 					//Df20180103 @Roopa taking the lat and long from the assetevent for application generated alerts purpose
 					//DF20190111-KO369761-Null check condition added.

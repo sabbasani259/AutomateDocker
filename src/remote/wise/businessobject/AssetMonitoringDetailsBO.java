@@ -22,10 +22,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 import java.util.TimeZone;
 import java.util.Map.Entry;
 
@@ -1862,14 +1864,14 @@ public class AssetMonitoringDetailsBO {
 			{
 				asset = (AssetEntity)assetItr.next();
 			}
-//			iLogger.info("AssetMonitoringDetailsBO :: getAssetEventLog()-----> assetQ " + assetQ);
+		//	iLogger.info("AssetMonitoringDetailsBO :: getAssetEventLog()-----> assetQ " + assetQ);
 			//DF20170130 @Roopa for Role based alert implementation, added paramId column in business_event table to match alert code and get the parameter key list from the monitoring prameters table. 
 			// Shajesh : 2021-02-17 : Node Traverse issue in Hibernate call, So convert to native SQL call
 			//Query monQ = session.createQuery(" from MonitoringParameters where RecordType='Event' ");
 			/*Query monQ = session.createQuery("SELECT a from MonitoringParameters a, EventEntity b where a.parameterId=b.parameterID and b.eventCode in ("+alertCodeListAsString+") and a.RecordType='Event' ");*/
 			Query monQ = session.createSQLQuery("SELECT * FROM monitoring_parameters a, business_event b WHERE a.Parameter_ID = b.Parameter_ID AND b.Alert_Code IN (" + alertCodeListAsString + ") AND a.Record_Type = 'Event'");
 		    ((SQLQuery)monQ).addEntity(MonitoringParameters.class);
-//		    iLogger.info("AssetMonitoringDetailsBO :: getAssetEventLog()-----> monQ " + monQ);
+		    iLogger.info("AssetMonitoringDetailsBO :: getAssetEventLog()-----> monQ " + monQ);
 			Iterator monItr = monQ.list().iterator();
 			while(monItr.hasNext())
 			{
@@ -1914,32 +1916,24 @@ public class AssetMonitoringDetailsBO {
 		//DF20170525 @Roopa fix for not picking the events if multiple events are there in the event column row
 		
 		for(int i=0;i<paramKeyList.size();i++){
-			//JCB6370.so
-//			if(i==0){
-//				//jsonObjQuery="Events -> '$."+paramKeyList.get(i)+"' is not null OR";
-//				//jsonObjQuery="Events -> '$.\""+paramKeyList.get(i)+"\"' is not null OR"; // 20221129-Dhiraj k -added escape character to handle json format
-//				jsonObjQuery.append("Events -> '$.\"");
-//				jsonObjQuery.append(paramKeyList.get(i));
-//				jsonObjQuery.append("\"' is not null OR"); // 20221129-Dhiraj k -added escape character to handle json format
-//			}
-//			else{
-				//jsonObjQuery=jsonObjQuery+" Events -> '$."+paramKeyList.get(i)+"' is not null OR";	
-				//jsonObjQuery=jsonObjQuery+" Events -> '$.\""+paramKeyList.get(i)+"\"' is not null OR";	 // 20221129-Dhiraj k - added escape character to handle json format
-				//JCB6370.eo
-				//JCB6370.sn
-				jsonObjQuery.append(" Events -> '$.\"");
-				jsonObjQuery.append(paramKeyList.get(i));
-				jsonObjQuery.append("\"' is not null OR");	 
-				//JCB6370.en
-				//			}
+//			if(i==0)
+//				jsonObjQuery="Events -> '$."+paramKeyList.get(i)+"' is not null OR";
+//			else
+//				jsonObjQuery=jsonObjQuery+" Events -> '$."+paramKeyList.get(i)+"' is not null OR";	
+			//JCB6370.sn
+			jsonObjQuery.append(" Events -> '$.\"");
+			jsonObjQuery.append(paramKeyList.get(i));
+			jsonObjQuery.append("\"' is not null OR");	 
+			//JCB6370.en
 		}
-		//JCB6370.sn
+		//JCB6370.so
 //		if(jsonObjQuery!=null)
-//			jsonObjQuery=jsonObjQuery+" Events -> '$.Unknown_ErrorCode' is not null";
+//	     jsonObjQuery=jsonObjQuery+" Events -> '$.Unknown_ErrorCode' is not null";
 //		else
-//			jsonObjQuery=" Events -> '$.Unknown_ErrorCode' is not null";	
+//			jsonObjQuery=" Events -> '$.Unknown_ErrorCode' is not null";
 		//JCB6370.eo
 		jsonObjQuery=jsonObjQuery.append(" Events -> '$.Unknown_ErrorCode' is not null");//JCB6370.n
+		
 		
 		/*TAssetMonQuery=" select t.Transaction_Timestamp, t.TxnData, t.Message_ID, t.Events"
                 + " from "+tAssetMonTable+" t"
@@ -2002,7 +1996,7 @@ public class AssetMonitoringDetailsBO {
 				 startTAssetMonTable =endTAssetMonTable; //Df20170102 @Roopa if strat table is not available than picking the data only from emd table.
 			 }
 			
-
+			
 			 if(startTAssetMonTable.equals(endTAssetMonTable)){
 				 
 				 TAssetMonQuery=" select t.Transaction_Timestamp, t.TxnData, t.Message_ID, t.Events"
@@ -2015,7 +2009,8 @@ public class AssetMonitoringDetailsBO {
 			                + " and t.Serial_Number='"
 			                + SerialNumber
 			                + "' "
-			                + " and (Message_ID -> '$.LOG'='1' OR Message_ID -> '$.LOG_PT'='1' OR "+jsonObjQuery.toString()+")"
+			                //+ " and (Message_ID -> '$.LOG'='1' OR Message_ID -> '$.LOG_PT'='1' OR "+jsonObjQuery+")"//JCB6370.o
+			                + " and (Message_ID -> '$.LOG'='1' OR Message_ID -> '$.LOG_PT'='1' OR "+jsonObjQuery.toString()+")"//JCB6370.n
 			                //aj20119610: DM4 events exclusion change
 			                + " and ((Txndata -> '$.DTC_ID_2' is null or Txndata ->'$.DTC_ID_2'='########') and (Txndata -> '$.DTC_ID_4' is  null or Txndata ->'$.DTC_ID_4'='########') )"
 			               // + " OR Events in ("+jsonObjQuery+") " //Role based alert fetch @Roopa
@@ -2035,7 +2030,8 @@ public class AssetMonitoringDetailsBO {
 			                + " and t.Serial_Number='"
 			                + SerialNumber
 			                + "' "
-			                + " and (Message_ID -> '$.LOG'='1' OR Message_ID -> '$.LOG_PT'='1' OR "+jsonObjQuery.toString()+")"
+			                //+ " and (Message_ID -> '$.LOG'='1' OR Message_ID -> '$.LOG_PT'='1' OR "+jsonObjQuery+")"//JCB6370.o
+			                + " and (Message_ID -> '$.LOG'='1' OR Message_ID -> '$.LOG_PT'='1' OR "+jsonObjQuery.toString()+")"//JCB6370.n
 			                //aj20119610: DM4 events exclusion change
 			                + " and ((Txndata -> '$.DTC_ID_2' is null or Txndata ->'$.DTC_ID_2'='########') and (Txndata -> '$.DTC_ID_4' is  null or Txndata ->'$.DTC_ID_4'='########') )"
 			               // + " OR Events in ("+jsonObjQuery+") " //Role based alert fetch @Roopa
@@ -2050,7 +2046,8 @@ public class AssetMonitoringDetailsBO {
 			                + " and t.Serial_Number='"
 			                + SerialNumber
 			                + "' "
-			                + " and (Message_ID -> '$.LOG'='1' OR Message_ID -> '$.LOG_PT'='1' OR "+jsonObjQuery.toString()+")"
+			                //+ " and (Message_ID -> '$.LOG'='1' OR Message_ID -> '$.LOG_PT'='1' OR "+jsonObjQuery+")"//JCB6370.o
+			                + " and (Message_ID -> '$.LOG'='1' OR Message_ID -> '$.LOG_PT'='1' OR "+jsonObjQuery.toString()+")"//JCB6370.n
 			                //aj20119610: DM4 events exclusion change
 			                + " and ((Txndata -> '$.DTC_ID_2' is null or Txndata ->'$.DTC_ID_2'='########') and (Txndata -> '$.DTC_ID_4' is  null or Txndata ->'$.DTC_ID_4'='########') )"
 			               // + " OR Events in ("+jsonObjQuery+") " //Role based alert fetch @Roopa
@@ -2060,8 +2057,9 @@ public class AssetMonitoringDetailsBO {
 			 }
 		
 		//end
-
-			 Thread thread1 = new Thread() {
+		
+		
+		   Thread thread1 = new Thread() {
 
 
 			public void run() {
@@ -2069,6 +2067,7 @@ public class AssetMonitoringDetailsBO {
 				try{
 				//DF20170809: SU334449 - Passing timeZone for SAARC changes
 				implListFromAMHAMD= new DynamicAMH_DAL().getAMHAMDListForEventMap(TAssetMonQuery,seg_ID,assetId,stratTAssetMonQuery,endTAssetMonQuery,timeZone);
+				//System.out.println("Check1"+implListFromAMHAMD);
 				}
 				catch(Exception e){
 					
@@ -2126,7 +2125,7 @@ public class AssetMonitoringDetailsBO {
 			//DF20190802:Abhishek::changed location to EventclosedLocation
 		
 		//DF20200116:Abhishek: fetcing location from location if EventClosedLocation is null.
-				String closedAlertsQuery = " select ifnull(a.EventClosedLocation,location) as Location,a.Event_ID,a.UpdateSource, a.Active_Status, a.Event_Severity, a.Event_Closed_Time as Event_Generated_Time, a.Event_Type_ID, a.Asset_Event_ID, b.Event_Name, m.DTC_code, m.Error_Code"
+				String closedAlertsQuery = " select ifnull(a.EventClosedLocation,location) as Location,a.UpdateSource,a.Event_ID, a.Active_Status, a.Event_Severity, a.Event_Closed_Time as Event_Generated_Time, a.Event_Type_ID, a.Asset_Event_ID, b.Event_Name, m.DTC_code, m.Error_Code"
 						+ " from asset_event a, business_event b left outer join monitoring_parameters m on  b.Parameter_ID = m.Parameter_ID"
 						+ " where a.Serial_Number='" + SerialNumber + "'"
 						+ " and a.Event_Closed_Time >= '"+ stringISTtoGMTConversion(period + " 00:00:00.0") +"' and a.Event_Closed_Time <= '"+ stringISTtoGMTConversion(period + " 23:59:59.0") +"' "
@@ -2157,7 +2156,6 @@ public class AssetMonitoringDetailsBO {
 		
 		iLogger.info("implListFromAMHAMD :: "+implListFromAMHAMD);
 		
-		
 		Collections.sort(FinalAlertsList, new transactionComparator());
 		
 		//iLogger.info("AssetEventLogService Final FinalAlertsList size:: "+FinalAlertsList.size());
@@ -2165,79 +2163,119 @@ public class AssetMonitoringDetailsBO {
 		//iLogger.info("AssetEventLogService AMHAMDList size:: "+implListFromAMHAMD.size());
 		
 		List<AssetEventLogImpl> tempList=new LinkedList<AssetEventLogImpl>();
-		
-		for(int i=0;i<implListFromAMHAMD.size();i++){
+		//LL-198 : Sai Divya : 20240731 : EventMapBugFix.en
+//		for(int i=0;i<implListFromAMHAMD.size();i++){
+//			String isRemoveAlert = "0";
+//			if(implListFromAMHAMD.get(i).getRecord_Type_Id()==2){
+//				int k =0;
+//				for(int j=0;j<FinalAlertsList.size();j++){
+//					k++;
+//				
+//			
+//				
+//				
+////					System.out.println("FinalAlertsList.size():"+FinalAlertsList.size());
+//					if(implListFromAMHAMD.get(i).getEventGeneratedTime().equalsIgnoreCase(FinalAlertsList.get(j).getEventGeneratedTime())){
+////						//Sai Divya : 20250724 : Engine Off status missing in event map.sn
+////						if ((implListFromAMHAMD.get(i).getParamName()
+////								.equalsIgnoreCase(FinalAlertsList.get(j).getParamName()))
+////								&& implListFromAMHAMD.get(i).getParameterValue()
+////										.equalsIgnoreCase(FinalAlertsList.get(j).getParameterValue()) && 
+////										implListFromAMHAMD.get(i).getEventGeneratedTime().equalsIgnoreCase(FinalAlertsList.get(j).getEventGeneratedTime())) {
+////							System.out.print("Check1 :" + FinalAlertsList.get(j));
+////							FinalAlertsList.remove(j);
+////						}
+////						//Sai Divya : 20250724 : Engine Off status missing in event map.en
+//						implListFromAMHAMD.get(i).setParamName(FinalAlertsList.get(j).getParamName());
+//						implListFromAMHAMD.get(i).setParameterValue(FinalAlertsList.get(j).getParameterValue());
+//						implListFromAMHAMD.get(i).setAlertSeverity(FinalAlertsList.get(j).getAlertSeverity());
+//						//implListFromAMHAMD.get(i).setDtcCode(FinalAlertsList.get(j).getDtcCode());
+//						
+//						System.out.println("removing   /n"+FinalAlertsList.get(j));
+//						FinalAlertsList.remove(j);
+//					}
+//					//DF20210524 Avinash Xavier A Events Map :Delete the alert that is not in asset event from the list instead of showing as engine on
+//					else {
+//						if (k==FinalAlertsList.size() && !implListFromAMHAMD.get(i).getEventGeneratedTime().equalsIgnoreCase(FinalAlertsList.get(j).getEventGeneratedTime()) 
+//								&& implListFromAMHAMD.get(i).getIsengineOn().equalsIgnoreCase("0") && implListFromAMHAMD.get(i).getParamName().equalsIgnoreCase("ENGINE_ON")){
+//							isRemoveAlert="1";
+//						
+//						}}
+//					
+//				}
+//			
+//			}
+//			if(isRemoveAlert!=null && isRemoveAlert.equalsIgnoreCase("1")){
+//				
+//				implListFromAMHAMD.remove(i);
+//				i--;
+//				
+//			}
+//		}
+		//LL-198 : Sai Divya : 20240731 : EventMapBugFix.eo
+		//LL-198 : Sai Divya : 20240731 : EventMapBugFix.sn
+		for (int i = 0; i < implListFromAMHAMD.size(); i++) {
 			String isRemoveAlert = "0";
-			if(implListFromAMHAMD.get(i).getRecord_Type_Id()==2){
-				int k =0;
-				for(int j=0;j<FinalAlertsList.size();j++){
+			if (implListFromAMHAMD.get(i).getRecord_Type_Id() == 2) {
+				int k = 0;
+				AssetEventLogImpl implAlert = implListFromAMHAMD.get(i);
+
+				for (int j = 0; j < FinalAlertsList.size(); j++) {
 					k++;
-				
-			
-				
-				
-//					System.out.println("FinalAlertsList.size():"+FinalAlertsList.size());
-					if(implListFromAMHAMD.get(i).getEventGeneratedTime().equalsIgnoreCase(FinalAlertsList.get(j).getEventGeneratedTime())){
-						//Sai Divya : 20250724 : Engine Off status missing in event map.sn
-						if ((implListFromAMHAMD.get(i).getParamName()
-								.equalsIgnoreCase(FinalAlertsList.get(j).getParamName()))
-								&& implListFromAMHAMD.get(i).getParameterValue()
-										.equalsIgnoreCase(FinalAlertsList.get(j).getParameterValue()) && 
-										implListFromAMHAMD.get(i).getEventGeneratedTime().equalsIgnoreCase(FinalAlertsList.get(j).getEventGeneratedTime())) {
-							System.out.print("Check1 :" + FinalAlertsList.get(j));
-							FinalAlertsList.remove(j);
+					AssetEventLogImpl finalAlert = FinalAlertsList.get(j);
+
+					boolean isSameEvent = implAlert.getEventGeneratedTime()
+							.equalsIgnoreCase(finalAlert.getEventGeneratedTime())
+							&& implAlert.getParamName().equalsIgnoreCase(finalAlert.getParamName())
+							&& implAlert.getParameterValue().equalsIgnoreCase(finalAlert.getParameterValue());
+
+					if (isSameEvent) {
+						// It's a duplicate, remove from FinalAlertsList
+						FinalAlertsList.remove(j);
+						break;
+					} else {
+						if (k == FinalAlertsList.size()
+								&& !implListFromAMHAMD.get(i).getEventGeneratedTime()
+										.equalsIgnoreCase(FinalAlertsList.get(j).getEventGeneratedTime())
+								&& implListFromAMHAMD.get(i).getIsengineOn().equalsIgnoreCase("0")
+								&& implListFromAMHAMD.get(i).getParamName().equalsIgnoreCase("ENGINE_ON")) {
+							isRemoveAlert = "1";
+
 						}
-						//Sai Divya : 20250724 : Engine Off status missing in event map.en
-						implListFromAMHAMD.get(i).setParamName(FinalAlertsList.get(j).getParamName());
-						implListFromAMHAMD.get(i).setParameterValue(FinalAlertsList.get(j).getParameterValue());
-						implListFromAMHAMD.get(i).setAlertSeverity(FinalAlertsList.get(j).getAlertSeverity());
-						//implListFromAMHAMD.get(i).setDtcCode(FinalAlertsList.get(j).getDtcCode());
-						
-						
-						//FinalAlertsList.remove(j);
 					}
-					//DF20210524 Avinash Xavier A Events Map :Delete the alert that is not in asset event from the list instead of showing as engine on
-					else {
-						if (k==FinalAlertsList.size() && !implListFromAMHAMD.get(i).getEventGeneratedTime().equalsIgnoreCase(FinalAlertsList.get(j).getEventGeneratedTime()) 
-								&& implListFromAMHAMD.get(i).getIsengineOn().equalsIgnoreCase("0") && implListFromAMHAMD.get(i).getParamName().equalsIgnoreCase("ENGINE_ON")){
-							isRemoveAlert="1";
-						
-						}}
-					
 				}
-			
 			}
-			if(isRemoveAlert!=null && isRemoveAlert.equalsIgnoreCase("1")){
-				
+			if (isRemoveAlert != null && isRemoveAlert.equalsIgnoreCase("1")) {
+
 				implListFromAMHAMD.remove(i);
 				i--;
-				
+
 			}
 		}
-		
-
+		//LL-198 : Sai Divya : 20240731 : EventMapBugFix.en
 	
 		//iLogger.info("AssetEventLogService Final return list size:: "+implListFromAMHAMD.size());
+//		System.out.println("FinalAlertsList"+FinalAlertsList);
+//		for(int j=0;j<FinalAlertsList.size();j++){
+//			//Df20170103 @Roopa Taking the application generated alerts from asset event table
+//			AssetEventLogImpl impl=new AssetEventLogImpl();
+//			
+//			impl.setAlertSeverity(FinalAlertsList.get(j).getAlertSeverity());
+//			impl.setEventGeneratedTime(FinalAlertsList.get(j).getEventGeneratedTime());
+//			impl.setLatitude(FinalAlertsList.get(j).getLatitude());
+//			impl.setLongitude(FinalAlertsList.get(j).getLongitude());
+//			impl.setParamName(FinalAlertsList.get(j).getParamName());
+//			impl.setParameterValue(FinalAlertsList.get(j).getParameterValue());
+//			impl.setRecord_Type_Id(2);
+//			
+//			
+//			
+//			tempList.add(impl);
+//		}
+	//	System.out.println("tempList"+tempList);
 		
-		for(int j=0;j<FinalAlertsList.size();j++){
-			//Df20170103 @Roopa Taking the application generated alerts from asset event table
-			AssetEventLogImpl impl=new AssetEventLogImpl();
-			
-			impl.setAlertSeverity(FinalAlertsList.get(j).getAlertSeverity());
-			impl.setEventGeneratedTime(FinalAlertsList.get(j).getEventGeneratedTime());
-			impl.setLatitude(FinalAlertsList.get(j).getLatitude());
-			impl.setLongitude(FinalAlertsList.get(j).getLongitude());
-			impl.setParamName(FinalAlertsList.get(j).getParamName());
-			impl.setParameterValue(FinalAlertsList.get(j).getParameterValue());
-			impl.setRecord_Type_Id(2);
-			
-			
-			
-			tempList.add(impl);
-		}
-		
-		implListFromAMHAMD.addAll(tempList);
-		
+		implListFromAMHAMD.addAll(FinalAlertsList);
+		System.out.println("implListFromAMHAMD"+implListFromAMHAMD);
 		return implListFromAMHAMD;
 		
 	}

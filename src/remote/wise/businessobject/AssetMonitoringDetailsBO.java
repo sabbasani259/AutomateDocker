@@ -2154,7 +2154,7 @@ public class AssetMonitoringDetailsBO {
 		iLogger.info("activeAlertsList:"+activeAlertsList);
 		iLogger.info("closedAlertsList:"+closedAlertsList);
 		
-		iLogger.info("implListFromAMHAMD :: "+implListFromAMHAMD);
+		//System.out.println("implListFromAMHAMD :: "+implListFromAMHAMD);
 		
 		Collections.sort(FinalAlertsList, new transactionComparator());
 		
@@ -2169,29 +2169,19 @@ public class AssetMonitoringDetailsBO {
 //			if(implListFromAMHAMD.get(i).getRecord_Type_Id()==2){
 //				int k =0;
 //				for(int j=0;j<FinalAlertsList.size();j++){
+//					System.out.println("J VAlue :"+j);
 //					k++;
 //				
 //			
 //				
-//				
+//				System.out.println(implListFromAMHAMD.get(i).getEventGeneratedTime());
 ////					System.out.println("FinalAlertsList.size():"+FinalAlertsList.size());
 //					if(implListFromAMHAMD.get(i).getEventGeneratedTime().equalsIgnoreCase(FinalAlertsList.get(j).getEventGeneratedTime())){
-////						//Sai Divya : 20250724 : Engine Off status missing in event map.sn
-////						if ((implListFromAMHAMD.get(i).getParamName()
-////								.equalsIgnoreCase(FinalAlertsList.get(j).getParamName()))
-////								&& implListFromAMHAMD.get(i).getParameterValue()
-////										.equalsIgnoreCase(FinalAlertsList.get(j).getParameterValue()) && 
-////										implListFromAMHAMD.get(i).getEventGeneratedTime().equalsIgnoreCase(FinalAlertsList.get(j).getEventGeneratedTime())) {
-////							System.out.print("Check1 :" + FinalAlertsList.get(j));
-////							FinalAlertsList.remove(j);
-////						}
-////						//Sai Divya : 20250724 : Engine Off status missing in event map.en
 //						implListFromAMHAMD.get(i).setParamName(FinalAlertsList.get(j).getParamName());
 //						implListFromAMHAMD.get(i).setParameterValue(FinalAlertsList.get(j).getParameterValue());
 //						implListFromAMHAMD.get(i).setAlertSeverity(FinalAlertsList.get(j).getAlertSeverity());
 //						//implListFromAMHAMD.get(i).setDtcCode(FinalAlertsList.get(j).getDtcCode());
-//						
-//						System.out.println("removing   /n"+FinalAlertsList.get(j));
+//						System.out.println("Removed packet"+FinalAlertsList.get(j));
 //						FinalAlertsList.remove(j);
 //					}
 //					//DF20210524 Avinash Xavier A Events Map :Delete the alert that is not in asset event from the list instead of showing as engine on
@@ -2215,42 +2205,54 @@ public class AssetMonitoringDetailsBO {
 		//LL-198 : Sai Divya : 20240731 : EventMapBugFix.eo
 		//LL-198 : Sai Divya : 20240731 : EventMapBugFix.sn
 		for (int i = 0; i < implListFromAMHAMD.size(); i++) {
-			String isRemoveAlert = "0";
-			if (implListFromAMHAMD.get(i).getRecord_Type_Id() == 2) {
-				int k = 0;
-				AssetEventLogImpl implAlert = implListFromAMHAMD.get(i);
+		    AssetEventLogImpl implAlert = implListFromAMHAMD.get(i);
+		    String isRemoveAlert = "0";
 
-				for (int j = 0; j < FinalAlertsList.size(); j++) {
-					k++;
-					AssetEventLogImpl finalAlert = FinalAlertsList.get(j);
+		    if (implAlert.getRecord_Type_Id() == 2) {
+		        String implParam = implAlert.getParamName().split("#")[0];
+		        String implTime = implAlert.getEventGeneratedTime();
+		        String implValue = implAlert.getParameterValue();
 
-					boolean isSameEvent = implAlert.getEventGeneratedTime()
-							.equalsIgnoreCase(finalAlert.getEventGeneratedTime())
-							&& implAlert.getParamName().equalsIgnoreCase(finalAlert.getParamName())
-							&& implAlert.getParameterValue().equalsIgnoreCase(finalAlert.getParameterValue());
+		        int k = 0;
+		        for (int j = 0; j < FinalAlertsList.size(); j++) {
+		            AssetEventLogImpl finalAlert = FinalAlertsList.get(j);
+		            String finalParam = finalAlert.getParamName();
+		            String finalTime = finalAlert.getEventGeneratedTime();
+		            String finalValue = finalAlert.getParameterValue();
 
-					if (isSameEvent) {
-						// It's a duplicate, remove from FinalAlertsList
-						FinalAlertsList.remove(j);
-						break;
-					} else {
-						if (k == FinalAlertsList.size()
-								&& !implListFromAMHAMD.get(i).getEventGeneratedTime()
-										.equalsIgnoreCase(FinalAlertsList.get(j).getEventGeneratedTime())
-								&& implListFromAMHAMD.get(i).getIsengineOn().equalsIgnoreCase("0")
-								&& implListFromAMHAMD.get(i).getParamName().equalsIgnoreCase("ENGINE_ON")) {
-							isRemoveAlert = "1";
+		            k++;
 
-						}
-					}
-				}
-			}
-			if (isRemoveAlert != null && isRemoveAlert.equalsIgnoreCase("1")) {
+		            // Full match
+		            if (implTime.equalsIgnoreCase(finalTime)
+		                    && implParam.equalsIgnoreCase(finalParam)
+		                    && implValue.equalsIgnoreCase(finalValue)) {
+		                implAlert.setParamName(finalAlert.getParamName());
+		                implAlert.setParameterValue(finalAlert.getParameterValue());
+		                implAlert.setAlertSeverity(finalAlert.getAlertSeverity());
+		                FinalAlertsList.remove(j);
+		                break;
+		            }
 
-				implListFromAMHAMD.remove(i);
-				i--;
+		            // ENGINE_ON at same time as any alert
+		            if (implTime.equalsIgnoreCase(finalTime)
+		                    && implParam.equalsIgnoreCase("ENGINE_ON")) {
+		                isRemoveAlert = "1";
+		                break;
+		            }
 
-			}
+		            // Last iteration and unmatched ENGINE_ON with value 0
+//		            if (k == FinalAlertsList.size()
+//		                    && implParam.equalsIgnoreCase("ENGINE_ON")
+//		                    && implValue.equals("0")) {
+//		                isRemoveAlert = "1";
+//		            }
+		        }
+		    }
+
+		    if (isRemoveAlert.equals("1")) {
+		        implListFromAMHAMD.remove(i);
+		        i--; // Adjust index after removal
+		    }
 		}
 		//LL-198 : Sai Divya : 20240731 : EventMapBugFix.en
 	
@@ -2273,9 +2275,8 @@ public class AssetMonitoringDetailsBO {
 //			tempList.add(impl);
 //		}
 	//	System.out.println("tempList"+tempList);
-		
 		implListFromAMHAMD.addAll(FinalAlertsList);
-		System.out.println("implListFromAMHAMD"+implListFromAMHAMD);
+//		System.out.println("implListFromAMHAMD"+implListFromAMHAMD);
 		return implListFromAMHAMD;
 		
 	}

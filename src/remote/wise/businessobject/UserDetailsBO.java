@@ -1,5 +1,6 @@
 /*
  * JCB6239, JCB6240 : 20220829 : Dhiraj K : AssetSaleFromD2C session issue
+ *  * CR500 : 20241128 : Dhiraj Kumar : WHatsApp Integration with LL
  */
 package remote.wise.businessobject;
 
@@ -28,6 +29,7 @@ import java.util.Properties;
 import java.util.Random;
 import java.util.TimeZone;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.Logger;
@@ -1141,7 +1143,7 @@ public class UserDetailsBO extends BaseBusinessObject {
 	 * @throws CustomFault
 	 */
 	public List<UserAlertPreferenceImpl> getUserAlertPreference(String loginId,
-			String roleName) throws CustomFault {
+			String roleName,int pageNumber,int eventTypeID) throws CustomFault {
 		List<UserAlertPreferenceImpl> respList = new ArrayList<UserAlertPreferenceImpl>();
 		// Logger fatalError = Logger.getLogger("fatalErrorLogger");
 		Logger iLogger = InfoLoggerClass.logger;
@@ -1178,7 +1180,7 @@ public class UserDetailsBO extends BaseBusinessObject {
 			//DF20170130 @Roopa for Role based alert implementation
 			DateUtil utilObj=new DateUtil();
 
-			List<String> alertCodeList= utilObj.roleAlertMapDetails(loginId,0, "Display");
+			List<String> alertCodeList= utilObj.roleAlertMapDetailsNew(loginId,0, "Display",pageNumber,eventTypeID);
 
 			ListToStringConversion conversion = new ListToStringConversion();
 
@@ -1195,7 +1197,7 @@ public class UserDetailsBO extends BaseBusinessObject {
 									+ " FROM EventEntity b1,CatalogValuesEntity p1,EventTypeEntity p4"
 									+ " WHERE b1.eventCode in ("+alertCodeListAsString+")"
 									+ " AND b1.eventName=p1.catalogValue AND b1.eventTypeId = p4.eventTypeId"
-									+ " order by b1.eventTypeId ,b1.eventId ");
+									+ " order by b1.eventId ");
 					// query to get all user preferences along with the catalog
 					// id
 					Query query2 = session
@@ -1251,6 +1253,7 @@ public class UserDetailsBO extends BaseBusinessObject {
 						impl.setEventTypeName(eventTypeName);
 						impl.setSMSEvent(false);
 						impl.setEmailEvent(false);
+						impl.setWhatsAppEvent(false);//CR500.n
 						if (catlogMap != null
 								&& catlogMap.containsKey(catalogValueId)) {
 							catalogId = catlogMap.get(catalogValueId);
@@ -1259,6 +1262,10 @@ public class UserDetailsBO extends BaseBusinessObject {
 							} else if (catalogId == 10) {
 								impl.setEmailEvent(true);
 							}
+							//CR500.sn
+							else if (catalogId == 13) {
+								impl.setWhatsAppEvent(true);
+							}//CR500.en
 						}
 						idExists = false;
 						Iterator<UserAlertPreferenceImpl> listIter = respList
@@ -1281,6 +1288,10 @@ public class UserDetailsBO extends BaseBusinessObject {
 									} else if (catalogId == 10) {
 										impl1.setEmailEvent(true);
 									}
+									//CR500.sn
+									else if (catalogId == 13) {
+										impl.setWhatsAppEvent(true);
+									}//CR500.en
 								}
 							}
 						}
@@ -1412,6 +1423,10 @@ public class UserDetailsBO extends BaseBusinessObject {
 							} else if (catalogId == 2) {
 								impl.setEmailEvent(true);
 							}
+							//CR500.sn
+							else if (catalogId == 14) {
+								impl.setWhatsAppEvent(true);
+							}//CR500.en
 						}
 						idExists = false;
 						Iterator<UserAlertPreferenceImpl> listIter = respList
@@ -1439,6 +1454,10 @@ public class UserDetailsBO extends BaseBusinessObject {
 									} else if (catalogId == 2) {
 										impl1.setEmailEvent(true);
 									}
+									//CR500.sn
+									else if (catalogId == 14) {
+										impl1.setWhatsAppEvent(true);
+									}//CR500.en
 								}
 							}
 						}
@@ -1880,6 +1899,9 @@ public class UserDetailsBO extends BaseBusinessObject {
 					newCatalogValueIds.add(catlogMap.get(
 							respObj1.getEventTypeName()).get(2));
 				}
+				if (respObj1.isWhatsappEvent()) {
+					newCatalogValueIds.add(catlogMap.get(respObj1.getEventTypeName()).get(14));
+				}
 			}
 			// get all existing catalog id values for user
 			List<Integer> existingCatalogIdValues = new ArrayList<Integer>();
@@ -1887,7 +1909,8 @@ public class UserDetailsBO extends BaseBusinessObject {
 					.createQuery("select pe.catalogValueId from PreferenceEntity pe,CatalogValuesEntity cve where pe.contact='"
 							+ loginId
 							+ "' and pe.catalogValueId = cve.catalogValueId"
-							+ " and cve.catalogId in (1,2)");
+							//+ " and cve.catalogId in (1,2)");//CR500.o
+							+ " and cve.catalogId in (1,2,14)");//CR500.n
 
 			Iterator itr = qu.list().iterator();
 			CatalogValuesEntity cvEntity = null;
@@ -2009,25 +2032,30 @@ public class UserDetailsBO extends BaseBusinessObject {
 			List<UserAlertPreferenceRespContract> respContractList)
 					throws CustomFault {
 		Logger iLogger = InfoLoggerClass.logger;
-
+		iLogger.info("Entered into the setAdminAlertPreference Method");
 		long startTime = System.currentTimeMillis();
 		List<Integer> newCatalogValueIds = new ArrayList<Integer>();
 		Map<Integer, HashMap<Integer, Integer>> catlogMap = new HashMap<Integer, HashMap<Integer, Integer>>();
-		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+		List<Integer> eventIds=new LinkedList<Integer>();
+		eventIds=respContractList.stream().map(UserAlertPreferenceRespContract :: getEventId).collect(Collectors.toList());
+		Session session = HibernateUtil.getSessionFactory().openSession();
 		//DF20150603 - Rajani Nagaraju - WISE going down issue - Open a new session when the getCurrentSession returns a dirty session(txns which is not yet committed exists)
-		if(session.getTransaction().isActive() && session.isDirty())
-		{
-			iLogger.info("Opening a new session");
-			session = HibernateUtil.getSessionFactory().openSession();
-		}
+//		if(session.getTransaction().isActive() && session.isDirty())
+//		{
+//			iLogger.info("Opening a new session");
+//			session = HibernateUtil.getSessionFactory().openSession();
+//		}
 		session.beginTransaction();
 		HashMap<Integer, Integer> valueMap = null;
 		try {
+			iLogger.info("Entered into the try block");
 			// get all event names along with their catalog value ids in hashmap
 			Query q = session
-					.createQuery("select e1.eventId,c2.catalogValueId,c2.catalogId from EventEntity e1,CatalogValuesEntity c2 where e1.eventName=c2.catalogValue");
+					.createQuery("select e1.eventId,c2.catalogValueId,c2.catalogId from EventEntity e1,CatalogValuesEntity c2 where e1.eventName=c2.catalogValue and e1.eventId in (:eventIds)");
+			q.setParameterList("eventIds", eventIds);
 			Iterator iterat = q.list().iterator();
 			Object[] result = null;
+			iLogger.info("Check1");
 			int eventId, catalogId, catalogValueId;
 			while (iterat.hasNext()) {
 				result = (Object[]) iterat.next();
@@ -2049,7 +2077,7 @@ public class UserDetailsBO extends BaseBusinessObject {
 					catlogMap.put((Integer) result[0], valueMap);
 				}
 			}
-
+			iLogger.info("Check2");
 			// iterate over response
 			UserAlertPreferenceRespContract respObj1 = null;
 			Iterator<UserAlertPreferenceRespContract> listIter1 = respContractList
@@ -2076,6 +2104,7 @@ public class UserDetailsBO extends BaseBusinessObject {
 							+ "'and pe.catalogValueId = cve.catalogValueId"
 							+ " and cve.catalogId in (9,10)");
 			Iterator itr = qu.list().iterator();
+			iLogger.info("Check3");
 			CatalogValuesEntity cvEntity = null;
 			while (itr.hasNext()) {
 				cvEntity = (CatalogValuesEntity) itr.next();
@@ -2095,7 +2124,7 @@ public class UserDetailsBO extends BaseBusinessObject {
 			List<Integer> differList1 = new ArrayList<Integer>();
 			differList1.addAll(newCatalogValueIds);
 			differList1.removeAll(existingCatalogIdValues); // add this list
-
+			iLogger.info("Check4");
 			Iterator<Integer> iterIds = differList1.iterator();
 			cvEntity = null;
 			while (iterIds.hasNext()) {
@@ -2165,6 +2194,7 @@ public class UserDetailsBO extends BaseBusinessObject {
 
 			catch(Exception e)
 			{
+				e.printStackTrace();
 				Logger fLogger = FatalLoggerClass.logger;
 				//DF20150603 - Rajani Nagaraju - WISE going down issue - Adding try catch against commit
 				fLogger.fatal("Exception in commiting the record:"+e);
@@ -2206,10 +2236,11 @@ public class UserDetailsBO extends BaseBusinessObject {
 		session.beginTransaction();
 		HashMap<Integer, Integer> valueMap = null;
 		try {
+			iLogger.info("Entered into try Block");
 			// get all event names along with their catalog value ids in hashmap
 			Query q = session
 					.createQuery("select e1.eventId,c2.catalogValueId,c2.catalogId from EventEntity e1,CatalogValuesEntity c2 where e1.eventName=c2.catalogValue and e1.eventTypeId =2");
-			iLogger.info("Query executed");
+			iLogger.info("Query Created");
 			List<Integer> eventIds = Arrays.asList(4, 5, 6, 16, 17);
 			Iterator iterat = q.list().iterator();
 			Object[] result = null;
@@ -2261,7 +2292,8 @@ public class UserDetailsBO extends BaseBusinessObject {
 					.createQuery("select pe.catalogValueId from PreferenceEntity pe,CatalogValuesEntity cve where pe.contact='"
 							+ loginId
 							+ "'and pe.catalogValueId = cve.catalogValueId"
-							+ " and cve.catalogId in (9,10)");
+							//+ " and cve.catalogId in (9,10)");
+							+ " and cve.catalogId in (9,10,13)");//CR500.n
 			Iterator itr = qu.list().iterator();
 			CatalogValuesEntity cvEntity = null;
 			while (itr.hasNext()) {

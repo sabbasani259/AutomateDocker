@@ -76,6 +76,9 @@
 	<property generated="never" lazy="false" name="PremFlag" type="int">
 	<column name="PremFlag" />
 	</property>
+	<property generated="never" lazy="false" name="machineCategory" type="java.lang.String">
+	<column name="MachineCategory" />
+	</property>
   <many-to-one class="remote.wise.businessentity.ClientEntity"
    fetch="join" name="client_id">
    <column name="Client_ID"/>

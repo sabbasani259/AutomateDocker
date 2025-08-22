@@ -438,6 +438,23 @@ public class RestApplication extends Application
 		singletons.add(new RemoteDiagnosticsRestService());//CR517
 		singletons.add(new DealerDataAndSMSNotificationsRestService());//CR498.n
 		singletons.add(new CommRepHOIntoXlsFile());//Prasanna:20250519:HO comm report
+		singletons.add(new BSVPerformanceReport());	
+		//LLOPS-164 : Sai Divya : 20250821 : Soap to Rest.sn
+		singletons.add(new AssetDashboardRestService());
+		singletons.add(new StockSummaryRestService());
+		singletons.add(new CustomerRequiringRestService());
+		singletons.add(new AlertSummaryRestService());
+		singletons.add(new ServiceDueOverDueRestService());
+		singletons.add(new ReportMasterListServiceRestService());
+		singletons.add(new UserAlertsServiceRestService());
+		singletons.add(new MachineProfileServiceRestService());
+		singletons.add(new LandmarkDetailsServiceRestService());
+		singletons.add(new TenancyDetailsServiceRestService());
+		singletons.add(new AssetGroupServiceRestService());
+		singletons.add(new RolledOffMachinesServiceRestService());
+		singletons.add(new AuditLogDetailsServiceRestService());
+		//LLOPS-164 : Sai Divya : 20250821 : Soap to Rest.en
+		singletons.add(new SoftwareIdLogService());
 		
 	}
 

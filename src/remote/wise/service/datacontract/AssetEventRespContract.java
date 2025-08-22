@@ -1,5 +1,9 @@
 package remote.wise.service.datacontract;
 
+import org.apache.logging.log4j.Logger;
+
+import remote.wise.log.InfoLogging.InfoLoggerClass;
+
 public class AssetEventRespContract
 {	
 	private String ParameterName;
@@ -108,5 +112,20 @@ public class AssetEventRespContract
 	public void setAlertSeverity(String alertSeverity) {
 		this.alertSeverity = alertSeverity;
 	}
+
+	Logger iLogger = InfoLoggerClass.logger;
+
+
+	@Override
+	public String toString() {
+		iLogger.info("AssetEventRespContract [ParameterName=" + ParameterName + ", TransactionTime=" + TransactionTime
+				+ ", SequenceId=" + SequenceId + ", ParameterValue=" + ParameterValue + ", latitude=" + latitude
+				+ ", longitude=" + longitude + ", alertSeverity=" + alertSeverity + "]");
+		return "AssetEventRespContract [ParameterName=" + ParameterName + ", TransactionTime=" + TransactionTime
+				+ ", SequenceId=" + SequenceId + ", ParameterValue=" + ParameterValue + ", latitude=" + latitude
+				+ ", longitude=" + longitude + ", alertSeverity=" + alertSeverity + "]";
+	}
+	
+	
 	
 }

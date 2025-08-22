@@ -58,7 +58,7 @@ public class InsertComRepoEnchIntoCVSFileDAO {
 						"Lat", "Lon", "City", "State", "device_status", "SIM_No", "Network provider", "renew_state",
 						"country", "plant", "extended_warranty", "Comm_State", "Comm_District", "Comm_City",
 						"Comm_Address", "Machine type", "NIP", "version", "BP_code" ,"Altitude in Meters"  , "Customer Contact No",
-						"Usage Category","Sale Date","Warranty Type","Pin Code","Tehsil"};//CR446.n
+						"Usage Category","Sale Date","Warranty Type","Pin Code","Tehsil","Machine Category"};//CR446.n
 
 				writer.writeNext(header);
 				while (loopFlag < count) {
@@ -67,8 +67,8 @@ public class InsertComRepoEnchIntoCVSFileDAO {
 					//String query = "select * from com_rep_oem_enhanced limit " + loopFlag + "," + "5000";//CR446.o
 					//String query = "SELECT a.*, b.usgaeCategory FROM com_rep_oem_enhanced a LEFT OUTER JOIN asset_profile b" + " ON a.Serial_Number=b.SerialNumber LIMIT " + loopFlag + "," + "5000";//CR446.n //CR462.O
 					
-					String query = "SELECT a.*, b.usgaeCategory FROM com_rep_oem_enhanced a LEFT OUTER JOIN asset_profile b" + " ON a.Serial_Number=b.SerialNumber where owner not in ('unAllocated') or plant  in ('HAR','PUN','RAJ') LIMIT " + loopFlag + "," + "5000" ;//CR462.n
-					
+					//String query = "SELECT a.*, b.usgaeCategory FROM com_rep_oem_enhanced a LEFT OUTER JOIN asset_profile b" + " ON a.Serial_Number=b.SerialNumber where owner not in ('unAllocated') or plant  in ('HAR','PUN','RAJ') LIMIT " + loopFlag + "," + "5000" ;//CR462.n
+					String query = "SELECT a.*, b.usgaeCategory,a.MachineCategory FROM com_rep_oem_enhanced a LEFT OUTER JOIN asset_profile b" + " ON a.Serial_Number=b.SerialNumber where owner not in ('unAllocated') or plant  in ('HAR','PUN','RAJ') LIMIT " + loopFlag + "," + "5000" ;//CR462.n
 					iLogger.info(query);
 
 					ResultSet rs1 = stmt1.executeQuery(query);
@@ -112,6 +112,7 @@ public class InsertComRepoEnchIntoCVSFileDAO {
 						//CR490.n
 						String Sub_District;
 						String Pin_Code;
+						String machineCategory;
 						SerialNumber = rs1.getString("Serial_Number");
 						if (rs1.getString("Profile") != null) {
 							profile = rs1.getString("Profile");
@@ -366,11 +367,19 @@ public class InsertComRepoEnchIntoCVSFileDAO {
 							Sub_District=rs1.getString("Sub_District");
 						}
 						//CR490.en
+						if(rs1.getString("MachineCategory")!=null)
+						{
+							machineCategory=rs1.getString("MachineCategory");
+						}
+						else
+						{
+							machineCategory="NA";
+						}
 						String[] data1 = { SerialNumber, profile, model, Zone, DealerName, Owner, tmh, version,
 								Pkt_Created_TS, Pkt_Recd_TS, Roll_Off_Date, Installed_date, Lat, Lon, City, State,
 								device_status, SIM_No, networkprovider, renew_state, country, plant, extended_warranty,
 								Comm_State, Comm_District, Comm_City, Comm_Address, machineType, NIP, mipVersion,
-								BP_code , altitude , customerContact, usageCategory,SaleDate,WarrantyType,Pin_Code,Sub_District };
+								BP_code , altitude , customerContact, usageCategory,SaleDate,WarrantyType,Pin_Code,Sub_District,machineCategory };
 					
 						writer.writeNext(data1);
 					}

@@ -1,6 +1,7 @@
-/*DF-100000266: 2022 0307: DH20313904: Alert Preference Update in table MUserAlertPref. 
+/*DF-100000266: 20220307: DH20313904: Alert Preference Update in table MUserAlertPref. 
  *Event type Id(Integer) getting updated in table instead of event type code(String).
  *Changes added to update table with correct data type.
+ *CR500 : 20241128 : Dhiraj Kumar : WHatsApp Integration with LL
  */
 
 package remote.wise.service.datacontract;
@@ -15,7 +16,17 @@ public class UserAlertPreferenceRespContract {
 	private boolean EmailEvent;
 	private String EventTypeName;
 	private String loginId;
+	//CR500.sn
+	private boolean whatsappEvent;
 
+	public boolean isWhatsappEvent() {
+		return whatsappEvent;
+	}
+
+	public void setWhatsappEvent(boolean whatsappEvent) {
+		this.whatsappEvent = whatsappEvent;
+	}
+	//CR500.en
 	//DF-100000266.sn 
 	private String eventTypeCode;
 

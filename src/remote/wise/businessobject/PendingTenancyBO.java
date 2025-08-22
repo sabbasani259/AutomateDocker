@@ -2,6 +2,7 @@
  *Event Type Id(Integer) getting updated in table instead of event type code(String).
  *Changes added to update table with correct data type.
  *DF-100000266: 20220714: DH20313904: Alert Preference Update in table MUserAlertPref. 
+ * *CR500 : 20241128 : Dhiraj Kumar : WHatsApp Integration with LL
  */
 
 package remote.wise.businessobject;
@@ -376,7 +377,12 @@ public class PendingTenancyBO
 				else
 					response.setSMSEvent(true);
 				//DF-100000266.en
-
+				//CR500.sn
+				if (rs.getString("Event_Type_Code").equals("001"))
+					response.setWhatsappEvent(true);
+				else
+					response.setWhatsappEvent(false);
+				//CR500.en
 				userAlertPrefList.add(response);
 			}
 			//DF-100000266.sn
@@ -392,6 +398,7 @@ public class PendingTenancyBO
 
 			HashMap<String,String> smsAlertPrefMap = new HashMap<String,String>();
 			HashMap<String,String> emailAlertPrefMap = new HashMap<String,String>();
+			HashMap<String,String> whatsappAlertPrefMap = new HashMap<String,String>();//CR500.n
 			for(int i=0; i<userAlertPrefList.size(); i++)
 			{
 				//DF-100000266.o
@@ -403,6 +410,8 @@ public class PendingTenancyBO
 				smsAlertPrefMap.put(userAlertPrefList.get(i).getEventTypeCode(), boolToStringMap.get(userAlertPrefList.get(i).isSMSEvent()));
 				emailAlertPrefMap.put(userAlertPrefList.get(i).getEventTypeCode(), boolToStringMap.get(userAlertPrefList.get(i).isEmailEvent()));
 				//DF-100000266.en
+				whatsappAlertPrefMap.put(userAlertPrefList.get(i).getEventTypeCode(), boolToStringMap.get(userAlertPrefList.get(i).isWhatsappEvent()));//CR500.n
+				
 			}
 
 			//DF-100000266.o
@@ -412,6 +421,8 @@ public class PendingTenancyBO
 			new UserPreferenceBO().setUserAlertPrefToMySql(newContactID, "SMS", "AlertType", smsAlertPrefMap);
 			new UserPreferenceBO().setUserAlertPrefToMySql(newContactID, "Email", "AlertType", emailAlertPrefMap);
 			//DF100000266.en
+			new UserPreferenceBO().setUserAlertPrefToMySql(newContactID, "WhatsApp", "AlertType", whatsappAlertPrefMap);//CR500.n
+
 
 			iLogger.info("PendingTenancyBatchService:PendingTenancyBO:AccountID:"+accountObj.getAccount_id()+"; Set User Alert Pref - SUCCESS");
 
@@ -442,8 +453,9 @@ public class PendingTenancyBO
 
 				//Set Subscriber3 in MAlertSubsriberGroup
 				query= "update MAlertSubsriberGroup set SubscriberGroup = json_set(SubscriberGroup,'$.\"Subscriber3\"'," +
-						"CAST('{\"SMS1\":\""+newContactID+"\",\"EMAIL1\":\""+newContactID+"\" }' as json)) where AssetID='"+assetList.get(i)+"' ";
-				stmt.executeUpdate(query);
+						//"CAST('{\"SMS1\":\""+newContactID+"\",\"EMAIL1\":\""+newContactID+"\" }' as json)) where AssetID='"+assetList.get(i)+"' ";//CR500.o
+						"CAST('{\"SMS1\":\""+newContactID+"\",\"EMAIL1\":\""+newContactID+"\" ,\"WHATSAPP1\":\""+ newContactID+"\"}' as json)) where AssetID='"+assetList.get(i)+"' ";//CR500.n
+					stmt.executeUpdate(query);
 				iLogger.info("PendingTenancyBatchService:PendingTenancyBO:AccountID:"+accountObj.getAccount_id()+"; Set Subscriber3 in MAlertSubsriberGroup - SUCCESS");
 			}
 		}

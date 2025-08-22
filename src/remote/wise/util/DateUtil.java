@@ -13,6 +13,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Query;
@@ -362,6 +365,7 @@ public List<String> roleAlertMapDetails(String loginId, int loginTenancyId, Stri
 			if(loginId!=null){
 				selectQuery="select c.Role_ID from contact c where c.Contact_ID='"+loginId+"' ";	
 			}
+			
 			else if(loginTenancyId!=0){
 				
 				//Df20180129 @Roopa Multiple BP code changes--Taking the list of users that are mapped to given account code, based on Mapping code
@@ -469,6 +473,220 @@ public List<String> roleAlertMapDetails(String loginId, int loginTenancyId, Stri
 		return alertCodeList;
 
 	}
+
+public List<String> roleAlertMapDetailsNew(String loginId, int loginTenancyId, String Mode,int pageNumber,int eventTypeID){
+	
+
+	Logger iLogger = InfoLoggerClass.logger;
+	Logger fLogger = FatalLoggerClass.logger;
+
+	TreeMap<String,TreeMap<String,String>> roleAlertMap=new TreeMap<String,TreeMap<String,String>>();
+
+	List<String> alertCodeList=new ArrayList<String>();
+	List<String> alertCodeList1=new ArrayList<String>();
+	String roleId = null;
+
+	Connection prodConnection = null;
+	Statement statement = null;
+	Statement statement1 = null;
+	Statement statement2 = null;
+	ResultSet rs = null;
+	ResultSet rs1 = null;
+	ResultSet rs2 = null;
+	String selectQuery=null;
+	int pge;
+//	iLogger.info("pageNumber % 5 ::"+pageNumber % 5);
+//	if ((pageNumber % 5) == 0) {
+//		pge = pageNumber / 5;
+//		iLogger.info("pageNumber::"+pge );
+//	}
+//
+//	else if (pageNumber == 1) {
+//		pge = 1;
+//	}
+//
+//	else {
+//		while (((pageNumber) % 5) != 0) {
+//			pageNumber = pageNumber - 1;
+//		}
+//
+//		pge = ((pageNumber) / 5) + 1;
+//	}
+	iLogger.info("pageNumber"+pageNumber);
+	int startLimit = (pageNumber - 1)*50;
+	int endLimit = startLimit+ 50;
+	iLogger.info("startLimit:1:"+startLimit );
+	
+	if(startLimit!=0)
+	{
+	
+		startLimit=startLimit+1;
+		iLogger.info("startLimit:2:"+startLimit );
+	}
+	iLogger.info("startLimit:3:"+startLimit );
+	
+	
+	iLogger.info("endLimit::"+endLimit );
+
+	try{
+
+		ConnectMySQL connMySql = new ConnectMySQL();
+		prodConnection = connMySql.getConnection();
+		statement = prodConnection.createStatement();
+		rs = statement.executeQuery("select * from alert_role_mapping ");
+		
+		String query ="select a.Event_Type_Name,b1.Event_ID from event_type a join  business_event b1 on  b1.Event_Type_ID = a.Event_Type_ID where a.Event_Type_ID='"+eventTypeID+"'";
+		statement2 = prodConnection.createStatement();
+		rs2 = statement2.executeQuery(query);
+		while(rs2.next()){
+			alertCodeList1.add(rs2.getString("Event_ID"));
+		}
+			Set<String> normalizedAlertCodeList1 = alertCodeList1.stream().map(code -> String.format("%03d", Integer.parseInt(code))).collect(Collectors.toSet());
+		String alertMap = null;
+		TreeMap<String, String> alertMapDetails=new TreeMap<String, String>();
+
+		String roleNAme;
+
+		while(rs.next()){
+
+			roleNAme=String.valueOf(rs.getInt("role_id"));
+			if(Mode.equalsIgnoreCase("SMS")){
+				alertMap=rs.getObject("alertmap_sms").toString();
+			}
+			if(Mode.equalsIgnoreCase("EMAIL")){
+				alertMap=rs.getObject("alertmap_email").toString();
+			}
+
+			if(Mode.equalsIgnoreCase("Display")){
+				alertMap=rs.getObject("alertmap_display").toString();			
+			}
+			
+			alertMapDetails=new Gson().fromJson(alertMap, new TypeToken<TreeMap<String, Object>>() {}.getType());
+			
+			roleAlertMap.put(roleNAme, alertMapDetails);
+
+		}
+
+		iLogger.info("roleAlertMap ::"+roleAlertMap.size());
+
+		statement1 = prodConnection.createStatement();
+		iLogger.info("loginTenancyId"+loginTenancyId);
+		if(loginId!=null){
+			selectQuery="select c.Role_ID from contact c where c.Contact_ID='"+loginId+"'";	
+		}
+		
+		else if(loginTenancyId!=0){
+			iLogger.info("loginTenancyId"+loginTenancyId);
+			//Df20180129 @Roopa Multiple BP code changes--Taking the list of users that are mapped to given account code, based on Mapping code
+			List<Integer> tenancyIdList=new ArrayList<Integer>();
+			tenancyIdList.add(loginTenancyId);
+			
+			tenancyIdList.addAll(new DateUtil().getLinkedTenancyListForTheTenancy(tenancyIdList));
+			
+			ListToStringConversion conversion = new ListToStringConversion();
+			String tenancyIdListString = conversion.getIntegerListString(tenancyIdList).toString();
+			iLogger.info("tenancyIdListString"+tenancyIdListString);
+			selectQuery="select c.Role_ID from contact c, account_contact ac, account_tenancy at where at.Tenancy_ID in ("+tenancyIdListString+") and " +
+					"at.Account_ID=ac.Account_ID and ac.Contact_ID=c.Contact_ID";
+		}
+		else{
+			return alertCodeList;
+		}
+
+		iLogger.info("selectQuery"+selectQuery);
+		rs1 = statement1.executeQuery(selectQuery);
+		rs1.setFetchSize(1);
+
+		while(rs1.next()){
+			roleId=String.valueOf(rs1.getInt("Role_ID"));
+		}
+
+
+
+		iLogger.info("roleId :"+roleId);
+
+		if(roleAlertMap!=null && roleAlertMap.size()>0){
+
+			TreeMap<String, String> roleMap=roleAlertMap.get(roleId);
+
+			if(roleMap!=null && roleMap.size()>0){
+
+				for(Map.Entry pair: roleMap.entrySet()){
+					if(String.valueOf(pair.getValue()).equalsIgnoreCase("1") && normalizedAlertCodeList1.contains(String.valueOf(pair.getKey()))) 
+					{
+						alertCodeList.add(String.valueOf(pair.getKey()));
+					}
+				}
+				int listSize = alertCodeList.size();
+				iLogger.info("listSize"+listSize);
+				if (startLimit < listSize) {
+				    endLimit = Math.min(endLimit, listSize);
+				    alertCodeList = alertCodeList.subList(startLimit, endLimit);
+				} else {
+				    alertCodeList = null; // return empty list for out-of-range page
+				}
+                iLogger.info("alertCodeList"+alertCodeList);
+
+			}
+
+		}
+	}
+
+	catch (SQLException e) {
+
+		e.printStackTrace();
+		fLogger.fatal("SQL Exception in fetching data from mysql::"+e.getMessage());
+	} 
+
+	catch(Exception e)
+	{
+		e.printStackTrace();
+		fLogger.fatal("Exception in fetching data from mysql::"+e.getMessage());
+	}
+
+	finally {
+		if(rs!=null)
+			try {
+				rs.close();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+
+		if(rs1!=null)
+			try {
+				rs1.close();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+
+		if(statement!=null)
+			try {
+				statement.close();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
+		if(statement1!=null)
+			try {
+				statement1.close();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
+		if (prodConnection != null) {
+			try {
+				prodConnection.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+	}
+	return alertCodeList;
+
+}
 	public static  String filteralertMap="";
 	
 	public List<String> roleAlertMapDetailsForHealthTab(String loginId, int loginTenancyId, String Mode){
@@ -1014,5 +1232,50 @@ public List<Integer> getLinkedTenancyListForTheTenancy(List<Integer> tenancyIdLi
 	
 	return updatedTenancyIdList;
 }
+public String getMOSPDynamicTable(String txnKey, Date TxnDate){
+	 
+	Logger iLogger = InfoLoggerClass.logger;
+	Logger fLogger = FatalLoggerClass.logger;
 
+
+	Properties prop=null;
+	try	{
+		prop= StaticProperties.getConfProperty();
+	}
+	catch(Exception e) {
+		fLogger.fatal(txnKey+":AMS:DAL:TAssetMOSPMonData-getTAssetMOSPMonData"+"Error in intializing property File :"+e.getMessage());
+	}
+
+	String TAssetMonTable = prop.getProperty("default_TAssetMOSPMonData_TableKey");
+	String jcbTAssetMonTableFormat = prop.getProperty("JCB_TAssetMOSPMonData_TableKey");
+
+	Calendar cal = Calendar.getInstance();
+	int currYear=cal.get(Calendar.YEAR);
+	int currentWeekNo = cal.get(Calendar.WEEK_OF_YEAR);
+
+	int transactionWeekNo = 0;
+	int transactionYear=0;
+
+	if(TxnDate!=null){
+		cal.setTime(TxnDate);
+		transactionWeekNo = cal.get(Calendar.WEEK_OF_YEAR);
+		transactionYear = cal.get(Calendar.YEAR);
+		int noofweeksintransactionYear=cal.getActualMaximum(Calendar.WEEK_OF_YEAR);
+
+		if(currYear!=transactionYear){
+			currentWeekNo =noofweeksintransactionYear+currentWeekNo;
+		}
+		Calendar futurecal = Calendar.getInstance();
+		futurecal.add(Calendar.DAY_OF_YEAR, 6);
+		int futureYear=futurecal.get(Calendar.YEAR);
+		if(transactionWeekNo==1 && futureYear==transactionYear+1){
+			transactionWeekNo=noofweeksintransactionYear;
+		}
+		if(currentWeekNo - transactionWeekNo < 8){
+			TAssetMonTable = jcbTAssetMonTableFormat.replace("week", transactionWeekNo+"");
+			TAssetMonTable =TAssetMonTable.replace("year", transactionYear+"");
+		}
+	}
+	return TAssetMonTable;
+}
 }

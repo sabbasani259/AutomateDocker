@@ -31,7 +31,7 @@ public class JcbRollOffImpl
 	 */
 	public String vinMachineNameMapping(String serialNumber, String nickName, String chasisNumber, String make, String builtDate, String machineNumber,
 										//String messageId)//CR395.o
-										String messageId, String rollOffDate)//CR395.n
+										String messageId, String rollOffDate,String machineCategory)//CR395.n
 	{
 		Logger bLogger = BusinessErrorLoggerClass.logger;
 		
@@ -97,7 +97,7 @@ public class JcbRollOffImpl
 		
 		//2014-06-18 : Machine Number check to extract the last 7 digits : Deepthi 
 		//status = assetDetailsBo.setVinMachineNameAssociation(serialNumber,nickName, chasisNumber,make,builtDate,machineNumber,messageId);//CR395.o
-		status = assetDetailsBo.setVinMachineNameAssociation(serialNumber,nickName, chasisNumber,make,builtDate,machineNumber,messageId, rollOffDate);//CR395.n
+		status = assetDetailsBo.setVinMachineNameAssociation(serialNumber,nickName, chasisNumber,make,builtDate,machineNumber,messageId, rollOffDate,machineCategory);//CR395.n
 		
 		//DF20150311 - Rajani Nagaraju - Updating AssetOwnerSnapshot for a VIN on real time
 		new CurrentAssetOwnerDetailsImpl().setVinOwnerDetails(serialNumber);

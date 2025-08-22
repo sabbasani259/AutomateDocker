@@ -1,5 +1,8 @@
 package remote.wise.businessobject;
 
+/*
+ * CR500 : 20241128 : Dhiraj Kumar : WHatsApp Integration with LL
+ */
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -76,6 +79,7 @@ public class SetAlertPreferencesThread implements Runnable{
 				response.setLoginId(LoginId);
 				response.setRoleName(role_name);
 				response.setSMSEvent(true);
+				response.setWhatsappEvent(true);//CR500.n
 
 				reqContractObj.add(response);
 			}
@@ -106,7 +110,7 @@ public class SetAlertPreferencesThread implements Runnable{
 					response.setLoginId(LoginId);
 					response.setRoleName(role_name);
 					response.setSMSEvent(true);
-
+					response.setWhatsappEvent(true);//CR500.n
 					reqContractObj.add(response);
 				}
 
@@ -135,6 +139,7 @@ public class SetAlertPreferencesThread implements Runnable{
 				response.setLoginId(LoginId);
 				response.setRoleName(role_name);
 				response.setSMSEvent(true);
+				response.setWhatsappEvent(true);//CR500.n
 
 				reqContractObj.add(response);
 			}

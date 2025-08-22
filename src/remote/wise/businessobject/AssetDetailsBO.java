@@ -33,20 +33,26 @@ import java.sql.DriverManager;
 	import java.text.DecimalFormat;
 	import java.text.ParseException;
 	import java.text.SimpleDateFormat;
-	import java.util.ArrayList;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 	import java.util.Calendar;
 	import java.util.Collections;
 	import java.util.Date;
 	import java.util.HashMap;
-	import java.util.Iterator;
+import java.util.HashSet;
+import java.util.Iterator;
 	import java.util.LinkedList;
 	import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 	import java.util.Random;
-	
-	import com.mysql.jdbc.exceptions.jdbc4.CommunicationsException;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import com.mysql.jdbc.exceptions.jdbc4.CommunicationsException;
 	
 	import org.apache.logging.log4j.Logger;
 	import org.codehaus.jackson.map.ObjectMapper;
@@ -95,7 +101,7 @@ import remote.wise.log.BusinessErrorLogging.BusinessErrorLoggerClass;
 	import remote.wise.pojo.AsseControlUnitDAO;
 	import remote.wise.service.implementation.AccountDetailsImpl;
 	import remote.wise.service.implementation.AssetDashboardImpl;
-	import remote.wise.service.implementation.AssetExtendedImpl;
+import remote.wise.service.implementation.AssetExtendedImpl;
 	import remote.wise.service.implementation.AssetProvisioningImpl;
 	import remote.wise.service.implementation.DomainServiceImpl;
 	import remote.wise.service.implementation.FleetSummaryImpl;
@@ -135,6 +141,16 @@ import com.wipro.mcoreapp.implementation.AlertSubscriptionImpl;
 		String iccidNumber;
 		//20240916 : Prasanna : CR486,CR487 :MSGID 022,023
 		String fuelLevel;
+		//CR512
+	String machineCategory;
+
+	public String getMachineCategory() {
+		return machineCategory;
+	}
+
+	public void setMachineCategory(String machineCategory) {
+		this.machineCategory = machineCategory;
+	}
 		public String getFuelLevel() {
 			return fuelLevel;
 		}
@@ -1362,6 +1378,7 @@ import com.wipro.mcoreapp.implementation.AlertSubscriptionImpl;
 				//DefectId:20150706 @Suprava Adding Mobile Number as New Search criteria in Fleet General Tab.	
 				ListToStringConversion conversion = new ListToStringConversion();
 				List<String> contactIdList = new LinkedList<String>();
+				List<Integer> contactTeancyIdList =new ArrayList<Integer>();
 				List<Integer> accountIdList = new LinkedList<Integer>();
 				String primaryMobileNumber = null;
 				int contactTeancyId = 0;
@@ -1748,16 +1765,16 @@ import com.wipro.mcoreapp.implementation.AlertSubscriptionImpl;
 				List<Integer> eventTypeIdList,List<String> eventSeverityList,int pageNumber, List<Integer> landmarkId, List<Integer> landmarkCategoryId,
 				boolean isOwnStock,String mobileNumber,String loginId) throws CustomFault
 				{
-	
-	
-	
+
+
+
 			List<AssetDashboardImpl> assetDashboardList = new LinkedList<AssetDashboardImpl>();
-	
+			
 			int retroFLag=0;
-	
+			
 			Logger fLogger = FatalLoggerClass.logger;
 			Logger iLogger = InfoLoggerClass.logger;
-	
+			
 			long startTime = System.currentTimeMillis();
 			iLogger.info("into the bo class ::loginid"+loginId);
 			//to get only the 50 records, according to the page number calculate X for Limit X,Y - 
@@ -1768,28 +1785,28 @@ import com.wipro.mcoreapp.implementation.AlertSubscriptionImpl;
 			{
 				pge = pageNumber/5;
 			}
-	
+			
 			else if(pageNumber==1)
 			{
 				pge=1;
 			}
-	
+						
 			else
 			{
 				while( ((pageNumber)%5) != 0 )
 				{
 					pageNumber = pageNumber-1;
 				}
-	
+				
 				pge = ((pageNumber)/5)+1;
 			}
 			int startLimit = (pge-1)*50;
-	
+			
 			int endLimit =50;
-	
+			
 			Session session = HibernateUtil.getSessionFactory().openSession();
-	
-	
+			
+			
 			try
 			{
 				//Keerthi : 12/02/14 : SEARCH : if m/c no.(7 digits) provided , get corresponding PIN 
@@ -1806,16 +1823,17 @@ import com.wipro.mcoreapp.implementation.AlertSubscriptionImpl;
 						}
 					}
 				}
-				//DefectId:20150706 @Suprava Adding Mobile Number as New Search criteria in Fleet General Tab.	
+			  //DefectId:20150706 @Suprava Adding Mobile Number as New Search criteria in Fleet General Tab.	
 				ListToStringConversion conversion = new ListToStringConversion();
 				List<String> contactIdList = new LinkedList<String>();
 				List<Integer> accountIdList = new LinkedList<Integer>();
+				List<Integer> contactTeancyIdList =new ArrayList<Integer>();//100016276.n
 				String primaryMobileNumber = null;
 				int contactTeancyId = 0;
 				if(! (session.isOpen() ))
-				{
-					session = HibernateUtil.getSessionFactory().openSession();
-				}
+	            {
+	                 session = HibernateUtil.getSessionFactory().openSession();
+	             }
 				if(mobileNumber!=null)
 				{
 					iLogger.info("search with mobile number::"+mobileNumber+"  loginId::"+loginId);
@@ -1826,65 +1844,114 @@ import com.wipro.mcoreapp.implementation.AlertSubscriptionImpl;
 	                                          "c.primary_mobile_number in ( select a.mobile_no from AccountEntity a where a.mappingCode in ( select acc.mappingCode from "+
 	                                          "AccountEntity acc where acc.mobile_no = '"+mobileNumber+"'))" +
 	                                          " and c.contact_id=ac.contact_id and ac.account_id=at.account_id and c.active_status=true");*/
-	
+						
 						//DF20190910: @Mamatha Below query modified for incorrect data while Search based on mobile number from Fleet page.
 						Query queryContact = session.createQuery("select c.primary_mobile_number,bp.account_id,c.contact_id,at.tenancy_id " +
 								" from ContactEntity c,AccountContactMapping ac,AccountEntity a,AccountEntity bp,AccountTenancyMapping at " +
 								" where c.contact_id=ac.contact_id and ac.account_id=a.account_id and c.primary_mobile_number = '"+mobileNumber+"' " +
 								" and a.mappingCode=bp.mappingCode and bp.account_id=at.account_id and c.active_status=1");
-	
-	
+						
+						
 						Object[] resultSet = null;
 						Iterator itrContact = queryContact.list().iterator();
-	
+
 						while(itrContact.hasNext())
 						{
 							resultSet = (Object[]) itrContact.next();
 							if(resultSet[0]!=null){
 								primaryMobileNumber = (String) resultSet[0];
 							}
-							if(resultSet[1]!=null){
+							//100016953 : Sai Divya : 20250821 : MobileNumberSearch.sn
+						/*	if(resultSet[1]!=null){
 								//DF20190910: @Mamatha Below query modified for incorrect data while Search based on mobile number from Fleet page.
 								//AccountEntity accountEntityObj = (AccountEntity)resultSet[1];
 								//int accountId = accountEntityObj.getAccount_id();
 								//accountIdList.add(accountEntityObj.getAccount_id());
-	
+								
 								accountIdList.add((Integer)resultSet[1]);
-	
-							}
+
+							}*/
+							//100016953 : Sai Divya : 20250821 : MobileNumberSearch.en
 							if(resultSet[2]!=null){
-								String contactId = (String) resultSet[2];
-								contactIdList.add(contactId);
+							String contactId = (String) resultSet[2];
+							contactIdList.add(contactId);
 							}
 							if(resultSet[3]!=null){
 								TenancyEntity tenancyEntityObj = (TenancyEntity)resultSet[3];
 								contactTeancyId = tenancyEntityObj.getTenancy_id();
+								contactTeancyIdList.add(tenancyEntityObj.getTenancy_id());//100016276.n
+								
 							}
 						}
-	
+						
+//						String contactTeancyIdListAsString = contactTeancyIdList.stream()
+//							    .map(String::valueOf)
+//							    .collect(Collectors.joining(","));//100016276.n
+						//100016953 : Sai Divya : 20250821 : MobileNumberSearch.sn
+						String contactTeancyIdListAsString = contactTeancyIdList.stream()
+							    .map(id -> "'" + id + "'")
+							    .collect(Collectors.joining(","));
+						//100016953 : Sai Divya : 20250821 : MobileNumberSearch.en
 						//To validate the Tenancy Hierarchy
 						String hierarchyLevel = null;
 						int level = 0;
+//						int childId=0;
+						List<Integer> childId=new LinkedList<>();//100016953.n
 						String userloginIdListAsString = conversion.getIntegerListString(userTenancyList).toString();
-						Query queryTenancy = session.createQuery("select parentId,childId,level from TenancyBridgeEntity where parentId in ("+userloginIdListAsString+")" +
-								" and childId ='"+contactTeancyId+"' ");
-						Object[] resultSetTenancy = null;
-						Iterator itrTenancy = queryTenancy.list().iterator();
-						while(itrTenancy.hasNext())
+//						Query queryTenancy = session.createQuery("select parentId,childId,level from TenancyBridgeEntity where parentId in ("+userloginIdListAsString+")" +
+//								" and childId ='"+contactTeancyId+"' ");//100016276.o
+//						Query queryTenancy = session.createQuery("select parentId,childId,level from TenancyBridgeEntity where parentId in ("+userloginIdListAsString+")" +
+//						" and childId ='"+contactTeancyIdListAsString+"' ");//100016276.n
+						
+						String hql = "select parentId, childId, level from TenancyBridgeEntity " +
+					             "where parentId in (" + userloginIdListAsString + ") " +
+					             "and childId in (" + contactTeancyIdListAsString + ")";//100016953.n
+						Query queryTenancy = session.createQuery(hql);//100016953.n
+						iLogger.info("queryTenancy :"+queryTenancy);
+			        	Object[] resultSetTenancy = null;
+				        Iterator itrTenancy = queryTenancy.list().iterator();
+				        while(itrTenancy.hasNext())
 						{
-							resultSetTenancy = (Object[]) itrTenancy.next();
+				        	resultSetTenancy = (Object[]) itrTenancy.next();
 							if(resultSetTenancy[2]!=null){
-								level = (Integer) resultSetTenancy[2];
+						    level = (Integer) resultSetTenancy[2];
 							}
+							//100016953 : Sai Divya : 20250821 : MobileNumberSearch.sn
+							if(resultSetTenancy[1]!=null){
+								childId.add((Integer) resultSetTenancy[1]);
+							}
+							//100016953 : Sai Divya : 20250821 : MobileNumberSearch.en
 							hierarchyLevel = String.valueOf(level);
 						}
-						// System.out.println("hierarchyLevel:"+hierarchyLevel);
-	
-						if(hierarchyLevel==null){
-							//Not to dispaly the above Hierarchy machine Details
-							iLogger.info("Mobile Number "+ mobileNumber + "does not exist !!!");
-							return assetDashboardList ;
+				      //100016953 : Sai Divya : 20250821 : MobileNumberSearch.sn
+				        String childIdList = childId.stream()
+							    .map(id -> "'" + id + "'")
+							    .collect(Collectors.joining(","));
+				       // System.out.println("hierarchyLevel:"+hierarchyLevel);
+				      //get account list from contactTeancyIdListAsString(list of child tenancy for logged in user for the searched mobile no.) from account_tenancy table
+						String accountQuery = "SELECT Account_ID FROM account_tenancy WHERE Tenancy_ID IN (" + childIdList + ")";
+						iLogger.info("accountQuery "+accountQuery);
+						ConnectMySQL connMySql = new ConnectMySQL();
+
+						try (Connection prodConnection = connMySql.getConnection();
+						     PreparedStatement preparedStatement = prodConnection.prepareStatement(accountQuery)) {
+
+						    ResultSet resultSet1 = preparedStatement.executeQuery();
+						    while (resultSet1.next()) {
+						        accountIdList.add(resultSet1.getInt("Account_ID"));
+						    }
+
+						} catch (SQLException e) {
+						    e.printStackTrace();
+						    fLogger.fatal("Exception Occured:"+e.getMessage());
 						}
+						iLogger.info("accountIdList "+accountIdList);
+						//100016953 : Sai Divya : 20250821 : MobileNumberSearch.en
+				        if(hierarchyLevel==null){
+				        	//Not to dispaly the above Hierarchy machine Details
+				        	iLogger.info("Mobile Number "+ mobileNumber + "does not exist !!!");
+							return assetDashboardList ;
+				        }
 						if(primaryMobileNumber==null)
 						{//invalid Mobile number
 							iLogger.info("Mobile Number "+ mobileNumber + "does not exist !!!");
@@ -1905,412 +1972,59 @@ import com.wipro.mcoreapp.implementation.AlertSubscriptionImpl;
 					}
 				}
 				//DefectId:20150706 End
-	
+				
 				//get Client Details
 				Properties prop1 = new Properties();
 				String clientName=null;
-	
+					
 				prop1.load(getClass().getClassLoader().getResourceAsStream("remote/wise/resource/properties/configuration.properties"));
 				clientName= prop1.getProperty("ClientName");
-	
-	
+	      
+				
 				//END of get Client Details	  
-	
+				
 				String userTenancyListAsString ;
-	
+			
 				String accountIdListAsString = conversion.getIntegerListString(accountIdList).toString();
 				if(! (session.isOpen() ))
-				{
-					session = HibernateUtil.getSessionFactory().openSession();
-				}
-	
+	            {
+	                 session = HibernateUtil.getSessionFactory().openSession();
+	             }
+			
 				if( ! (childTenancyList==null || childTenancyList.isEmpty())) 
 				{
 					//Get the list of accounts corresponding to the child tenancy
 					userTenancyListAsString = conversion.getIntegerListString(childTenancyList).toString(); 
-	
+					
 				}
 				else
 				{
 					userTenancyListAsString = conversion.getIntegerListString(userTenancyList).toString(); 
 				}
-	
+				
 				List<Integer> userAccList = new LinkedList<Integer>();
 				if(!userTenancyListAsString.isEmpty()){
-					Query accountQ = session.createQuery(" from AccountTenancyMapping where tenancy_id in ("+userTenancyListAsString+")");
-					Iterator accountItr = accountQ.list().iterator();
-					while(accountItr.hasNext())
-					{
-						AccountTenancyMapping accTen = (AccountTenancyMapping)accountItr.next();
-						userAccList.add(accTen.getAccount_id().getAccount_id());
-					}
-				}	
+				Query accountQ = session.createQuery(" from AccountTenancyMapping where tenancy_id in ("+userTenancyListAsString+")");
+				Iterator accountItr = accountQ.list().iterator();
+				while(accountItr.hasNext())
+				{
+					AccountTenancyMapping accTen = (AccountTenancyMapping)accountItr.next();
+					userAccList.add(accTen.getAccount_id().getAccount_id());
+				}
+				}
 				try
 				{
-					if(session!=null && session.isOpen())
-					{
-						session.close();
-					}
+				if(session!=null && session.isOpen())
+				{
+					session.close();
+				}
 				}
 				catch(Exception e){
 					fLogger.fatal("Exception in closing the AssetDashboard session::"+e);
 				}
-	
+				
 				String userAccListAsString = conversion.getIntegerListString(userAccList).toString();
-				//JCB6444.sn : old
-//				String mainSelectQuery="";
-//				String mainFromQuery="";
-//				String mainInnerQuery="";
-//				String endMainInnerQuery="";
-//				String mainGroupByQuery="";
-//				String mainOrderByQuery="";
-//				String endTopSelectQuery="";
-//				String outerInnerJoin="";
-//				String mainWhereQuery="";
-//				String topSelectQuery="";
-//				String leftjoinSelectQuery="";
-//				String leftjoinFromQuery="";
-//				String leftjoinWhereQuery="";
-//				String leftInnerJoin="";
-//				String endLeftInnerJoin="";
-//				String leftjoinONQuery="";
-//				String limitQuery="";
-//				String leftOuterJoin="";
-//				String mainCountQuery="";
-//				//DF23052019:Abhishek::New logic to fix custom group user filter			
-//				if(customGroupIdList==null || (customGroupIdList != null && customGroupIdList.isEmpty()))
-//				{	
-//					topSelectQuery = "select ams1.* ,ap.notes ,bb.* ,aes.AlertStatus from ";
-//	
-//					mainSelectQuery = " select ams.Serial_Number, ams.Latest_Transaction_Timestamp as transactionTime, ams.Latest_Created_Timestamp, ams.TxnData, a.Engine_Number, a.Product_ID, a.timeZone, a.country_code";
-//					mainFromQuery = " from asset_monitoring_snapshot ams " ;
-//	
-//					if(accountIdListAsString!=null && primaryMobileNumber!=null){
-//						mainInnerQuery =" inner join asset_owner_snapshot aos"+
-//								" on(ams.Serial_Number=aos.Serial_Number"+
-//								" and aos.Account_ID in ("+accountIdListAsString+")"+
-//								" and ams.Latest_Transaction_Timestamp >= aos.Ownership_Start_Date " ;
-//					}
-//					else{
-//						mainInnerQuery =" inner join asset_owner_snapshot aos"+
-//								" on(ams.Serial_Number=aos.Serial_Number"+
-//								" and aos.Account_ID in ("+userAccListAsString+")"+
-//								" and ams.Latest_Transaction_Timestamp >= aos.Ownership_Start_Date " ; 
-//					}
-//					if(! (assetGroupIdList==null || assetGroupIdList.isEmpty()) )
-//					{
-//						String assetGroupStringList = conversion.getIntegerListString(assetGroupIdList).toString();
-//						mainInnerQuery = mainInnerQuery + " and aos.Asset_Group_ID in ( "+ assetGroupStringList +" ) "; 
-//					}
-//					if ( ! (modelList==null || modelList.isEmpty()) ) 
-//					{
-//						String modelIdStringList = conversion.getIntegerListString(modelList).toString();
-//						mainInnerQuery = mainInnerQuery +" and aos.Asset_Type_ID in ( "+ modelIdStringList +" ) ";
-//	
-//					}
-//	
-//					if(! (serialNumber==null || serialNumber.isEmpty() ) )
-//					{
-//						iLogger.info("search with serial number::"+serialNumber+" login id::"+loginId);
-//						mainInnerQuery = mainInnerQuery + " and ams.Serial_Number= '"+ serialNumber+"' ";
-//					}
-//	
-//					mainInnerQuery = mainInnerQuery + " ) inner join asset a"+
-//							" on ( a.Serial_Number = ams.Serial_Number"+
-//							" and a.Status= 1 ";
-//					//aj20119610 - to include nickName based search query
-//					if(! (nickName==null || nickName.isEmpty() ) )
-//					{
-//						iLogger.info("search with nickName::"+nickName+" login id::"+loginId);
-//						mainInnerQuery = mainInnerQuery + " and a.nickName like '%"+ nickName+"%' ";
-//					}
-//					//DF20190318
-//					//outerInnerJoin="left outer join asset_event_snapshot";
-//					if( (! (eventTypeIdList==null || eventTypeIdList.isEmpty()) ) || 
-//							(! (eventSeverityList==null || eventSeverityList.isEmpty()) )	)
-//					{
-//						//DF20170130 @Roopa for Role based alert implementation
-//						DateUtil utilObj=new DateUtil();
-//						List<String> alertCodeList= utilObj.roleAlertMapDetails(null,userTenancyList.get(0), "Display");
-//	
-//						StringBuilder alertCodeListAsString=conversion.getStringList(alertCodeList);
-//	
-//						outerInnerJoin = outerInnerJoin+" inner join asset_event aee"
-//								+" on aee.Serial_Number = ams1.Serial_Number and aee.Active_Status=1 and aee.PartitionKey=1";
-//						outerInnerJoin = outerInnerJoin+" inner join business_event be"
-//								+" on be.Event_ID=aee.Event_ID and (be.Alert_Code in ("+alertCodeListAsString+"))";
-//	
-//						/*mainWhereQuery = mainWhereQuery + " and aee.Event_ID = ( select max(aevt.Event_ID) from " +
-//									" asset_event aevt where aevt.Serial_Number=ams.Serial_Number and aevt.Active_Status=1 ";*/
-//					}
-//					if(! (eventTypeIdList==null || eventTypeIdList.isEmpty()) )
-//					{
-//						String eventTypeIdStringList = conversion.getIntegerListString(eventTypeIdList).toString();
-//						//mainWhereQuery = mainWhereQuery+ " and aevt.Event_Type_ID in ("+eventTypeIdStringList+")";
-//						outerInnerJoin = outerInnerJoin+ " and aee.Event_Type_ID in ("+eventTypeIdStringList+")";
-//					}
-//					if(! (eventSeverityList==null || eventSeverityList.isEmpty()) )
-//					{
-//						String eventSeverityListAsString = conversion.getStringList(eventSeverityList).toString();
-//						//mainWhereQuery = mainWhereQuery + " and aevt.Event_Severity in ("+eventSeverityListAsString+")";
-//						outerInnerJoin = outerInnerJoin + " and aee.Event_Severity in ("+eventSeverityListAsString+")";
-//					}
-//	
-//					endMainInnerQuery = " )";
-//	
-//					mainWhereQuery = " where ams.Latest_Transaction_Timestamp > '2014-01-01 00:00:00'";
-//	
-//					//mainGroupByQuery = " group by ams.Serial_Number";
-//	
-//					mainOrderByQuery = " order by ams.Latest_Transaction_Timestamp desc ";
-//	
-//					endTopSelectQuery = " ) as ams1";
-//	
-//					outerInnerJoin = " inner join asset_profile ap"+
-//							" on ap.serialNumber = ams1.Serial_Number";
-//					//If any additional filters are applied
-//					//Get only the list of machines currently owned by logged in user
-//					if(isOwnStock)
-//					{
-//						mainInnerQuery = mainInnerQuery + " and a.Primary_Owner_ID=aos.Account_ID ";
-//					}
-//					//DF20180307 @Mani :: display retrofitment machines only in the fleet page
-//					if(retroFLag==1)
-//					{
-//						mainInnerQuery=mainInnerQuery+"and a.Retrofit_Flag=1";
-//					}
-//					leftjoinSelectQuery = " select p.Product_ID, ag.Asseet_Group_Name, aty.Asset_Type_Name, aty.Asset_ImageFile_Name, et.Engine_Type_Name";
-//	
-//					leftjoinFromQuery = " from products p";
-//	
-//					leftInnerJoin = " inner join asset_group ag"+
-//							" on ag.Asset_Group_ID = p.Asset_Group_ID"+
-//							" inner join asset_type aty"+
-//							" on aty.Asset_Type_ID = p.Asset_Type_ID"+
-//							" inner join engine_type et"+
-//							" on et.Engine_Type_id = p.Engine_Type_id";
-//	
-//					endLeftInnerJoin = " ) bb";
-//	
-//					leftjoinONQuery=" on ams1.Product_ID=bb.Product_ID ";
-//	
-//					limitQuery=" LIMIT "+startLimit+""+","+""+endLimit+"";
-//					//DF20190327:mani:introducing asset event snapshot and eliminating the asset event hit for every vin
-//					leftOuterJoin=" left outer join asset_event_snapshot aes on ams1.Serial_Number=aes.serialNumber";
-//					//DF20190221:AB369654::For showing count of communicating and non communicating machine both.
-//					mainCountQuery = "select count(*) as count from ( "+
-//							" (select Serial_Number from asset_owner_snapshot where account_id in ("+userAccListAsString+") ) a "+ 
-//							" inner join "+
-//							" (Select Serial_Number from asset where status =1) b "+
-//							" on a.serial_number = b.serial_number "+
-//							")";
-//				}
-//				else
-//				{
-//					//DF20190327 :mani: adding asset event snapshot in select
-//					topSelectQuery = "select ams1.* ,ap.notes ,bb.* ,aes.AlertStatus from ";
-//	
-//					/*mainSelectQuery = " select ams.Serial_Number, ams.Latest_Transaction_Timestamp as transactionTime, ams.Latest_Created_Timestamp, ams.Fuel_Level, ams.parameters, a.Engine_Number, a.Product_ID, ap.notes";
-//					mainFromQuery = " from asset_monitoring_snapshot_new ams, asset a, asset_owner_snapshot aos, asset_profile ap " ;*/
-//	
-//					//DF20161222 @Roopa Fetching assetdashboard details from new json from ams
-//					//DF20170803 @KO369761 Passing TimeZone with the query from Asset table
-//					//DF20180808 @KO369761 fetching Country code from Asset table
-//					mainSelectQuery = " select distinct(ams.Serial_Number), ams.Latest_Transaction_Timestamp as transactionTime, ams.Latest_Created_Timestamp, ams.TxnData, a.Engine_Number, a.Product_ID, a.timeZone, a.country_code";
-//					mainFromQuery = " from asset_monitoring_snapshot ams " ;
-//	
-//					if(accountIdListAsString!=null && primaryMobileNumber!=null){
-//						mainInnerQuery =" inner join custom_asset_group_snapshot cags"+
-//								" on(ams.Serial_Number = cags.Asset_Id and cags.user_Id in('"+loginId+"')"+
-//								") inner join asset_owner_snapshot aos on(ams.Serial_Number=aos.Serial_Number and aos.Account_ID in ("+accountIdListAsString+")";
-//					}
-//					else{
-//						mainInnerQuery =" inner join custom_asset_group_snapshot cags"+
-//								" on(ams.Serial_Number = cags.Asset_Id and cags.user_Id in('"+loginId+"')" ; 
-//					}
-//					String customGroupIdStringList = null;
-//					//DF20190823:Abhsihek::added the logic to filter the Fleet machines as per selected Machine Group
-//					if(! (customGroupIdList==null || customGroupIdList.isEmpty()) )
-//					{
-//						customGroupIdStringList = conversion.getIntegerListString(customGroupIdList).toString();
-//						mainInnerQuery = mainInnerQuery + " and cags.Group_ID in ("+customGroupIdStringList+") "; 
-//					}
-//	
-//					if(! (assetGroupIdList==null || assetGroupIdList.isEmpty()) )
-//					{
-//						String assetGroupStringList = conversion.getIntegerListString(assetGroupIdList).toString();
-//						//					mainInnerQuery = mainInnerQuery + " and aos.Asset_Group_ID in ( "+ assetGroupStringList +" ) ";
-//						//aj20119610 changed as part of groupBasedView
-//						mainInnerQuery = mainInnerQuery + ") inner join asset_owner_snapshot aos on(ams.Serial_Number=aos.Serial_Number and aos.Asset_Group_ID in ( "+ assetGroupStringList +" )) inner join asset ab on ( ab.Serial_Number = ams.Serial_Number and ab.Status= 1 and ab.primary_owner_id = aos.account_id ";
-//					}
-//					if ( ! (modelList==null || modelList.isEmpty()) ) 
-//					{
-//						String modelIdStringList = conversion.getIntegerListString(modelList).toString();
-//						mainInnerQuery = mainInnerQuery +" and aos.Asset_Type_ID in ( "+ modelIdStringList +" ) ";
-//					}
-//					if(! (serialNumber==null || serialNumber.isEmpty() ) )
-//					{
-//						iLogger.info("search with serial number::"+serialNumber+" login id::"+loginId);
-//						mainInnerQuery = mainInnerQuery + " and ams.Serial_Number= '"+ serialNumber+"' ";
-//					}
-//	
-//					mainInnerQuery = mainInnerQuery + " ) inner join asset a"+
-//							" on ( a.Serial_Number = ams.Serial_Number"+
-//							" and a.Status= 1 ";
-//					//aj20119610 - to include nickName based search query
-//					if(! (nickName==null || nickName.isEmpty() ) )
-//					{
-//						iLogger.info("search with nickName::"+nickName+" login id::"+loginId);
-//						mainInnerQuery = mainInnerQuery + " and a.nickName like '%"+ nickName+"%' ";
-//					}
-//	
-//					/*if(! (groupIdList==null || groupIdList.isEmpty()) )
-//					{
-//						String customAssetGroupStringList = conversion.getIntegerListString(groupIdList).toString();
-//						mainInnerQuery = mainInnerQuery + " )INNER JOIN custom_asset_group_member e ON(e.Serial_Number = ams.Serial_Number) "+
-//											" INNER JOIN custom_asset_group d ON(d.Group_ID = e.Group_ID and d.Group_ID in ("+customAssetGroupStringList+") and"+
-//											" d.Client_ID=(select cl.Client_ID from clients cl where cl.Client_Name='JCB') and d.Active_Status=1";
-//					}*/
-//					//DF20190318
-//					//outerInnerJoin="left outer join asset_event_snapshot";
-//					if( (! (eventTypeIdList==null || eventTypeIdList.isEmpty()) ) || 
-//							(! (eventSeverityList==null || eventSeverityList.isEmpty()) )	)
-//					{
-//						//DF20170130 @Roopa for Role based alert implementation
-//						DateUtil utilObj=new DateUtil();
-//						List<String> alertCodeList= utilObj.roleAlertMapDetails(null,userTenancyList.get(0), "Display");
-//	
-//						StringBuilder alertCodeListAsString=conversion.getStringList(alertCodeList);
-//	
-//						outerInnerJoin = outerInnerJoin+" inner join asset_event aee"
-//								+" on aee.Serial_Number = ams1.Serial_Number and aee.Active_Status=1 and aee.PartitionKey=1";
-//						outerInnerJoin = outerInnerJoin+" inner join business_event be"
-//								+" on be.Event_ID=aee.Event_ID and (be.Alert_Code in ("+alertCodeListAsString+"))";
-//	
-//						/*mainWhereQuery = mainWhereQuery + " and aee.Event_ID = ( select max(aevt.Event_ID) from " +
-//								" asset_event aevt where aevt.Serial_Number=ams.Serial_Number and aevt.Active_Status=1 ";*/
-//					}
-//	
-//					if(! (eventTypeIdList==null || eventTypeIdList.isEmpty()) )
-//					{
-//						String eventTypeIdStringList = conversion.getIntegerListString(eventTypeIdList).toString();
-//						//mainWhereQuery = mainWhereQuery+ " and aevt.Event_Type_ID in ("+eventTypeIdStringList+")";
-//						outerInnerJoin = outerInnerJoin+ " and aee.Event_Type_ID in ("+eventTypeIdStringList+")";
-//					}
-//	
-//					if(! (eventSeverityList==null || eventSeverityList.isEmpty()) )
-//					{
-//						String eventSeverityListAsString = conversion.getStringList(eventSeverityList).toString();
-//						//mainWhereQuery = mainWhereQuery + " and aevt.Event_Severity in ("+eventSeverityListAsString+")";
-//						outerInnerJoin = outerInnerJoin + " and aee.Event_Severity in ("+eventSeverityListAsString+")";
-//	
-//					}
-//	
-//					endMainInnerQuery = " )";
-//	
-//					mainWhereQuery = " where ams.Latest_Transaction_Timestamp > '2014-01-01 00:00:00'";
-//	
-//					//mainGroupByQuery = " group by ams.Serial_Number";
-//	
-//					mainOrderByQuery = " order by ams.Latest_Transaction_Timestamp desc ";
-//	
-//					endTopSelectQuery = " ) as ams1";
-//	
-//					outerInnerJoin = " inner join asset_profile ap"+
-//							" on ap.serialNumber = ams1.Serial_Number";
-//	
-//	
-//					//If any additional filters are applied
-//					//Get only the list of machines currently owned by logged in user
-//	
-//					if(isOwnStock)
-//					{
-//						mainInnerQuery = mainInnerQuery + " and a.Primary_Owner_ID=aos.Account_ID ";
-//					}
-//					//DF20180307 @Mani :: display retrofitment machines only in the fleet page
-//					if(retroFLag==1)
-//					{
-//						mainInnerQuery=mainInnerQuery+"and a.Retrofit_Flag=1";
-//					}
-//	
-//					/*else if (! (customGroupTypeIdList==null || customGroupTypeIdList.isEmpty()) )
-//					{
-//						String customAssetGroupTypeStringList = conversion.getIntegerListString(customGroupTypeIdList).toString();
-//						mainFromQuery = mainFromQuery + " , custom_asset_group d, custom_asset_group_member e ";
-//						mainWhereQuery = mainWhereQuery + " and d.Group_ID = e.Group_ID and d.Parent_Group_ID in ("+customAssetGroupTypeStringList+") and " +
-//											" e.Serial_Number = ams.Serial_Number and d.Client_ID=(select cl.Client_ID from clients cl where cl.Client_Name='"+clientName+"') and d.Active_Status=1 ";
-//					}*/
-//	
-//					/*if(! (landmarkId==null || landmarkId.isEmpty() ) )
-//					{
-//						String landmarkIdStringList = conversion.getIntegerListString(landmarkId).toString();
-//						mainFromQuery = mainFromQuery + " , landmark g, landmark_asset h ";
-//						mainWhereQuery = mainWhereQuery + " and g.landmark_id = h.landmark_id and g.ActiveStatus=1 and g.landmark_id in ("+landmarkIdStringList+") and "+
-//															" h.serial_number = ams.Serial_Number " ;
-//					}
-//	
-//					else if(! (landmarkCategoryId==null || landmarkCategoryId.isEmpty() ) )
-//					{
-//						String landmarkCategoryIdStringList = conversion.getIntegerListString(landmarkCategoryId).toString();
-//						mainFromQuery = mainFromQuery + " , landmark g, landmark_asset h ";
-//						mainWhereQuery = mainWhereQuery + " and g.landmark_id = h.landmark_id and g.ActiveStatus=1 and g.landmark_category_id in ("+landmarkCategoryIdStringList+") and "+
-//													" h.serial_number = ams.Serial_Number " ;
-//					}*/
-//	
-//					/*if( (! (eventTypeIdList==null || eventTypeIdList.isEmpty()) ) || 
-//							(! (eventSeverityList==null || eventSeverityList.isEmpty())))
-//					{
-//						mainWhereQuery=mainWhereQuery+")";
-//					}*/
-//	
-//					leftjoinSelectQuery = " select p.Product_ID, ag.Asseet_Group_Name, aty.Asset_Type_Name, aty.Asset_ImageFile_Name, et.Engine_Type_Name";
-//	
-//					leftjoinFromQuery = " from products p";
-//	
-//					leftInnerJoin = " inner join asset_group ag"+
-//							" on ag.Asset_Group_ID = p.Asset_Group_ID"+
-//							" inner join asset_type aty"+
-//							" on aty.Asset_Type_ID = p.Asset_Type_ID"+
-//							" inner join engine_type et"+
-//							" on et.Engine_Type_id = p.Engine_Type_id";
-//	
-//					endLeftInnerJoin = " ) bb";
-//	
-//					leftjoinONQuery=" on ams1.Product_ID=bb.Product_ID ";
-//	
-//					limitQuery=" LIMIT "+startLimit+""+","+""+endLimit+"";
-//					//DF20190327:mani:introducing asset event snapshot and eliminating the asset event hit for every vin
-//					leftOuterJoin=" left outer join asset_event_snapshot aes on ams1.Serial_Number=aes.serialNumber";
-//	
-//					//DF20190221:AB369654::For showing count of communicating and non communicating machine both.
-//					mainCountQuery = "select count(distinct(Asset_Id)) as count from custom_asset_group_snapshot where user_Id in('"+loginId+"')" +
-//							" and Group_ID in("+customGroupIdStringList+")";
-//				}
-//	
-//				String mainQuery = topSelectQuery+"("+mainSelectQuery+mainFromQuery+mainInnerQuery+")"+mainWhereQuery+mainOrderByQuery+limitQuery+endTopSelectQuery+outerInnerJoin+" left outer join ("+leftjoinSelectQuery+leftjoinFromQuery+leftInnerJoin+") bb"+leftjoinONQuery+leftOuterJoin+" ORDER BY ams1.transactionTime desc";
-//	
-//				iLogger.info("loginiD::"+loginId+"::finalQueryString for AssetDashboardService::getAssetDashboardDetails: "+mainQuery);
-//	
-//				DynamicAMS_DAL amsDaoObj=new DynamicAMS_DAL();
-//	
-//				long startTime1=System.currentTimeMillis();
-//	
-//				assetDashboardList=amsDaoObj.getQuerySpecificDetailsForAssetDashBoard(mainQuery,loginId);
-//	
-//				long endTime1=System.currentTimeMillis();
-//	
-//				iLogger.info("AssetDashBoard :: "+mainQuery+"   ---->Query Execution Time in ms Dashboard:"+(endTime1-startTime1));
-//	
-//				iLogger.info("loginiD::"+loginId+" AssetDashboardService BO DAL Query From New AMS Webservice Execution Time in ms:"+(endTime1-startTime1));
-//	
-//				//iLogger.info("AssetDashboardService:AMS DAL::getQuerySpecificDetails Size:"+assetDashboardList.size());
-//				//DF20190215:Ab369654 -> For getting machine count in UI		
-//				/*String mainSelectQuery1 ="select count(*) as count from";
-//			    String mainQuery1="("+mainSelectQuery+mainFromQuery+mainInnerQuery+")"+mainWhereQuery+endTopSelectQuery+outerInnerJoin+" left outer join ("+leftjoinSelectQuery+leftjoinFromQuery+leftInnerJoin+") bb"+leftjoinONQuery;
-//			    mainQuery = mainSelectQuery1+"("+mainQuery1+")";*/
-//				//iLogger.info("Count Query for AssetDashboardService::getAssetDashboardDetails: "+mainQuery);
-//JCB6444.en : old				
-				//JCB6444.sn : new
+				
 				String mainSelectQuery="";
 				String mainFromQuery="";
 				String mainInnerQuery="";
@@ -2335,11 +2049,23 @@ import com.wipro.mcoreapp.implementation.AlertSubscriptionImpl;
 					}
 					
 					if(accountIdListAsString!=null && primaryMobileNumber!=null){
+						//old
+						//mainInnerQuery = " where a.serial_number = d.serialnumber and  a.serial_number=c.serial_number and a.serial_number =b.serial_number "
+						//		+ " and b.Account_ID in ("+accountIdListAsString+") and  c.transactionTime > '2014-01-01 00:00:00' ";
+					    //JCB6444 : 20230719 : Prasanna Lakshmi : Getting Oops Error 
+						//JCB6444.sn
 						mainInnerQuery = " where a.status=1 and a.serial_number = d.serialnumber and  a.serial_number=c.serial_number and a.serial_number =b.serial_number "
 								+ " and b.Account_ID in ("+accountIdListAsString+") and  c.transactionTime > '2014-01-01 00:00:00' ";
+					    //JCB6444.en
 					}else {
+						//old
+						//mainInnerQuery = " where a.serial_number = d.serialnumber and  a.serial_number=c.serial_number and a.serial_number =b.serial_number "
+						//	+ " and b.Account_ID in ("+userAccListAsString+") and  c.transactionTime > '2014-01-01 00:00:00' ";
+						//JCB6444 : 20230719 : Prasanna Lakshmi : Getting Oops Error 
+						//JCB6444.sn
 						mainInnerQuery = " where a.status=1 and a.serial_number = d.serialnumber and  a.serial_number=c.serial_number and a.serial_number =b.serial_number "
-							+ " and b.Account_ID in ("+userAccListAsString+") and  c.transactionTime > '2014-01-01 00:00:00' ";
+								+ " and b.Account_ID in ("+userAccListAsString+") and  c.transactionTime > '2014-01-01 00:00:00' ";
+						//JCB6444.en
 					}
 					
 					if((!(eventTypeIdList==null || eventTypeIdList.isEmpty())) || (!(eventSeverityList==null || eventSeverityList.isEmpty()))){
@@ -2398,7 +2124,8 @@ import com.wipro.mcoreapp.implementation.AlertSubscriptionImpl;
 							" on a.serial_number = b.serial_number "+
 							")";
 				}else{
-					topSelectQuery = "select aa.* ,bb.* ,aes.AlertStatus from (";
+					//topSelectQuery = "select aa.* ,bb.* ,aes.AlertStatus from (";//ME100012110.o
+					topSelectQuery = "select distinct(serial_number) serial_number,aa.transactionTime,aa.Latest_Created_Timestamp,aa.TxnData ,aa.product_id, aa. Engine_Number,aa.timeZone, aa.country_code ,aa.notes, bb.* ,aes.AlertStatus from (";//ME100012110.n
 					mainSelectQuery = " select c.*, a.Engine_Number, a.Product_ID, a.timeZone, a.country_code ,d.notes ";
 					mainFromQuery = " from asset a , asset_owner_snapshot b " ;
 					mainFromQuery = mainFromQuery + " ,(select serial_number, latest_Transaction_Timestamp as transactionTime, Latest_Created_Timestamp, TxnData  from asset_monitoring_snapshot  ";
@@ -2408,10 +2135,14 @@ import com.wipro.mcoreapp.implementation.AlertSubscriptionImpl;
 						mainFromQuery = mainFromQuery + ", asset_event aee";
 						mainFromQuery = mainFromQuery + ", business_event be";
 					}
-					
+				//old 	
+				//	mainInnerQuery = " where a.serial_number = d.serialnumber and  a.serial_number=c.serial_number and a.serial_number =b.serial_number"
+				//			+ " and b.Account_ID in ("+userAccListAsString+") and  c.transactionTime > '2014-01-01 00:00:00' ";
+				//JCB6444 : 20230719 : Prasanna Lakshmi : Getting Oops Error 
+				//JCB6444.sn
 					mainInnerQuery = " where a.status=1 and a.serial_number = d.serialnumber and  a.serial_number=c.serial_number and a.serial_number =b.serial_number"
 							+ " and b.Account_ID in ("+userAccListAsString+") and  c.transactionTime > '2014-01-01 00:00:00' ";
-					
+				//JCB6444.en	
 					
 					if(accountIdListAsString!=null && primaryMobileNumber!=null){
 						mainInnerQuery = mainInnerQuery + " AND c.serial_number = cags.Asset_Id AND cags.user_Id in('" + loginId + "') AND b.Account_ID in ("+accountIdListAsString+")";
@@ -2487,8 +2218,7 @@ import com.wipro.mcoreapp.implementation.AlertSubscriptionImpl;
 				long endTime1=System.currentTimeMillis();
 				
 				iLogger.info(loginId+":ADS: AssetDetailsBO: AssetDashBoard Query Execution Time in ms Dashboard:"+(endTime1-startTime1));
-				//JCB6444.en : new
-				
+
 				//Get Total Number of machines in fleet 
 				AssetDashboardImpl assetDashboard = new AssetDashboardImpl();
 				assetDashboard = new AssetDashboardImpl();
@@ -2548,8 +2278,10 @@ import com.wipro.mcoreapp.implementation.AlertSubscriptionImpl;
 			long endTime = System.currentTimeMillis();
 			iLogger.info("loginId::"+loginId+"::BO End time ::"+(endTime-startTime));
 			return assetDashboardList;
-	
-				}
+			
+		
+			
+		}
 	
 		//DF20190523:Abhishek::Metod added to check the user in group user table.
 		private boolean checkGroupUser(String loginId) {
@@ -4664,7 +4396,7 @@ import com.wipro.mcoreapp.implementation.AlertSubscriptionImpl;
 	
 		public String setVinMachineNameAssociation(String serialNumber, String nickName, String chasisNumber, String make, String builtDate, 
 				//String machineNumber, String messageId)//CR395.o
-				String machineNumber, String messageId, String rollOffDate)//CR395.n
+				String machineNumber, String messageId, String rollOffDate,String machineCategory)//CR395.n
 		{
 			String status ="SUCCESS-Record Processed";
 			String serialNum=null, imeiNumber=null,simNumber=null;
@@ -4823,6 +4555,8 @@ import com.wipro.mcoreapp.implementation.AlertSubscriptionImpl;
 						assetEntity.setNick_name(nickName);
 						assetEntity.setChasisNumber(chasisNumber);
 						assetEntity.setMake(make);
+						//CR512
+						assetEntity.setMachineCategory(machineCategory);
 						assetEntity.setMachineNumber(machineNumber);
 						//DF20170710: SU334449 - Setting TimeZone for the SAARC countries to IST time for initial Roll-Off
 						assetEntity.setTimeZone("(GMT+05:30)");
@@ -4847,6 +4581,8 @@ import com.wipro.mcoreapp.implementation.AlertSubscriptionImpl;
 						newAssetEntity.setPrimary_owner_id(accountEntity.getAccount_id());
 						newAssetEntity.setActive_status(true);
 						newAssetEntity.setClient_id(client);
+						//CR512
+						assetEntity.setMachineCategory(machineCategory);
 						newAssetEntity.setChasisNumber(chasisNumber);
 						newAssetEntity.setMake(make);
 						newAssetEntity.setPurchase_date(scheduledDate);
@@ -6366,14 +6102,17 @@ try
 					                    // Extract SMS1 and EMAIL1 values from the Map
 					                    String sms1 = (String) subscriber3Map.get("SMS1");
 					                    String email1 = (String) subscriber3Map.get("EMAIL1");
+					                    String whatsApp1 = (String) subscriber3Map.get("WHATSAPP1");//CR500.n
 
 					                    iLogger.info("SMS1: " + sms1);
 					                    iLogger.info("EMAIL1: " + email1);
+					                    iLogger.info("WHATSAPP1: " + whatsApp1);//CR500.n
 
 					                    if (contactID != null) {
-						                    String updateQuery = "UPDATE wise.MAlertSubsriberGroup " +
-						                                         "SET SubscriberGroup = JSON_SET(SubscriberGroup, '$.Subscriber3', " +
-						                                         "'{\"SMS2\": \"" + contactID + "\", \"EMAIL2\": \"" + contactID + "\"";
+					                    	  String updateQuery = "UPDATE wise.MAlertSubsriberGroup " +
+				                                         "SET SubscriberGroup = JSON_SET(SubscriberGroup, '$.Subscriber3', " +
+				                                         "'{\"SMS2\": \"" + contactID + "\", \"EMAIL2\": \"" + contactID 
+				                                         + "\", \"WHATSAPP2\": \"" + contactID + "\""; //CR500.n
 
 						                    if (sms1 != null) {
 						                        updateQuery += ", \"SMS1\": \"" + sms1 + "\"";
@@ -6387,6 +6126,12 @@ try
 						                        updateQuery += ", \"EMAIL1\": \"" + email1 + "\"}'";
 						                    }else {
 						                        updateQuery += ", \"EMAIL1\": \"" + null + "\"}'";
+
+						                    }
+						                    if (whatsApp1 != null) {
+						                        updateQuery += ", \"WHATSAPP1\": \"" + whatsApp1 + "\"}'";
+						                    }else {
+						                        updateQuery += ", \"WHATSAPP1\": \"" + null + "\"}'";
 
 						                    }
 
@@ -13896,10 +13641,14 @@ try
 						+ extendedWarrantytype + ", driverName=" + driverName
 						+ ", driverContactNumber=" + driverContactNumber + ", make="
 						+ make + "]";
-			}*/			
-	
+			}*/		
+		
+		
+		
+		
 	}
 	
 	
+
 	
 	

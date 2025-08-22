@@ -1,6 +1,8 @@
 /*
  * JCB6239, JCB6240 : 20220829 : Dhiraj K : AssetSaleFromD2C session issue
+ * CR500 : 20241128 : Dhiraj Kumar : WHatsApp Integration with LL
  */
+
 package com.wipro.mcoreapp.businessobject;
 
 import java.sql.Connection;
@@ -202,6 +204,28 @@ public class UserSubscriptionBO
 								
 								modeContactMap.put(contactEntry.getKey().toString(), contactEntry.getValue().toString()+"|"+mobileNum);
 							}
+
+							//CR500.sn
+							else if(contactEntry.getKey().toString().contains("WHATSAPP"))
+							{
+								//---------------- Get the WA contact Number for the specified contact
+								String mobileNum = "";
+								Query contactQ = session.createQuery("from ContactEntity where contact_id='"+contactEntry.getValue().toString()+"' and active_status=true");
+								Iterator contactItr = contactQ.list().iterator();
+								ContactEntity contact = null;
+								while(contactItr.hasNext())
+								{
+									contact = (ContactEntity)contactItr.next();
+									if(contact.getPrimary_mobile_number()!=null)
+										mobileNum = contact.getPrimary_mobile_number();
+								}
+								
+								if(contact == null)
+									modeContactMap.put(contactEntry.getKey().toString(),"NONE");
+								
+								modeContactMap.put(contactEntry.getKey().toString(), contactEntry.getValue().toString()+"|"+mobileNum);
+							}
+							//CR500.en
 						}
 						
 						newGroupContactMap.put(entry.getKey().toString(), modeContactMap);
@@ -822,6 +846,7 @@ public class UserSubscriptionBO
 			HashMap<String,Object> groupContactMap = new Gson().fromJson(subscriberGroupJSON, new TypeToken<HashMap<String, Object>>() {}.getType());
 			HashMap<String,String> smsSubscribers = new HashMap<String,String>();
 			HashMap<String,String> emailSubscribers = new HashMap<String,String>();
+			HashMap<String,String> whatsappSubscribers = new HashMap<String,String>();//CR500.n
 			
 			
 			//**************************** STEP1: Iterate through the Subscriber group to fill in the sms and email subscriber map
@@ -866,11 +891,25 @@ public class UserSubscriptionBO
 							emailSubscribers.put(subscriberGroup,modeContact.getValue().toString());
 						}
 					}
+					//CR500.sn
+					if(modeContact.getKey().toString().contains("WHATSAPP"))
+					{
+						if(whatsappSubscribers.containsKey(subscriberGroup))
+						{
+						    String newValue = whatsappSubscribers.get(subscriberGroup)+"|"+modeContact.getValue().toString();
+						    whatsappSubscribers.put(subscriberGroup,newValue);
+						}
+						else
+						{
+						    whatsappSubscribers.put(subscriberGroup,modeContact.getValue().toString());
+						}
+					}//CR500.en
 				}
 			}
 			
-			System.out.println("smsSubscribers:"+smsSubscribers);
-			System.out.println("emailSubscribers:"+emailSubscribers);
+			iLogger.info("smsSubscribers:"+smsSubscribers);
+			iLogger.info("emailSubscribers:"+emailSubscribers);
+			iLogger.info("whatsappSubscribers:"+whatsappSubscribers);//CR500.n
 			
 			iLogger.info("MCoreApp:AlertSubscription:setCommSubscription:VIN:"+assetId+":Fill SMS and Email subscribers map - END");
 			
@@ -963,6 +1002,36 @@ public class UserSubscriptionBO
 				}
 			}
 			iLogger.info("MCoreApp:AlertSubscription:setCommSubscription:VIN:"+assetId+":Set the Subscriber Details into MAlertSubscribers for Email - END");
+			
+			//CR500.sn
+			//------------------- Set the List of Whatsapp Subscribers
+			iLogger.info("MCoreApp:AlertSubscription:setCommSubscription:VIN:"+assetId+":Set the Subscriber Details into MAlertSubscribers for Whatsapp - START");
+			if(emailSubscribers!=null && emailSubscribers.size()>0){
+				rs = stmt.executeQuery("select * from MAlertSubscribers where AssetID='"+assetId+"' and CommMode='WhatsApp'");
+				int update=0;
+				String subscriberJSONString=null;
+				HashMap<String,String >subsGroupContactMap=new HashMap<String, String>();
+				if(rs.next()){
+					update=1;
+					Object detailsObj = rs.getObject("Details");
+						if(detailsObj!=null)
+						    subscriberJSONString = detailsObj.toString();
+						
+						if(subscriberJSONString!=null){
+						    subsGroupContactMap = new Gson().fromJson(subscriberJSONString, new TypeToken<HashMap<String, Object>>() {}.getType());
+						}
+						for(Map.Entry entry : emailSubscribers.entrySet()){
+							subsGroupContactMap.put(entry.getKey().toString(), entry.getValue().toString());
+						}
+						stmt.executeUpdate("Update MAlertSubscribers set Details='"+new JSONObject(subsGroupContactMap).toString().replaceAll("\\\\","")+
+								"' where AssetID='"+assetId+"' and CommMode='WhatsApp'");
+				}
+				if(update==0){
+					stmt.executeUpdate("INSERT INTO MAlertSubscribers(AssetID,CommMode,Details) values('"+assetId+"','WhatsApp','"+(new JSONObject(whatsappSubscribers).toString()).replaceAll("\\\\","")+"')");
+				}
+			}
+			iLogger.info("MCoreApp:AlertSubscription:setCommSubscription:VIN:"+assetId+":Set the Subscriber Details into MAlertSubscribers for WhatsApp - END");
+			//CR500.en
 			
 			iLogger.info("MCoreApp:AlertSubscription:getSubscriptionDetails:VIN:"+assetId+":Set Suscribers for Alert Communication in OrientDB - END");
 			
@@ -1516,8 +1585,9 @@ public class UserSubscriptionBO
 								HashMap<String,String> internalJson = new HashMap<String,String>();
 								internalJson.put("EMAIL1", subscriber1Contact);
 								//DF20180424 @Roopa Adding Default SMS1 for OEM user.
-							     internalJson.put("SMS1", subscriber1Contact); 
-								HashMap subscriberJson = new HashMap();
+							    internalJson.put("SMS1", subscriber1Contact); 
+							    internalJson.put("WHATSAPP1", subscriber1Contact);// CR500.n
+								HashMap<String,HashMap<String, String>> subscriberJson = new HashMap<>();
 								subscriberJson.put("Subscriber1", internalJson);
 								
 								iLogger.info("MCoreApp:AlertSubscription:setDefaultSubscribers:VIN:"+assetId+":Set Email1 of Subscriber1 to :"+subscriber1Contact);
@@ -1574,7 +1644,9 @@ public class UserSubscriptionBO
 							HashMap<String,String> internalJson = new HashMap<String,String>();
 							internalJson.put("SMS1", subscriber2Contact);
 							internalJson.put("EMAIL1", subscriber2Contact);
-							HashMap subscriberJson = new HashMap();
+							internalJson.put("WHATSAPP1", subscriber2Contact);// CR500.n
+							HashMap<String,HashMap<String, String>> subscriberJson = new HashMap<>();// CR500.n
+							//HashMap subscriberJson = new HashMap();// CR500.o
 							subscriberJson.put("Subscriber2", internalJson);
 							
 							iLogger.info("MCoreApp:AlertSubscription:setDefaultSubscribers:VIN:"+assetId+":Set SMS1 and Email1 of Subscriber2 to :"+subscriber2Contact);
@@ -1594,7 +1666,9 @@ public class UserSubscriptionBO
 								subscriber2Contact = (String)dealerContactItr.next();
 								HashMap<String,String> internalJson = new HashMap<String,String>();
 								internalJson.put("SMS1", subscriber2Contact);
-								HashMap subscriberJson = new HashMap();
+								internalJson.put("WHATSAPP1", subscriber2Contact);// CR500.n
+								HashMap<String,HashMap<String, String>> subscriberJson = new HashMap<>();// CR500.n
+								//HashMap subscriberJson = new HashMap();
 								subscriberJson.put("Subscriber2", internalJson);
 								
 								iLogger.info("MCoreApp:AlertSubscription:setDefaultSubscribers:VIN:"+assetId+":Set SMS1 of Subscriber2 to :"+subscriber2Contact+"; Email1 not set since no TA exists with valid email ID");
@@ -1652,7 +1726,9 @@ public class UserSubscriptionBO
 							HashMap<String,String> internalJson = new HashMap<String,String>();
 							internalJson.put("SMS1", subscriber3Contact);
 							internalJson.put("EMAIL1", subscriber3Contact);
-							HashMap subscriberJson = new HashMap();
+							internalJson.put("WHATSAPP1", subscriber3Contact);// CR500.n
+							HashMap<String,HashMap<String, String>> subscriberJson = new HashMap<>();// CR500.n
+							//HashMap subscriberJson = new HashMap();//CR500.o
 							subscriberJson.put("Subscriber3", internalJson);
 							
 							iLogger.info("MCoreApp:AlertSubscription:setDefaultSubscribers:VIN:"+assetId+":Set SMS1 and Email1 of Subscriber3 to :"+subscriber3Contact);
@@ -1672,8 +1748,10 @@ public class UserSubscriptionBO
 								subscriber3Contact = (String)custContactItr.next();
 								HashMap<String,String> internalJson = new HashMap<String,String>();
 								internalJson.put("SMS1", subscriber3Contact);
-								HashMap subscriberJson = new HashMap();
-								subscriberJson.put("Subscriber3", internalJson);
+								internalJson.put("WHATSAPP1", subscriber3Contact);// CR500.n
+								HashMap<String,HashMap<String, String>> subscriberJson = new HashMap<>();// CR500.n
+								//HashMap subscriberJson = new HashMap();
+								subscriberJson.put("Subscriber3", internalJson);//CR500.o
 								
 								iLogger.info("MCoreApp:AlertSubscription:setDefaultSubscribers:VIN:"+assetId+":Set SMS1 of Subscriber3 to :"+subscriber3Contact+"; Email1 not set since no TA exists with valid email ID");
 								
@@ -1698,7 +1776,9 @@ public class UserSubscriptionBO
 								HashMap<String,String> internalJson = new HashMap<String,String>();
 								internalJson.put("SMS1", subscriber3Contact);
 								internalJson.put("EMAIL1", subscriber3Contact);
-								HashMap subscriberJson = new HashMap();
+								internalJson.put("WHATSAPP1", subscriber3Contact);// CR500.n
+								HashMap<String,HashMap<String, String>> subscriberJson = new HashMap<>();// CR500.n
+								//HashMap subscriberJson = new HashMap();//CR500.o
 								subscriberJson.put("Subscriber3", internalJson);
 								
 								iLogger.info("MCoreApp:AlertSubscription:setDefaultSubscribers:VIN:"+assetId+":Set SMS1 and Email1 of Subscriber3 to :"+subscriber3Contact);
@@ -1723,7 +1803,9 @@ public class UserSubscriptionBO
 								subscriber3Contact = (String)custContactItr.next();
 								HashMap<String,String> internalJson = new HashMap<String,String>();
 								internalJson.put("SMS1", subscriber3Contact);
-								HashMap subscriberJson = new HashMap();
+								internalJson.put("WHATSAPP1", subscriber3Contact);// CR500.n
+								HashMap<String,HashMap<String, String>> subscriberJson = new HashMap<>();// CR500.n
+								//HashMap subscriberJson = new HashMap();//CR500.o
 								subscriberJson.put("Subscriber3", internalJson);
 								
 								iLogger.info("MCoreApp:AlertSubscription:setDefaultSubscribers:VIN:"+assetId+":Set SMS1 of Subscriber3 to :"+subscriber3Contact+"; Email1 not set since no TA exists with valid email ID");

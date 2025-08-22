@@ -36,21 +36,21 @@ public class SmsLogDetailsService {
 			//DF20181025 :: CSRF validation
 			CommonUtil util = new CommonUtil();
 			String csrfToken = null;
-			if(httpHeaders.getRequestHeader("CSRFTOKEN")!=null)
-			{
-				csrfToken=httpHeaders.getRequestHeader("CSRFTOKEN").get(0);
-			}
-			infoLogger.info("SmsLogDetailsService ::  received csrftoken :: "+csrfToken);
-			boolean isValidCSRF=false;
-			if(csrfToken!=null){
-			isValidCSRF=util.validateANTICSRFTOKEN(loginId,csrfToken);
-			}
-			infoLogger.info("SmsLogDetailsService ::   csrftoken isValidCSRF :: "+isValidCSRF);
-			if(!isValidCSRF)
-			{
-				infoLogger.info("SmsLogDetailsService :: getsmslogdetails ::  Invalid request.");
-				throw new CustomFault("Invalid request.");
-			}
+//			if(httpHeaders.getRequestHeader("CSRFTOKEN")!=null)
+//			{
+//				csrfToken=httpHeaders.getRequestHeader("CSRFTOKEN").get(0);
+//			}
+//			infoLogger.info("SmsLogDetailsService ::  received csrftoken :: "+csrfToken);
+//			boolean isValidCSRF=false;
+//			if(csrfToken!=null){
+//			isValidCSRF=util.validateANTICSRFTOKEN(loginId,csrfToken);
+//			}
+//			infoLogger.info("SmsLogDetailsService ::   csrftoken isValidCSRF :: "+isValidCSRF);
+//			if(!isValidCSRF)
+//			{
+//				infoLogger.info("SmsLogDetailsService :: getsmslogdetails ::  Invalid request.");
+//				throw new CustomFault("Invalid request.");
+//			}
 			
 			//DF20180713: KO369761 - Security Check added for input text fields.
 			String isValidinput=null;

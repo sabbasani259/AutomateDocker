@@ -37,8 +37,16 @@ public class AssetEntity extends BaseBusinessEntity implements Serializable
 	
 	private int PremFlag; //CR353.n
 	
-	
-	
+	//CR512
+	private String machineCategory;
+		
+	public String getMachineCategory() {
+		return machineCategory;
+	}
+
+	public void setMachineCategory(String machineCategory) {
+		this.machineCategory = machineCategory;
+	}
 
 	public Timestamp getSale_Date() {
 		return sale_Date;
@@ -147,6 +155,8 @@ public class AssetEntity extends BaseBusinessEntity implements Serializable
 			setProductId(e.getProductId());
 			setChasisNumber(e.getChasisNumber());
 			setMake(e.getMake());
+			//CR512
+			setMachineCategory(e.getMachineCategory());
 			setMachineNumber(e.getMachineNumber());
 			setDateTime(e.getDateTime());
 		}

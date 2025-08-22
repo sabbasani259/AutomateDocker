@@ -17,6 +17,7 @@ import com.google.gson.reflect.TypeToken;
 
 /**
  * DF100001418:20220429:DHIRAJ K:Notification Subscriber Report issue 
+ * CR500 : 20241128 : Dhiraj Kumar : WHatsApp Integration with LL
  */
 
 public class SubscriberReportServiceTask implements Runnable {
@@ -25,7 +26,8 @@ public class SubscriberReportServiceTask implements Runnable {
 	String vin;
 	Object subscribergroupdata;
 	ResultSet ns3rs = null, smsItr = null, contactItr = null,
-			accountItr = null, accountNameItr = null;
+			accountItr = null, accountNameItr = null,
+			waItr=null;//CR500.n
 	Statement statement2 = null, statement3 = null, statement4 = null;
 	Connection prodConnection = null;
 	Map<String, Object> subsGroupMap = null;
@@ -53,7 +55,6 @@ public class SubscriberReportServiceTask implements Runnable {
 						}.getType());
 				subsGroupMap.remove("@type");
 				subsGroupMap.remove("@version");
-				//iLogger.info(subsGroupMap);
 				for (Map.Entry<String, Object> entry : subsGroupMap.entrySet()) {
 					if (entry.getKey().toString().equalsIgnoreCase("@type"))
 						continue;
@@ -147,6 +148,30 @@ public class SubscriberReportServiceTask implements Runnable {
 									.put(contactEntry.getKey().toString()
 											.trim(), value + "|" + mobileNum);
 						}
+
+						//CR500.sn
+						else if (contactEntry.getKey().toString()
+								.contains("WHATSAPP")) {
+							// ---------------- Get the SMS contact Number for the specified contact
+							String mobileNum = "No data";
+							String waQ = "select * from contact where contact_id='"
+									+ value + "' and status=1";
+							waItr = statement2.executeQuery(waQ);
+							while (waItr.next()) {
+								mobileNum = waItr
+										.getString("Primary_Moblie_Number");
+							}
+
+							if (mobileNum == null) {
+								mobileNum = "No data";
+								subscribersResultMap.put(contactEntry.getKey()
+										.toString().trim(), "NONE");
+							}
+							subscribersResultMap
+									.put(contactEntry.getKey().toString()
+											.trim(), value + "|" + mobileNum);
+						}
+						//CR500.en
 					}
 
 					String ns3Query = "", ns3select = "";
@@ -168,7 +193,6 @@ public class SubscriberReportServiceTask implements Runnable {
 						}
 						if (entry.getKey().toString()
 								.equalsIgnoreCase("Subscriber3")) {
-							//iLogger.info("iside update s3" );
 							ns3Query = "update MAlertSubsriber_acountdata set Subscriber3='\""
 									+ subscribersResultMap
 									+ "\"' where AssetID='" + vin + "'";
@@ -176,7 +200,6 @@ public class SubscriberReportServiceTask implements Runnable {
 					} else {
 						if (entry.getKey().toString()
 								.equalsIgnoreCase("Subscriber1")) {
-							//iLogger.info("iside insert s1" );
 							ns3Query = "insert into MAlertSubsriber_acountdata values('"
 									+ vin
 									+ "','\""
@@ -193,7 +216,6 @@ public class SubscriberReportServiceTask implements Runnable {
 						}
 						if (entry.getKey().toString()
 								.equalsIgnoreCase("Subscriber3")) {
-							//iLogger.info("iside insert s3" );
 							ns3Query = "insert into MAlertSubsriber_acountdata values('"
 									+ vin
 									+ "',null,null,'\""

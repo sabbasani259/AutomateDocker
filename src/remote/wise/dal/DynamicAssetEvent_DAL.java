@@ -7,7 +7,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -102,18 +104,28 @@ public class DynamicAssetEvent_DAL {
 					
 					implObj.setAlertSeverity(rs.getString("Event_Severity"));
 					//implObj.setDtcCode(rs.getInt("DTC_code"));
-					if(alertState.equalsIgnoreCase("close") && rs.getString("UpdateSource").equalsIgnoreCase("reset"))
-					{
-						iLogger.info("UpdatedSource:"+rs.getString("UpdateSource"));
-						String temp=implObj.getParamName();
+					if (alertState.equalsIgnoreCase("close") && rs.getString("UpdateSource").equalsIgnoreCase("reset")) {
+					    iLogger.info("UpdatedSource:" + rs.getString("UpdateSource"));
 
-					    // Trim  ".0" from the timestamp
+					    String temp = implObj.getParamName(); // e.g., "16570917-Fore Solenoid Open Circuit-B120A-13"
+
 					    String cleanedTimestamp = convertedTimestamp;
-					    if (convertedTimestamp != null && convertedTimestamp.endsWith(".0")) {
-					        cleanedTimestamp = convertedTimestamp.substring(0, convertedTimestamp.length() - 2);
+					    if (convertedTimestamp != null) {
+					        try {
+					            // Parse the original timestamp
+					            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
+					            Date date = inputFormat.parse(convertedTimestamp);
+
+					            // Format to desired output
+					            SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+					            cleanedTimestamp = outputFormat.format(date);
+					        } catch (Exception e) {
+					            iLogger.error("Timestamp parsing failed: " + e.getMessage());
+					        }
 					    }
 
-						implObj.setParamName(temp+"- refreshed on "+cleanedTimestamp);
+					    // Set the formatted param name
+					    implObj.setParamName(temp + "(refreshed on " + cleanedTimestamp + ")");
 					}
 					
 					//Df20180103 @Roopa taking the lat and long from the assetevent for application generated alerts purpose

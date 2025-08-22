@@ -31,7 +31,7 @@ public class AssetProfileDetails {
 
 	//JCB6336.sn
 	@SuppressWarnings({ "unchecked" })
-	public void setAssetProfileRollOffDetails(String serialNumber, String engineNumber){
+	public void setAssetProfileRollOffDetails(String serialNumber, String engineNumber,String machineCategory,String rollOffDate){
 		Logger iLogger = InfoLoggerClass.logger;
 		Logger fLogger = FatalLoggerClass.logger;
 		String simNo, iccidNo, finalJsonString, connIP, connPort;
@@ -57,6 +57,11 @@ public class AssetProfileDetails {
 			}
 			if(engineNumber != null)
 				finalProfileDetailsMap.put("EngineNumber", engineNumber);
+			//CR512.n
+			if(machineCategory!=null)
+				finalProfileDetailsMap.put("MachineCategory", machineCategory);
+			if(rollOffDate!=null)
+				finalProfileDetailsMap.put("RollOffDate", rollOffDate);
 			jsonObj = new JSONObject();
 			jsonObj.putAll(finalProfileDetailsMap);
 			finalJsonString = jsonObj.toString();

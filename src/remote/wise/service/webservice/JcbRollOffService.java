@@ -122,9 +122,21 @@ public class JcbRollOffService {
 		}else {
 			rollOffDate = builtDate;
 		}
+		// CR512.sn
+		String[] parts = make.split("-");
+		String machineCategory;
+		// iLogger.info("parts.length:"+parts.length);
+		if (parts.length > 1) {
+			machineCategory = parts[1];
+			make = parts[0];
+		} else {
+			machineCategory = "";
+			make = parts[0];
+		}
+		// CR512.en
 		//CR395.en
 		//String response = new JcbRollOffImpl().vinMachineNameMapping(serialNumber,engineNumber,chasisNumber,make,builtDate,machineNumber, messageId);
-		String response = new JcbRollOffImpl().vinMachineNameMapping(serialNumber,engineNumber,chasisNumber,make,builtDate,machineNumber, messageId, rollOffDate);
+		String response = new JcbRollOffImpl().vinMachineNameMapping(serialNumber,engineNumber,chasisNumber,make,builtDate,machineNumber, messageId, rollOffDate,machineCategory);
 		long endTime = System.currentTimeMillis();
 		iLogger.info("serviceName:JcbRollOffService~executionTime:"+(endTime-startTime)+"~"+""+"~");
 		
@@ -247,7 +259,7 @@ public class JcbRollOffService {
 			//new AssetOwnershipDetails().setAssetOwnershipDetails(serialNumber);//20220921.o.Additional log added
 			new AssetOwnershipDetails().setAssetOwnershipDetails(serialNumber, "RollOff");//20220921.n.Additional log added
 			//DF20180108: @SU334449 - Invoking MOOL DA Layer from WISE post successful persistence of machine profile details in MySQL database
-			new AssetProfileDetails().setAssetProfileRollOffDetails(serialNumber, engineNumber);
+			new AssetProfileDetails().setAssetProfileRollOffDetails(serialNumber, engineNumber,machineCategory,rollOffDate);
 			
 			//ME100030804.so
 			//SH20011298-20211216 : CR264-20211118-LLPlusAPI-MachinesAPI_Changes_v00_00

@@ -38,7 +38,7 @@ public class KafkaConsumerListener implements ServletContextListener {
 	}
 
 	@Override
-	public void contextInitialized(ServletContextEvent event) {/*
+	public void contextInitialized(ServletContextEvent event) {
 		// TODO Auto-generated method stub
 		Logger iLogger = InfoLoggerClass.logger;
 //		iLogger.debug("SMSHandler:KafkaListener:Servlet Context Initialization - START");
@@ -54,7 +54,7 @@ public class KafkaConsumerListener implements ServletContextListener {
 		new EmailQConsumer();
 		
 		//Invoke the Listener SaleFromD2CQ Topic as a separate thread that runs continuously
-		iLogger.info("ServiceHistoryHandler:KafkaListener:Initialize Listener on ServiceHistoryQ Topic");
+		/*iLogger.info("ServiceHistoryHandler:KafkaListener:Initialize Listener on ServiceHistoryQ Topic");
 		new ServiceHistoryQConsumer();
 		
 		//Invoke the Listener JCBRollOffQ Topic as a separate thread that runs continuously

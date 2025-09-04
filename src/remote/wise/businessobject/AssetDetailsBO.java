@@ -8,6 +8,7 @@
  * CR395 : 20230425 : Dhiraj K :Rolloff date change
  * JCB6444 : 20230725 : Prasanna Lakshmi :  Getting Oops Error while clicking on Image
  * CR482 : 20240726 : Dhiraj Kumar : Ignore Sale date update for C2C sale 
+ * LLOPS - 182 : Sai Divya : 20250904 : File Processing failure for C2C .o
  */
 package remote.wise.businessobject;
 	
@@ -5932,15 +5933,20 @@ try
 	
 				AccountEntity dealerAccount =null;
 				//DF20190313:mani:to pass account id instead of account code for checking in partnership
-				int dealerAccId=0;
+				//int dealerAccId=0;// LLOPS - 182.o
+				List <Integer> dealerAccId=new LinkedList<>();// LLOPS - 182.n
 				Query dealerQuery = session.createQuery("from AccountEntity where status=true and accountCode='"+dealerCode+"'");
 				Iterator dealerItr = dealerQuery.list().iterator();
 				while(dealerItr.hasNext())
 				{
 					dealerAccount = (AccountEntity)dealerItr.next();
 					//DF20190313:mani:to pass account id instead of account code for checking in partnership
-					dealerAccId=dealerAccount.getAccount_id();
+					//dealerAccId=dealerAccount.getAccount_id();//LLOPS-182.o
+					dealerAccId.add(dealerAccount.getAccount_id());//LLOPS-182.n
 				}
+				 String dealerAccIdList = dealerAccId.stream()
+						    .map(id -> "'" + id + "'")
+						    .collect(Collectors.joining(","));// LLOPS - 182.n
 				if(dealerAccount==null)
 				{
 					throw new CustomFault("Dealer Master not received for the Dealer Code: "+dealerCode);
@@ -5991,8 +5997,11 @@ try
 						" accountToId='"+buyerAccId+"' " );*/
 	
 				//DF20201111 : Zakir :  Updating PartnershipMappingQuery, since the old query was not completely working in certain scenarios
+//				Query PartnershipMappingQry = session.createQuery(" from PartnershipMapping a, AccountEntity b  where a.accountToId=b.account_id and b.accountCode = '"
+//						+buyerCode+"' and a.accountFromId='"+dealerAccId+"' " );// LLOPS - 182.o
+//	
 				Query PartnershipMappingQry = session.createQuery(" from PartnershipMapping a, AccountEntity b  where a.accountToId=b.account_id and b.accountCode = '"
-						+buyerCode+"' and a.accountFromId='"+dealerAccId+"' " );
+						+buyerCode+"' and a.accountFromId='"+dealerAccIdList+"' " );// LLOPS - 182.n
 	
 				Iterator PartnershipMappingItr = PartnershipMappingQry.list().iterator();
 	

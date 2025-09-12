@@ -1,0 +1,36 @@
+version: 0.2
+ 
+env:
+  variables:
+    EAR_NAME: myapp.ear
+ 
+phases:
+  install:
+    runtime-versions:
+      java: corretto11   # this is only the CodeBuild host runtime, not used inside Docker
+    commands:
+      - echo "Install phase..."
+      - yum -y install jq || true
+  pre_build:
+    commands:
+      - echo "Ensure CodeBuild project has Privileged enabled for Docker builds."
+  build:
+    commands:
+      - echo "Building docker image to produce .ear"
+      - docker build -t myapp-build-image:latest .
+      - echo "Creating container from build image..."
+      - CONTAINER_ID=$(docker create myapp-build-image:latest)
+      - echo $CONTAINER_ID > /tmp/container_id
+      - echo "Copying EAR from container to host workspace..."
+      - docker cp $(cat /tmp/container_id):/work/dist/${EAR_NAME} ${EAR_NAME} || (echo "ERROR: ${EAR_NAME} not found in image" && exit 1)
+      - docker rm $(cat /tmp/container_id) || true
+  post_build:
+    commands:
+      - ls -la
+      - echo "Build finished. Artifact ${EAR_NAME} present."
+ 
+artifacts:
+  files:
+    - myapp.ear
+  discard-paths: yes
+ 

@@ -16,17 +16,17 @@ phases:
 
   pre_build:
 
-    commands:
+  commands:
 
-      - echo "Starting pre-build phase..."
+    - echo "Starting pre-build phase..."
 
-      - mkdir -p build/classes
+    - mkdir -p build/classes
 
-      - find src -name "*.java" > sources.txt
+    - find src -name "*.java" > sources.txt
 
-      - cat sources.txt
+    - cat sources.txt
 
-      - javac -d build/classes @sources.txt
+    - javac -encoding ISO-8859-1 -d build/classes @sources.txt
 
   build:
 

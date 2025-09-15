@@ -8,17 +8,15 @@ phases:
       - echo "Installing dependencies..."
       - java -version
 
-pre_build:
-  commands:
-    - echo "Starting pre-build phase..."
-    - mkdir -p build/classes
-    # Download JAX-RS API jar (or copy from somewhere)
-    - mkdir -p lib
-    - wget https://repo1.maven.org/maven2/javax/ws/rs/javax.ws.rs-api/2.1/javax.ws.rs-api-2.1.jar -O lib/javax.ws.rs-api-2.1.jar
-    # Add other Jersey jars similarly
-    - find src -name "*.java" > sources.txt
-    - cat sources.txt
-    - javac -encoding ISO-8859-1 -d build/classes -cp "lib/*" @sources.txt
+  pre_build:
+    commands:
+      - echo "Starting pre-build phase..."
+      - mkdir -p build/classes
+      - mkdir -p lib
+      - wget https://repo1.maven.org/maven2/javax/ws/rs/javax.ws.rs-api/2.1/javax.ws.rs-api-2.1.jar -O lib/javax.ws.rs-api-2.1.jar
+      - find src -name "*.java" > sources.txt
+      - cat sources.txt
+      - javac -encoding ISO-8859-1 -d build/classes -cp "lib/*" @sources.txt
 
   build:
     commands:

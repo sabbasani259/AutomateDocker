@@ -1,33 +1,63 @@
 version: 0.2
-
+ 
 phases:
-  install:
-    runtime-versions:
-      java: corretto11
-    commands:
-      - echo "Installing dependencies..."
-      - java -version
-  pre_build:
-    commands:
-      - echo "Starting pre-build phase..."
-      - mkdir -p build/classes
-      - javac -d build/classes src/**/*.java
-  build:
-    commands:
-      - echo "Building EAR file..."
-      - mkdir -p build/ear
-      - cp -r WebContent/* build/ear/
-      - cd build/ear
-      - jar -cvf application.ear *
-      - cd ../..
-      - echo "EAR file created successfully."
-  post_build:
-    commands:
-      - echo "Uploading EAR file to S3..."
-      - aws s3 cp build/ear/application.ear s3://$(aws s3api list-buckets --query "Buckets[?contains(Name, 'ap-south-1')].Name | [0]" --output text)/
-      - echo "Upload completed."
 
+  install:
+
+    runtime-versions:
+
+      java: corretto11
+
+    commands:
+
+      - echo "Installing dependencies..."
+
+      - java -version
+
+  pre_build:
+
+    commands:
+
+      - echo "Starting pre-build phase..."
+
+      - mkdir -p build/classes
+
+      - find src -name "*.java" > sources.txt
+
+      - javac -d build/classes @sources.txt
+
+  build:
+
+    commands:
+
+      - echo "Building EAR file..."
+
+      - mkdir -p build/ear
+
+      - cp -r WebContent/* build/ear/
+
+      - cd build/ear
+
+      - jar -cvf application.ear *
+
+      - cd ../..
+
+      - echo "EAR file created successfully."
+
+  post_build:
+
+    commands:
+
+      - echo "Uploading EAR file to S3..."
+
+      - aws s3 cp build/ear/application.ear s3://$(aws s3api list-buckets --query "Buckets[?contains(Name, 'ap-south-1')].Name | [0]" --output text)/
+
+      - echo "Upload completed."
+ 
 artifacts:
+
   files:
+
     - build/ear/application.ear
+
   discard-paths: yes

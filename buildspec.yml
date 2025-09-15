@@ -10,10 +10,8 @@ phases:
   pre_build:
     commands:
       - echo "Starting pre-build phase..."
-      - echo "Searching for Java files..."
-      - find . -name "*.java"
       - mkdir -p build/classes
-      - javac -d build/classes $(find . -name "*.java")
+      - javac -encoding UTF-8 -d build/classes src/**/*.java
   build:
     commands:
       - echo "Building EAR file..."

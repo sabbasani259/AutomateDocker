@@ -10,10 +10,10 @@ phases:
   pre_build:
     commands:
       - echo "Starting pre-build phase..."
+      - echo "Searching for Java files..."
+      - find . -name "*.java"
       - mkdir -p build/classes
-      - echo "Listing source files..."
-      - ls -R src/com/wipro/remote/
-      - javac -d build/classes src/com/wipro/remote/*.java
+      - javac -d build/classes $(find . -name "*.java")
   build:
     commands:
       - echo "Building EAR file..."

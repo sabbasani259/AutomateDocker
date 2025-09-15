@@ -24,6 +24,8 @@ phases:
 
       - find src -name "*.java" > sources.txt
 
+      - cat sources.txt
+
       - javac -d build/classes @sources.txt
 
   build:

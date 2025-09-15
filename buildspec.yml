@@ -11,7 +11,7 @@ phases:
     commands:
       - echo "Starting pre-build phase..."
       - mkdir -p build/classes
-      - javac -encoding UTF-8 -d build/classes src/**/*.java
+      - javac -d build/classes src/**/*.java
   build:
     commands:
       - echo "Building EAR file..."

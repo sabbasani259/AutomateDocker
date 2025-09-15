@@ -3854,9 +3854,12 @@ catch(CustomFault e)
 
 		try
 		{
+//			Query query = session.createQuery(" select a from AccountTenancyMapping a, TenancyEntity b where " +
+//					" a.tenancy_id=b.tenancy_id and b.tenancyCode = (select d.tenancyCode from TenancyEntity d" +
+//					" where d.tenancy_id ='" +tenancy_Id+"')");//100017461.o
 			Query query = session.createQuery(" select a from AccountTenancyMapping a, TenancyEntity b where " +
-					" a.tenancy_id=b.tenancy_id and b.tenancyCode = (select d.tenancyCode from TenancyEntity d" +
-					" where d.tenancy_id ='" +tenancy_Id+"')");
+					" a.tenancy_id=b.tenancy_id and b.mappingCode = (select d.mappingCode from TenancyEntity d" +
+					" where d.tenancy_id ='" +tenancy_Id+"')");//100017461.n
 			Iterator it = query.list().iterator();
 			List<AccountEntity> accountEntity = new LinkedList<AccountEntity>();
 			while(it.hasNext())

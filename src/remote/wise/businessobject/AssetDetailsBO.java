@@ -6001,7 +6001,7 @@ try
 //						+buyerCode+"' and a.accountFromId='"+dealerAccId+"' " );// LLOPS - 182.o
 //	
 				Query PartnershipMappingQry = session.createQuery(" from PartnershipMapping a, AccountEntity b  where a.accountToId=b.account_id and b.accountCode = '"
-						+buyerCode+"' and a.accountFromId='"+dealerAccIdList+"' " );// LLOPS - 182.n
+						+buyerCode+"' and a.accountFromId in (" +dealerAccIdList+ ") " );// LLOPS - 182.n
 	
 				Iterator PartnershipMappingItr = PartnershipMappingQry.list().iterator();
 	

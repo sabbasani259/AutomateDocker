@@ -213,10 +213,10 @@ public class DealerDataAndSMSNotificationsRestService {
 			CommonUtil util = new CommonUtil();
 			String isValidinput = null;
 			String csrfToken = null;
-			iLogger.info(loginID);
+			String userID=null;
 			if (loginID != null) {
 				iLogger.info("Initial login ID: " + loginID);
-				String userID = new CommonUtil().getUserId(loginID);
+				 userID = new CommonUtil().getUserId(loginID);
 
 				if (userID == null) {
 					throw new CustomFault("Invalid Login ID: " + loginID);
@@ -229,7 +229,7 @@ public class DealerDataAndSMSNotificationsRestService {
 			}
 
 			DealerDataAndSMSNotificationsImpl impl = new DealerDataAndSMSNotificationsImpl();
-			response = impl.createSubscriberDetails(dealerCode, subscriberDetails);
+			response = impl.createSubscriberDetails(dealerCode, subscriberDetails,userID);
 			iLogger.info(response);
 
 			if ("SUCCESS".equals(response)) {
@@ -338,14 +338,29 @@ public class DealerDataAndSMSNotificationsRestService {
 	@Path("/delete")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String deleteDealer(@QueryParam("dealerCode") String dealerCode,
-			@QueryParam("NotificationDEalerID") String NotificationDEalerID) {
+			@QueryParam("NotificationDealerID") String NotificationDEalerID) {
 		DealerDataAndSMSNotificationsImpl impl = new DealerDataAndSMSNotificationsImpl();
 		boolean isDeleted = impl.deleteDealerByCode(dealerCode, NotificationDEalerID);
 
 		if (isDeleted) {
 			return "SUCCESS";
 		} else {
-			return "FAILURE:Dealer with DealerCode: " + dealerCode + " not found.";
+			return "FAILURE: NotificationDealerID is present in DealerSubscriberDetails. Please remove it from there first.";
+		}
+	}
+	
+	@POST
+	@Path("/deletePrincipleDetails")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String deletePrincipleDealer(@QueryParam("dealerCode") String dealerCode,
+			@QueryParam("PrincipleDealerID") String PrincipleDealerID) {
+		DealerDataAndSMSNotificationsImpl impl = new DealerDataAndSMSNotificationsImpl();
+		boolean isDeleted = impl.deletePrincipleDealerByCode(dealerCode, PrincipleDealerID);
+
+		if (isDeleted) {
+			return "SUCCESS";
+		} else {
+			return "FAILURE:PrincipleDealerID not found in the database .";
 		}
 	}
 

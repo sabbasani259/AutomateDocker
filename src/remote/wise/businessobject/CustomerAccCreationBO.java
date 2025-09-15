@@ -8,6 +8,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
 import org.apache.logging.log4j.Logger;
@@ -302,26 +303,33 @@ public class CustomerAccCreationBO
 			
 			query = "select Account_ID from account where Status=1 and account_code='"+sellerCode+"'";
 			rs = stmt.executeQuery(query);
+			List<Integer> sellerAccountList=new LinkedList<>();//LLOPS - 182.n
 			while(rs.next())
 			{
 				sellerAccId = rs.getInt("Account_ID");
+				sellerAccountList.add(sellerAccId);//LLOPS - 182.n
 			}
-			if(sellerAccId==0)
+			//if(sellerAccId==0)
+			//LLOPS - 182.sn
+			if(sellerAccountList.isEmpty())
 			{
 				throw new CustomFault("Seller account doesn't exists in LL:"+sellerCode);
 			}
-			
-			
+			//LLOPS - 182.en
+
 			query = "select primary_owner_id from asset where serial_number='"+serialNumber+"'";
 			rs = stmt.executeQuery(query);
 			while(rs.next())
 			{
 				primaryOwnerId=rs.getInt("primary_owner_id");
 			}
-			if(primaryOwnerId!=sellerAccId)
+			//if(primaryOwnerId!=sellerAccId)
+			//LLOPS - 182.sn
+			if(!sellerAccountList.contains(primaryOwnerId))
 			{
 				throw new CustomFault("Seller is not the current owner of the machine:"+sellerCode);
-			}
+			}	
+			//LLOPS - 182.en
 			
 			//---------------------------------------- STEP3: Get the address details
 			int adressInput = 1, AddressID=0;

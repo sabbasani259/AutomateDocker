@@ -12,8 +12,8 @@ phases:
       - echo "Starting pre-build phase..."
       - mkdir -p build/classes
       - echo "Listing source files..."
-      - ls -R src
-      - javac -d build/classes src/**/*.java
+      - ls -R src/com/wipro/remote/
+      - javac -d build/classes src/com/wipro/remote/*.java
   build:
     commands:
       - echo "Building EAR file..."

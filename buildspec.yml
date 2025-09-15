@@ -1,36 +1,34 @@
 version: 0.2
- 
-env:
-  variables:
-    EAR_NAME: myapp.ear
- 
+
 phases:
   install:
     runtime-versions:
-      java: corretto11   # this is only the CodeBuild host runtime, not used inside Docker
+      java: corretto11
     commands:
-      - echo "Install phase..."
-      - yum -y install jq || true
+      - echo "Installing dependencies..."
+      - java -version
   pre_build:
     commands:
-      - echo "Ensure CodeBuild project has Privileged enabled for Docker builds."
+      - echo "Starting pre-build phase..."
+      - mkdir -p build/classes
+      - javac -d build/classes src/com/wipro/remote/**/*.java
+      - echo "Java files compiled successfully."
   build:
     commands:
-      - echo "Building docker image to produce .ear"
-      - docker build -t myapp-build-image:latest .
-      - echo "Creating container from build image..."
-      - CONTAINER_ID=$(docker create myapp-build-image:latest)
-      - echo $CONTAINER_ID > /tmp/container_id
-      - echo "Copying EAR from container to host workspace..."
-      - docker cp $(cat /tmp/container_id):/work/dist/${EAR_NAME} ${EAR_NAME} || (echo "ERROR: ${EAR_NAME} not found in image" && exit 1)
-      - docker rm $(cat /tmp/container_id) || true
+      - echo "Building EAR file..."
+      - mkdir -p build/ear
+      - cp -r WebContent/* build/ear/
+      - cd build/ear
+      - jar -cvf application.ear *
+      - cd ../..
+      - echo "EAR file created successfully."
   post_build:
     commands:
-      - ls -la
-      - echo "Build finished. Artifact ${EAR_NAME} present."
- 
+      - echo "Uploading EAR file to S3..."
+      - aws s3 cp build/ear/application.ear s3://$(aws s3api list-buckets --query "Buckets[?contains(Name, 'ap-south-1')].Name | [0]" --output text)/
+      - echo "Upload completed."
+
 artifacts:
   files:
-    - myapp.ear
+    - build/ear/application.ear
   discard-paths: yes
- 

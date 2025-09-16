@@ -1,30 +1,21 @@
 package remote.wise.service.webservice;
 
 
+import org.apache.logging.log4j.Logger;
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.JsonMappingException;
+import remote.wise.exception.CustomFault;
+import remote.wise.log.InfoLogging.InfoLoggerClass;
+import remote.wise.service.implementation.DOutLetMappingImpl;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
-
-import org.apache.logging.log4j.Logger;
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.kohsuke.rngom.ast.builder.Include;
-
-import remote.wise.exception.CustomFault;
-import remote.wise.log.InfoLogging.InfoLoggerClass;
-import remote.wise.service.implementation.DOutLetMappingImpl;
 
 /**
  *  WebService class to fetch zone ,dealer and outlet_type  from Dealer_outlet_mapping.

@@ -76,6 +76,42 @@ phases:
       # Servlet API
       - wget https://repo1.maven.org/maven2/javax/servlet/javax.servlet-api/3.1.0/javax.servlet-api-3.1.0.jar -O lib/javax.servlet-api-3.1.0.jar
 
+      # Apache HttpClient and dependencies
+      - wget https://repo1.maven.org/maven2/org/apache/httpcomponents/httpclient/4.5.14/httpclient-4.5.14.jar -O lib/httpclient-4.5.14.jar
+      - wget https://repo1.maven.org/maven2/org/apache/httpcomponents/httpcore/4.4.16/httpcore-4.4.16.jar -O lib/httpcore-4.4.16.jar
+      - wget https://repo1.maven.org/maven2/commons-logging/commons-logging/1.2/commons-logging-1.2.jar -O lib/commons-logging-1.2.jar
+
+      # org.json
+      - wget https://repo1.maven.org/maven2/org/json/json/20230618/json-20230618.jar -O lib/json-20230618.jar
+
+      # OpenCSV
+      - wget https://repo1.maven.org/maven2/com/opencsv/opencsv/5.8/opencsv-5.8.jar -O lib/opencsv-5.8.jar
+
+      # Jackson Annotations
+      - wget https://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-annotations/2.15.2/jackson-annotations-2.15.2.jar -O lib/jackson-annotations-2.15.2.jar
+
+      # Apache XML Serializer (xerces/xalan)
+      - wget https://repo1.maven.org/maven2/xml-apis/xml-apis/1.4.01/xml-apis-1.4.01.jar -O lib/xml-apis-1.4.01.jar
+      - wget https://repo1.maven.org/maven2/xerces/xercesImpl/2.12.2/xercesImpl-2.12.2.jar -O lib/xercesImpl-2.12.2.jar
+
+      # iText PDF
+      - wget https://repo1.maven.org/maven2/com/itextpdf/itextpdf/5.5.13.3/itextpdf-5.5.13.3.jar -O lib/itextpdf-5.5.13.3.jar
+
+      # net.sf.json and dependencies
+      - wget https://repo1.maven.org/maven2/net/sf/json-lib/json-lib/2.4/json-lib-2.4-jdk15.jar -O lib/json-lib-2.4-jdk15.jar
+      - wget https://repo1.maven.org/maven2/commons-beanutils/commons-beanutils/1.9.4/commons-beanutils-1.9.4.jar -O lib/commons-beanutils-1.9.4.jar
+      - wget https://repo1.maven.org/maven2/commons-collections/commons-collections/3.2.2/commons-collections-3.2.2.jar -O lib/commons-collections-3.2.2.jar
+      - wget https://repo1.maven.org/maven2/net/sf/ezmorph/ezmorph/1.0.6/ezmorph-1.0.6.jar -O lib/ezmorph-1.0.6.jar
+
+      # NominatimReverseGeocoding JAPI
+      - wget https://repo1.maven.org/maven2/eu/bitm/NominatimReverseGeocoding/1.0/NominatimReverseGeocoding-1.0.jar -O lib/NominatimReverseGeocoding-1.0.jar
+
+      # JJWT (JSON Web Token)
+      - wget https://repo1.maven.org/maven2/io/jsonwebtoken/jjwt/0.12.3/jjwt-0.12.3.jar -O lib/jjwt-0.12.3.jar
+      - wget https://repo1.maven.org/maven2/io/jsonwebtoken/jjwt-api/0.12.3/jjwt-api-0.12.3.jar -O lib/jjwt-api-0.12.3.jar
+      - wget https://repo1.maven.org/maven2/io/jsonwebtoken/jjwt-impl/0.12.3/jjwt-impl-0.12.3.jar -O lib/jjwt-impl-0.12.3.jar
+      - wget https://repo1.maven.org/maven2/io/jsonwebtoken/jjwt-jackson/0.12.3/jjwt-jackson-0.12.3.jar -O lib/jjwt-jackson-0.12.3.jar
+
       # Compile with all dependencies
       - find src -name "*.java" > sources.txt
       - cat sources.txt

@@ -109,6 +109,14 @@ phases:
       - wget https://repo1.maven.org/maven2/io/jsonwebtoken/jjwt-impl/0.12.3/jjwt-impl-0.12.3.jar -O lib/jjwt-impl-0.12.3.jar
       - wget https://repo1.maven.org/maven2/io/jsonwebtoken/jjwt-jackson/0.12.3/jjwt-jackson-0.12.3.jar -O lib/jjwt-jackson-0.12.3.jar
 
+      # RNGOM (for org.kohsuke.rngom.ast.builder)
+      - wget https://repo1.maven.org/maven2/com/thaiopensource/jing/20181222.0.0/jing-20181222.0.0.jar -O lib/jing-20181222.0.0.jar
+
+      # JAXB (for com.sun.xml.bind.*)
+      - wget https://repo1.maven.org/maven2/com/sun/xml/bind/jaxb-impl/2.3.3/jaxb-impl-2.3.3.jar -O lib/jaxb-impl-2.3.3.jar
+      - wget https://repo1.maven.org/maven2/javax/xml/bind/jaxb-api/2.3.1/jaxb-api-2.3.1.jar -O lib/jaxb-api-2.3.1.jar
+      - wget https://repo1.maven.org/maven2/org/glassfish/jaxb/jaxb-runtime/2.3.3/jaxb-runtime-2.3.3.jar -O lib/jaxb-runtime-2.3.3.jar
+
       #  # NominatimReverseGeocoding JAPI
       # - wget https://repo1.maven.org/maven2/eu/bitm/NominatimReverseGeocoding/1.0/NominatimReverseGeocoding-1.0.jar -O lib/NominatimReverseGeocoding-1.0.jar
 

@@ -117,6 +117,9 @@ phases:
       - wget https://repo1.maven.org/maven2/javax/xml/bind/jaxb-api/2.3.1/jaxb-api-2.3.1.jar -O lib/jaxb-api-2.3.1.jar
       - wget https://repo1.maven.org/maven2/org/glassfish/jaxb/jaxb-runtime/2.3.3/jaxb-runtime-2.3.3.jar -O lib/jaxb-runtime-2.3.3.jar
 
+      # Trang (for org.kohsuke.rngom.ast.builder.Include)
+      - wget https://repo1.maven.org/maven2/com/thaiopensource/trang/20091111/trang-20091111.jar -O lib/trang-20091111.jar
+
       #  # NominatimReverseGeocoding JAPI
       # - wget https://repo1.maven.org/maven2/eu/bitm/NominatimReverseGeocoding/1.0/NominatimReverseGeocoding-1.0.jar -O lib/NominatimReverseGeocoding-1.0.jar
 

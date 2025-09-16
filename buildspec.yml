@@ -130,7 +130,7 @@ phases:
       - wget https://repo1.maven.org/maven2/javax/persistence/javax.persistence-api/2.2/javax.persistence-api-2.2.jar -O lib/javax.persistence-api-2.2.jar
 
       # Add Hibernate Core (if using Hibernate)
-      - wget https://repo1.maven.org/maven2/org/hibernate/hibernate-core/5.6.15.Final/hibernate-core-5.6.15.Final.jar -O lib/hibernate-core-5.6.15.Final.jar
+      - wget https://repo1.maven.org/maven2/org/hibernate/hibernate-core/3.6.10.Final/hibernate-core-3.6.10.Final.jar -O lib/hibernate-core-3.6.10.Final.jar
 
       # NominatimReverseGeocoding JAPI
       # - wget https://repo1.maven.org/maven2/eu/bitm/NominatimReverseGeocoding/1.0/NominatimReverseGeocoding-1.0.jar -O lib/NominatimReverseGeocoding-1.0.jar

@@ -126,14 +126,24 @@ phases:
       # Trang (for org.kohsuke.rngom.ast.builder.Include)
       - wget https://repo1.maven.org/maven2/com/thaiopensource/trang/20091111/trang-20091111.jar -O lib/trang-20091111.jar
 
+      # Add JPA API
+      - wget https://repo1.maven.org/maven2/javax/persistence/javax.persistence-api/2.2/javax.persistence-api-2.2.jar -O lib/javax.persistence-api-2.2.jar
+
+    # Add Hibernate Core (if using Hibernate)
+    - wget https://repo1.maven.org/maven2/org/hibernate/hibernate-core/5.6.15.Final/hibernate-core-5.6.15.Final.jar -O lib/hibernate-core-5.6.15.Final.jar
+
+
 
       #  NominatimReverseGeocoding JAPI
       # - wget https://repo1.maven.org/maven2/eu/bitm/NominatimReverseGeocoding/1.0/NominatimReverseGeocoding-1.0.jar -O lib/NominatimReverseGeocoding-1.0.jar
+      
 
       # Compile with all dependencies
       - find src -name "*.java" > sources.txt
       - cat sources.txt
       - javac -encoding ISO-8859-1 -d build/classes -cp "lib/*" @sources.txt
+
+      
 
   build:
     commands:

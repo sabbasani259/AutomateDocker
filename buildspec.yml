@@ -62,7 +62,7 @@ phases:
 
       # Jedis (Redis client)
       - wget https://repo1.maven.org/maven2/redis/clients/jedis/3.7.1/jedis-3.7.1.jar -O lib/jedis-3.7.1.jar
-      - wget https://repo1.maven.org/maven2/org/apache/commons/pool2/commons-pool2/2.11.1/commons-pool2-2.11.1.jar -O lib/commons-pool2-2.11.1.jar
+      - wget https://repo1.maven.org/maven2/org/apache/commons/commons-pool2/2.12.0/commons-pool2-2.12.0.jar -O lib/commons-pool2-2.12.0.jar
 
       # JXL (Java Excel API)
       - wget https://repo1.maven.org/maven2/net/sourceforge/jexcelapi/jxl/2.6.12/jxl-2.6.12.jar -O lib/jxl-2.6.12.jar

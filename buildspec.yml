@@ -44,7 +44,7 @@ phases:
 
       # JavaMail (javax.mail and activation)
       - wget https://repo1.maven.org/maven2/com/sun/mail/javax.mail/1.6.2/javax.mail-1.6.2.jar -O lib/javax.mail-1.6.2.jar
-      - wget https://repo1.maven.org/maven2/com/sun/activation/activation/1.1.1/activation-1.1.1.jar -O lib/activation-1.1.1.jar
+      - wget https://repo1.maven.org/maven2/javax/activation/activation/1.1.1/activation-1.1.1.jar -O lib/activation-1.1.1.jar
 
       # JMS API
       - wget https://repo1.maven.org/maven2/javax/jms/javax.jms-api/2.0.1/javax.jms-api-2.0.1.jar -O lib/javax.jms-api-2.0.1.jar

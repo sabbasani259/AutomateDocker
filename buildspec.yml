@@ -14,6 +14,12 @@ phases:
       - mkdir -p build/classes
       - mkdir -p lib
 
+      # Copy the reverseGeocoding.jar to the lib directory
+      - cp reverseGeocoding.jar lib/reverseGeocoding.jar
+
+      # Verify the contents of the JAR file
+      - jar tf lib/reverseGeocoding.jar
+
       # Logging (Log4j)
       - wget https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.20.0/log4j-core-2.20.0.jar -O lib/log4j-core-2.20.0.jar
       - wget https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.20.0/log4j-api-2.20.0.jar -O lib/log4j-api-2.20.0.jar
@@ -119,9 +125,6 @@ phases:
 
       # Trang (for org.kohsuke.rngom.ast.builder.Include)
       - wget https://repo1.maven.org/maven2/com/thaiopensource/trang/20091111/trang-20091111.jar -O lib/trang-20091111.jar
-      
-      # NominatimReverseGeocoding JAPI
-      - cp reverseGeocoding.jar lib/reverseGeocoding.jar
 
 
       #  NominatimReverseGeocoding JAPI

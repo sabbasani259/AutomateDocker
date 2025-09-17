@@ -115,11 +115,16 @@ phases:
 
   post_build:
     commands:
-      - echo "Building Docker image..."
-      - echo $GITHUB_TOKEN | docker login ghcr.io -u sabbasani259 --password-stdin
-      - docker build -t ghcr.io/sabbasani259/wise-ear:latest .
-      - docker push ghcr.io/sabbasani259/wise-ear:latest
-      - echo "Docker image pushed to GHCR."
+      - echo "Retrieving LLApplicationToken from Secrets Manager"
+      - export LL_APPLICATION_TOKEN=$(aws secretsmanager get-secret-value --secret-id LLApplicationToken --query SecretString --output text | jq -r .LL_APPLICATION_TOKEN)
+      - echo "Logging in to GitHub Container Registry"
+      - echo $LL_APPLICATION_TOKEN | docker login ghcr.io -u sabbasani259 --password-stdin
+      - echo "Building and pushing Docker images for EAR files"
+      - for ear in build/ear/*.ear; do
+          name=$(basename "$ear" .ear | tr '[:upper:]' '[:lower:]');
+          docker build -t ghcr.io/sabbasani259/$name:latest --build-arg EAR_FILE="$ear" -f docker/Dockerfile .;
+          docker push ghcr.io/sabbasani259/$name:latest;
+        done
 
 artifacts:
   files:

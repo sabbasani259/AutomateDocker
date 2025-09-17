@@ -159,13 +159,16 @@ phases:
 
   post_build:
     commands:
-      - echo "Building Docker image..."
+      version: 0.2
+
+phases:
+  post_build:
+    commands:
       - echo "Retrieving GitHub token from Secrets Manager"
-      - export GITHUB_TOKEN=$(aws secretsmanager get-secret-value --secret-id github/token --query SecretString --output text | jq -r .GITHUB_TOKEN)
+      - export GITHUB_TOKEN=$(aws secretsmanager get-secret-value --secret-id LLApplicationToken --query SecretString --output text | jq -r .GITHUB_TOKEN)
       - echo "Logging in to GitHub Container Registry"
       - echo $GITHUB_TOKEN | docker login ghcr.io -u sabbasani259 --password-stdin
       - docker build -t ghcr.io/sabbasani259/wise-ear:latest .
-      # Push the image to GHCR
       - docker push ghcr.io/sabbasani259/wise-ear:latest
       - echo "Docker image pushed to GHCR."
 

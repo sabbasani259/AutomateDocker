@@ -116,9 +116,9 @@ phases:
   post_build:
     commands:
       - echo "Retrieving LLApplicationToken from Secrets Manager"
-      - export LL_APPLICATION_TOKEN=$(aws secretsmanager get-secret-value --secret-id LLApplicationToken --query SecretString --output text | jq -r .LL_APPLICATION_TOKEN)
+      - export GITHUB_TOKEN=$(aws secretsmanager get-secret-value --secret-id LLApplicationToken --query SecretString --output text | jq -r .LL_APPLICATION_TOKEN)
       - echo "Logging in to GitHub Container Registry"
-      - echo $LL_APPLICATION_TOKEN | docker login ghcr.io -u sabbasani259 --password-stdin
+      - echo $GITHUB_TOKEN | docker login ghcr.io -u sabbasani259 --password-stdin
       - echo "Building and pushing Docker images for EAR files"
       - for ear in build/ear/*.ear; do
           name=$(basename "$ear" .ear | tr '[:upper:]' '[:lower:]');

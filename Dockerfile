@@ -1,10 +1,6 @@
-# Use Payara Full as base image
-FROM payara/server-full:5.2022.5
-
-# Copy your EAR file into the deployments directory
-COPY build/ear/wise.ear /opt/payara/deployments/
-
-# Expose the default Payara port
-EXPOSE 8080
-
-# Optionally, set environment variables or commands as needed
+FROM openjdk:8-jre
+ARG EAR_FILE
+COPY ${EAR_FILE} /app/wise.ear
+# Set the working directory
+WORKDIR /app
+# Add ENTRYPOINT or CMD as needed

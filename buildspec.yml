@@ -122,7 +122,7 @@ phases:
       - echo "Building and pushing Docker images for EAR files"
       - for ear in build/ear/*.ear; do
           name=$(basename "$ear" .ear | tr '[:upper:]' '[:lower:]');
-          docker build -t ghcr.io/sabbasani259/$name:latest --build-arg EAR_FILE="$ear" -f docker/Dockerfile .;
+          docker build -t ghcr.io/sabbasani259/$name:latest --build-arg EAR_FILE="$ear" -f Dockerfile .
           docker push ghcr.io/sabbasani259/$name:latest;
         done
 

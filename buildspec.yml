@@ -159,14 +159,22 @@ phases:
 
   post_build:
     commands:
-      - echo "Building Docker image..."
-      # Login to GHCR using your GitHub username and personal access token
-      - echo $GITHUB_TOKEN | docker login ghcr.io -u sabbasani259 --password-stdin
-      # Build the Docker image (Dockerfile must be in the project root)
-      - docker build -t ghcr.io/sabbasani259/wise-ear:latest .
-      # Push the image to GHCR
-      - docker push ghcr.io/sabbasani259/wise-ear:latest
-      - echo "Docker image pushed to GHCR."
+      - echo "Fetching the latest artifact from S3 bucket..."
+	  - mkdir -p build/ear
+	  - latest_file=$(aws s3api list-objects-v2 --bucket buildartif --query 'sort_by(Contents, &LastModified)[-1].Key' --output text)
+	  - echo "Latest file in S3: $latest_file"
+	  - aws s3 cp s3://buildartif/$latest_file build/ear/latest.zip
+	  - unzip build/ear/latest.zip -d build/ear
+	  - ls -l build/ear/wise.ear
+	  - echo "Retrieving GitHub token from Secrets Manager"
+	  - export GITHUB_TOKEN=$(aws secretsmanager get-secret-value --secret-id LLApplicationToken --query SecretString --output text | jq -r .GITHUB_TOKEN)
+	  - echo "Logging in to GitHub Container Registry"
+	  - echo $GITHUB_TOKEN | docker login ghcr.io -u sabbasani259 --password-stdin
+	  - echo "Building Docker image with the EAR file..."
+	  - docker build -t ghcr.io/sabbasani259/wise-ear:latest --build-arg EAR_FILE=build/ear/wise.ear -f docker/Dockerfile .
+	  - echo "Pushing Docker image to GHCR..."
+	  - docker push ghcr.io/sabbasani259/wise-ear:latest
+	  - echo "Docker image pushed to GHCR."
 
 artifacts:
   files:

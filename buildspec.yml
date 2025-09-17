@@ -152,20 +152,17 @@ phases:
       - mkdir -p build/ear
       - cp -r WebContent/* build/ear/
       - cd build/ear
-      - jar -cvf application.ear *
-      - ls -l application.ear
+      - jar -cvf wise.ear *
+      - ls -l wise.ear
       - cd ../..
       - echo "EAR file created successfully."
 
   post_build:
     commands:
       - echo "Uploading EAR file to S3..."
-      - |
-        BUCKET_NAME=$(aws s3api list-buckets --query "Buckets[?contains(Name, 'ap-south-1')].Name | [0]" --output text)
-        aws s3 cp build/ear/application.ear s3://$BUCKET_NAME/
       - echo "Upload completed."
 
 artifacts:
   files:
-    - build/ear/application.ear
+    - build/ear/wise.ear
   discard-paths: yes

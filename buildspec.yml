@@ -159,8 +159,14 @@ phases:
 
   post_build:
     commands:
-      - echo "Uploading EAR file to S3..."
-      - echo "Upload completed."
+      - echo "Building Docker image..."
+      # Login to GHCR using your GitHub username and personal access token
+      - echo $GITHUB_TOKEN | docker login ghcr.io -u sabbasani259 --password-stdin
+      # Build the Docker image (Dockerfile must be in the project root)
+      - docker build -t ghcr.io/sabbasani259/wise-ear:latest .
+      # Push the image to GHCR
+      - docker push ghcr.io/sabbasani259/wise-ear:latest
+      - echo "Docker image pushed to GHCR."
 
 artifacts:
   files:

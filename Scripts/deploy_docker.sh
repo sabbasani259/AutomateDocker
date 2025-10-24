@@ -9,4 +9,4 @@ docker stop wise_app || true
 docker rm wise_app || true
 
 echo "Running new container..."
-docker run -d --name wise_app -p 8081:8080 $IMAGE_NAME
+docker run -d --name wise_app -p 8083:8080 $IMAGE_NAME
